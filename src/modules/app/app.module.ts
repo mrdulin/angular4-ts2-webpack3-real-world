@@ -11,7 +11,7 @@ import { SidebarComponent } from './sidebar';
 import { ContentComponent } from './content';
 import { BreadcrumbComponent } from 'common/components/breadcrumb';
 
-import { StringService, NavigationService } from 'common/services';
+import { StringService, NavigationService, PaginatorService } from 'common/services';
 
 import './style.async.css';
 
@@ -30,8 +30,13 @@ import './style.async.css';
     AppRoutingModule
   ],
   bootstrap: [AppComponent],
-  providers: [StringService, NavigationService]
-})
+  providers: [
+    StringService,
+    NavigationService,
+    PaginatorService
+  ]
+}
+)
 export class AppModule {
 
 }
