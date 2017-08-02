@@ -74,14 +74,8 @@ export class SicknessComponent implements OnInit {
   }
 
   public onPageChange(e: PageEvent) {
-    console.log(e, this.lastPageIndex);
-    if (this.lastPageIndex <= e.pageIndex) {
-      this.lastPageIndex = e.pageIndex
-    } else {
-
-    }
-    this.lastPageIndex = e.pageIndex;
-    this.diseaseDataBase.getDiseasesByPage(this.keyword, e.pageIndex);
+    const pageIndex: number = e.pageIndex + 1;
+    this.diseaseDataBase.getDiseasesByPage(this.keyword, pageIndex);
   }
 
   public trackByFn(index: number, tableHeader: ITableHeader) {
@@ -123,8 +117,9 @@ export class DiseaseDataSource extends DataSource<any>{
   connect(): Observable<any> {
     return this._diseaseDataBase.dataChange.asObservable().map(() => {
       const books = this._diseaseDataBase.getData() || [];
-      const startIndex: number = this._paginator.pageIndex * this._paginator.pageSize;
-      return books.splice(startIndex, this._paginator.pageSize);
+      // const startIndex: number = this._paginator.pageIndex * this._paginator.pageSize;
+      // return books.splice(startIndex, this._paginator.pageSize);
+      return books;
     });
   }
 
