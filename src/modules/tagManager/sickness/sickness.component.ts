@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MdPaginator, PageEvent, MdDialog } from '@angular/material';
+import { MdPaginator, PageEvent, MdDialog, MdDialogRef } from '@angular/material';
 import { DataSource } from '@angular/cdk';
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -49,7 +49,8 @@ export class SicknessComponent implements OnInit {
   public pageIndex: number;
   public pageSizeOptions: number[];
 
-  public lastKeyWord: string;
+  public dialogRef: MdDialogRef<EditDialogComponent>;
+
 
   @ViewChild(MdPaginator)
   public paginator: MdPaginator;
@@ -89,8 +90,9 @@ export class SicknessComponent implements OnInit {
   }
 
   private edit(disease: IDisease) {
-    console.log(disease);
-    this._dialog.open(EditDialogComponent)
+    this.dialogRef = this._dialog.open(EditDialogComponent, {
+      data: disease
+    });
   }
 }
 

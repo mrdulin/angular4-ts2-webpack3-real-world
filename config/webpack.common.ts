@@ -25,7 +25,8 @@ const config: webpack.Configuration = {
       'material-design-icons': helpers.resolve('../node_modules/material-design-icons'),
       'normalize.css': helpers.resolve('../node_modules/normalize.css/normalize.css'),
       'root': helpers.resolve('..'),
-      'common': helpers.resolve('../src/common')
+      'common': helpers.resolve('../src/common'),
+      'services': helpers.resolve('../src/services')
     }
   },
 
