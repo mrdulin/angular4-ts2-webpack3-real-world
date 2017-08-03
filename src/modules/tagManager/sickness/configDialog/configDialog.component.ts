@@ -25,6 +25,7 @@ export class ConfigDialogComponent implements OnInit {
 
   onSumit() {
     console.log(this.config);
+
   }
 
 }

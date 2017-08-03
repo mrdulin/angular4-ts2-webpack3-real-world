@@ -1,6 +1,6 @@
 <h2 md-dialog-title>配置设置</h2>
 <md-dialog-content>
-  <form novalidate (submit)='onSumit()'>
+  <form novalidate>
     <md-input-container class='full-width' type='text'>
       <input mdInput disabled placeholder="疾病ID" name="tagId" [value]="disease.tagId">
     </md-input-container>
@@ -43,5 +43,5 @@
 </md-dialog-content>
 <md-dialog-actions>
   <button md-raised-button md-dialog-close>取消</button>
-  <button md-raised-button type='submit'>确定</button>
+  <button md-raised-button (click)='onSumit()'>确定</button>
 </md-dialog-actions>

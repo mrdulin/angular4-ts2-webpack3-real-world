@@ -117,7 +117,7 @@ export class SicknessComponent implements OnInit {
           config
         }
       });
-    })
+    });
   }
 
   private setProperties(disease: IDisease) {
