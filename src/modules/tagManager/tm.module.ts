@@ -7,17 +7,19 @@ import { HttpModule } from '@angular/http';
 import { TagManagerRoutingModule } from './tm-routing.module';
 import { TagManagerMaterialModule } from './tagManager-material.module';
 
-import { SicknessComponent } from './sickness';
+import { SicknessComponent, EditDialogComponent, ConfigDialogComponent } from './sickness';
 import { DepartmentComponent } from './department';
 import { AttributeComponent } from './attribute';
 
-
+import { DiseaseService, DiseaseConfigService } from 'root/src/services';
 
 @NgModule({
   declarations: [
     SicknessComponent,
     DepartmentComponent,
-    AttributeComponent
+    AttributeComponent,
+    EditDialogComponent,
+    ConfigDialogComponent
   ],
   imports: [
     TagManagerRoutingModule,
@@ -25,7 +27,13 @@ import { AttributeComponent } from './attribute';
     CommonModule,
     TagManagerMaterialModule,
     HttpModule
-  ]
+  ],
+  entryComponents: [
+    EditDialogComponent,
+    ConfigDialogComponent
+  ],
+  providers: [DiseaseService, DiseaseConfigService]
+
 })
 export class TagManagerModule {
 

@@ -6,8 +6,6 @@ import { ContentComponent } from './content';
 import { TagManagerModule } from '../tagManager';
 import { RouterService } from 'common/services';
 
-import * as config from 'root/config/modules.json';
-
 const routes: Routes = [
   {
     path: '',
@@ -33,6 +31,10 @@ const routes: Routes = [
       {
         path: '',
         loadChildren: '../doctorCenter/doctorCenter.module.ts#DoctorCenterModule'
+      },
+      {
+        path: '',
+        loadChildren: '../goToHospital/goToHospital.module.ts#GoToHospitalModule'
       }
       // --
     ]

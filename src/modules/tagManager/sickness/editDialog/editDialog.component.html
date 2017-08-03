@@ -1,0 +1,63 @@
+<h2 md-dialog-title>编辑疾病</h2>
+<md-dialog-content>
+  <form novalidate>
+    <md-input-container class='full-width' type='text'>
+      <input mdInput disabled placeholder="疾病ID" name="tagId" [value]="disease.tagId">
+    </md-input-container>
+
+    <div class='form-control-row'>
+      <button md-raised-button>上传图片</button>
+    </div>
+
+    <md-input-container class='full-width' type='text'>
+      <input mdInput name="tagName" placeholder="疾病名称" [value]="disease.tagName">
+    </md-input-container>
+
+    <md-input-container class='full-width' type='text'>
+      <input mdInput name="aliasName" placeholder="疾病别名" [value]="disease.aliasName">
+    </md-input-container>
+
+    <div>
+      <md-input-container type='text'>
+        <input mdInput name="standardCode" placeholder="ICD标准码" [value]="disease.standardCode">
+      </md-input-container>
+
+      <md-input-container type='text'>
+        <input mdInput name="extraCode" placeholder="ICD标准码" [value]="disease.extraCode">
+      </md-input-container>
+
+      <md-input-container type='text'>
+        <input mdInput disabled name="tagLevel" placeholder="类目级别" [value]="disease.tagLevel + '级'">
+      </md-input-container>
+    </div>
+
+    <md-input-container class='full-width' type='text'>
+      <input mdInput disabled name="parentName" placeholder="所属疾病类目" [value]="disease.parentName">
+    </md-input-container>
+
+    <div>
+      <md-select placeholder='关联一级科室' name='deptLv1' class="full-width dept-list" [(ngModel)]='selectedDeptLevel1'>
+        <md-option *ngFor='let deptLevel1 of deptsLevel1' [value]='deptLevel1'>
+          {{deptLevel1.tagName}}
+        </md-option>
+      </md-select>
+    </div>
+
+    <div>
+      <md-select placeholder='关联二级科室' name='deptLv2' class="full-width dept-list" [(ngModel)]='selectedDeptLevel2'>
+        <md-option *ngFor='let deptLevel2 of deptsLevel2' [value]='deptLevel2'>
+          {{deptLevel2.tagName}}
+        </md-option>
+      </md-select>
+    </div>
+
+    <div class='form-control-row'>
+      <button md-raised-button (click)='associate()'>关联</button>
+    </div>
+
+  </form>
+</md-dialog-content>
+<md-dialog-actions>
+  <button md-raised-button md-dialog-close>取消</button>
+  <button md-raised-button [md-dialog-close]='true'>确定</button>
+</md-dialog-actions>
