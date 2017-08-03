@@ -9,6 +9,8 @@ export interface IAppConfig{
 
 export const AppConfig: IAppConfig = {
   api: '//umr.test.pajkdc.com/innerApi',
+
+  //全局mock开关，true, 使用本地json，false，走http请求
   mockApi: true
 };
 

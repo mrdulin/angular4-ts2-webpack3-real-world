@@ -1,2 +1,3 @@
 export * from './sickness.component';
-export * from './components/editDialog';
+export * from './editDialog';
+export * from './configDialog';

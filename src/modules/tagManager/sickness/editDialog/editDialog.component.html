@@ -35,17 +35,25 @@
       <input mdInput disabled name="parentName" placeholder="所属疾病类目" [value]="disease.parentName">
     </md-input-container>
 
-    <md-select placeholder='关联一级科室' class="full-width dept-list">
-      <md-option *ngFor='let deptLevel1 of deptsLevel1' [value]='deptLevel1'>
-        {{deptLevel1.tagName}}
-      </md-option>
-    </md-select>
+    <div>
+      <md-select placeholder='关联一级科室' name='deptLv1' class="full-width dept-list" [(ngModel)]='selectedDeptLevel1'>
+        <md-option *ngFor='let deptLevel1 of deptsLevel1' [value]='deptLevel1'>
+          {{deptLevel1.tagName}}
+        </md-option>
+      </md-select>
+    </div>
 
-    <md-select placeholder='关联二级科室' class="full-width dept-list">
-      <md-option *ngFor='let deptLevel2 of deptsLevel2' [value]='deptLevel2'>
-        {{deptLevel2.tagName}}
-      </md-option>
-    </md-select>
+    <div>
+      <md-select placeholder='关联二级科室' name='deptLv2' class="full-width dept-list" [(ngModel)]='selectedDeptLevel2'>
+        <md-option *ngFor='let deptLevel2 of deptsLevel2' [value]='deptLevel2'>
+          {{deptLevel2.tagName}}
+        </md-option>
+      </md-select>
+    </div>
+
+    <div class='form-control-row'>
+      <button md-raised-button (click)='associate()'>关联</button>
+    </div>
 
   </form>
 </md-dialog-content>

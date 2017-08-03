@@ -5,11 +5,12 @@ import { DataSource } from '@angular/cdk';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 
-import { SicknessService } from './services/sickness.service';
+import { DiseaseService, DiseaseConfigService } from 'root/src/services';
 import { PaginatorService } from 'common/services';
-import { Disease, IDisease } from './models/disease.model';
+import { Disease, IDisease } from 'root/src/models';
 
-import { EditDialogComponent } from './components/editDialog';
+import { EditDialogComponent } from './editDialog';
+import { ConfigDialogComponent } from './configDialog';
 
 interface IQueryType {
   key: string;
@@ -23,8 +24,7 @@ interface ITableHeader extends IQueryType {
 @Component({
   selector: 'sickness',
   templateUrl: './sickness.component.html',
-  styleUrls: ['./sickness.component.css'],
-  providers: [SicknessService]
+  styleUrls: ['./sickness.component.css']
 })
 export class SicknessComponent implements OnInit {
   public queryTypes: IQueryType[] = [
@@ -49,15 +49,13 @@ export class SicknessComponent implements OnInit {
   public pageIndex: number;
   public pageSizeOptions: number[];
 
-  public dialogRef: MdDialogRef<EditDialogComponent>;
-
-
   @ViewChild(MdPaginator)
   public paginator: MdPaginator;
 
   constructor(
-    private _sicknessService: SicknessService,
+    private _diseaseService: DiseaseService,
     private _paginatorService: PaginatorService,
+    private _diseaseConfigService: DiseaseConfigService,
     private _dialog: MdDialog
   ) {
     this.pageIndex = this._paginatorService.pageIndex;
@@ -68,7 +66,7 @@ export class SicknessComponent implements OnInit {
   public ngOnInit() {
     this.selectedQueryType = this.queryTypes[0];
     this.displayedColumns = this.tableHeaders.map((header: ITableHeader) => header.key);
-    this.diseaseDataBase = new DiseaseDataBase(this._sicknessService);
+    this.diseaseDataBase = new DiseaseDataBase(this._diseaseService);
     this.dataSource = new DiseaseDataSource(this.diseaseDataBase, this.paginator);
   }
 
@@ -89,17 +87,48 @@ export class SicknessComponent implements OnInit {
     return tableHeader.key;
   }
 
+  /**
+   *
+   * @desc 打开编辑疾病模态框
+   * @private
+   * @param {IDisease} disease
+   * @memberof SicknessComponent
+   */
   private edit(disease: IDisease) {
-    this.dialogRef = this._dialog.open(EditDialogComponent, {
+    const dialogRef: MdDialogRef<EditDialogComponent> = this._dialog.open(EditDialogComponent, {
       data: disease
     });
+  }
+
+  /**
+   * @desc 打开配置设置模态框
+   * @private
+   * @param {IDisease} disease
+   * @memberof SicknessComponent
+   */
+  private config(disease: IDisease) {
+    // TODO: http://umr.test.pajkdc.com/innerApi/tag/disease/config?tagId=1001000
+    // 打开配置设置模态框, 先调service请求该疾病的配置，请求成功后打开模态框，请求失败，全局模态框错误提示。
+
+    this._diseaseConfigService.getConfigByTagId(disease.tagId).subscribe((config: any) => {
+      const dialogRef: MdDialogRef<ConfigDialogComponent> = this._dialog.open(ConfigDialogComponent, {
+        data: {
+          disease,
+          config
+        }
+      });
+    })
+  }
+
+  private setProperties(disease: IDisease) {
+
   }
 }
 
 export class DiseaseDataBase {
 
   constructor(
-    private _sicknessService: SicknessService
+    private _diseaseService: DiseaseService
   ) {
   }
 
@@ -111,7 +140,7 @@ export class DiseaseDataBase {
   }
 
   getDiseasesByPage(q: string, pageIndex: number) {
-    return this._sicknessService.getDiseasesByPage(q, pageIndex).subscribe((data: any) => {
+    return this._diseaseService.getDiseasesByPage(q, pageIndex).subscribe((data: any) => {
       const { model, error, errorCode } = data;
       const diseases: IDisease[] = model.t;
       const total: number = model.count;
@@ -132,10 +161,10 @@ export class DiseaseDataSource extends DataSource<any>{
 
   connect(): Observable<any> {
     return this._diseaseDataBase.dataChange.asObservable().map(() => {
-      const books = this._diseaseDataBase.getData() || [];
+      const diseases = this._diseaseDataBase.getData() || [];
       // const startIndex: number = this._paginator.pageIndex * this._paginator.pageSize;
       // return books.splice(startIndex, this._paginator.pageSize);
-      return books;
+      return diseases;
     });
   }
 

@@ -1,0 +1,13 @@
+{
+  "success": true,
+  "errorCode": 0,
+  "error": null,
+  "model": {
+    "tagId": 1001000,
+    "symptom": "偏头疼",
+    "inspection": "X射线",
+    "treatment": "中医治疗",
+    "preventive": "定期检查",
+    "description": "description:搜索测试标准疾病标签"
+  }
+}
