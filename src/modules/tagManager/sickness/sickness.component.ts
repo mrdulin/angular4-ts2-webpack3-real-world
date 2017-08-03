@@ -1,12 +1,15 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MdPaginator, PageEvent } from '@angular/material';
+import { MdPaginator, PageEvent, MdDialog } from '@angular/material';
 import { DataSource } from '@angular/cdk';
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 
-import { SicknessService } from './sickness.service';
+import { SicknessService } from './services/sickness.service';
 import { PaginatorService } from 'common/services';
+import { Disease, IDisease } from './models/disease.model';
+
+import { EditDialogComponent } from './components/editDialog';
 
 interface IQueryType {
   key: string;
@@ -31,13 +34,13 @@ export class SicknessComponent implements OnInit {
   public diseaseDataBase: DiseaseDataBase;
   public dataSource: DiseaseDataSource | null;
   public tableHeaders: ITableHeader[] = [
-    { key: 'diseaseId', name: '疾病ID', cell: (row: any) => `${row.ID}` },
-    { key: 'diseaseName', name: '疾病名称', cell: (row: any) => `${row.Title}` },
-    { key: 'ICD', name: 'ICD标准码', cell: (row: any) => `${row.SubTitle}` },
-    { key: 'IDC', name: 'IDC附加码', cell: (row: any) => `${row.Image}` },
-    { key: 'diseaseCategory', name: '所属疾病类目', cell: (row: any) => `类目` },
-    { key: 'department', name: '所属标准科室', cell: (row: any) => `科室` },
-    { key: 'operator', name: '操作', cell: (row: any) => `操作` }
+    { key: 'diseaseId', name: '疾病ID', cell: (row: IDisease) => `${row.tagId}` },
+    { key: 'diseaseName', name: '疾病名称', cell: (row: IDisease) => `${row.tagName}` },
+    { key: 'ICD', name: 'ICD标准码', cell: (row: IDisease) => `${row.standardCode}` },
+    { key: 'IDC', name: 'IDC附加码', cell: (row: IDisease) => `${row.extraCode}` },
+    { key: 'diseaseCategory', name: '所属疾病类目', cell: (row: IDisease) => `${row.parentName}` },
+    { key: 'department', name: '所属标准科室', cell: (row: IDisease) => `` },
+    { key: 'operator', name: '操作', cell: (row: IDisease) => `` }
   ];
   public selectedQueryType: IQueryType;
   public keyword: string;
@@ -46,14 +49,15 @@ export class SicknessComponent implements OnInit {
   public pageIndex: number;
   public pageSizeOptions: number[];
 
-  public lastPageIndex: number;
+  public lastKeyWord: string;
 
   @ViewChild(MdPaginator)
   public paginator: MdPaginator;
 
   constructor(
     private _sicknessService: SicknessService,
-    private _paginatorService: PaginatorService
+    private _paginatorService: PaginatorService,
+    private _dialog: MdDialog
   ) {
     this.pageIndex = this._paginatorService.pageIndex;
     this.pageSize = this._paginatorService.pageSize;
@@ -69,7 +73,9 @@ export class SicknessComponent implements OnInit {
 
   public onSubmit(): void {
     console.log(this.selectedQueryType, this.keyword);
-    const firstPage: number = this.lastPageIndex = this.pageIndex + 1;
+    const firstPage: number = this.pageIndex + 1;
+    this.paginator.pageIndex = 0;
+    console.log(this.paginator)
     this.diseaseDataBase.getDiseasesByPage(this.keyword, firstPage);
   }
 
@@ -80,6 +86,11 @@ export class SicknessComponent implements OnInit {
 
   public trackByFn(index: number, tableHeader: ITableHeader) {
     return tableHeader.key;
+  }
+
+  private edit(disease: IDisease) {
+    console.log(disease);
+    this._dialog.open(EditDialogComponent)
   }
 }
 
@@ -98,9 +109,13 @@ export class DiseaseDataBase {
   }
 
   getDiseasesByPage(q: string, pageIndex: number) {
-    return this._sicknessService.getDiseasesByPage(q, pageIndex).subscribe(data => {
-      this.dataChange.next(data.Books);
-      this.total = (<any>data).Total;
+    return this._sicknessService.getDiseasesByPage(q, pageIndex).subscribe((data: any) => {
+      const { model, error, errorCode } = data;
+      const diseases: IDisease[] = model.t;
+      const total: number = model.count;
+
+      this.dataChange.next(diseases);
+      this.total = total;
     });
   }
 }
@@ -112,7 +127,6 @@ export class DiseaseDataSource extends DataSource<any>{
   ) {
     super();
   }
-
 
   connect(): Observable<any> {
     return this._diseaseDataBase.dataChange.asObservable().map(() => {
