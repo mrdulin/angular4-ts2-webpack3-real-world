@@ -11,7 +11,7 @@ const GLOBAL_ERROR: Map<string, string> = new Map<string, string>([
 @Injectable()
 export class HttpInterceptorService extends Http {
   dialogRef: MdDialogRef<TipDialogComponent>;
-  alert: boolean;
+
   constructor(
     backend: ConnectionBackend,
     defaultOptions: RequestOptions,
@@ -64,17 +64,12 @@ export class HttpInterceptorService extends Http {
             msg: GLOBAL_ERROR.get(err.errorCode.toString())
           }
         });
-        // if (!this.alert) {
-        //   this.alert = true;
-        //   alert(GLOBAL_ERROR.get(err.errorCode.toString()));
-        // }
       } else if (err.status < 200 || err.status >= 300) {
         //TODO: http status error
       }
 
       return Observable.throw(err);
     }).finally(() => {
-      this.alert = false;
       this.dialogRef && this.dialogRef.close();
     })
   }
