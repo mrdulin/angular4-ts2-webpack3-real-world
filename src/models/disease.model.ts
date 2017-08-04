@@ -1,4 +1,4 @@
-export interface IDisease {
+export interface IDisease extends IDiseaseMainInfo {
   aliasName: string | null;
   configInfo: string | null;
   extraCode: string | null;
@@ -7,10 +7,21 @@ export interface IDisease {
   parentName: string | null;
   relatedTags: string[];
   standardCode: string;
-  tagId: number;
   tagLevel: number;
-  tagName: string;
   tagType: string;
+}
+
+export interface IDiseaseMainInfo {
+  tagId: string;
+  tagName: string;
+}
+
+export interface IDiseaseConfig{
+  description: string;
+  inspection: string;
+  preventive: string;
+  symptom: string;
+  treatment: string;
 }
 
 export class Disease {

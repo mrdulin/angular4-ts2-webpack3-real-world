@@ -32,6 +32,6 @@
     <md-header-row *cdkHeaderRowDef="displayedColumns"></md-header-row>
     <md-row *cdkRowDef="let row; columns: displayedColumns;"></md-row>
   </md-table>
-  <md-paginator (page)='onPageChange($event)' [length]="diseaseDataBase.total" [pageIndex]="0" [pageSize]="10" [pageSizeOptions]="pageSizeOptions">
+  <md-paginator (page)='onPageChange($event)' [length]="diseaseDataBase.total" [pageIndex]="pageIndex" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions">
   </md-paginator>
 </md-card>

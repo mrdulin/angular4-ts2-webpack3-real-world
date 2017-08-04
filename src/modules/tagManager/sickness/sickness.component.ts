@@ -43,7 +43,7 @@ export class SicknessComponent implements OnInit {
     { key: 'operator', name: '操作', cell: (row: IDisease) => `` }
   ];
   public selectedQueryType: IQueryType;
-  public keyword: string;
+  public keyword: string = '';
   public displayedColumns: string[] = [];
   public pageSize: number;
   public pageIndex: number;
@@ -71,10 +71,10 @@ export class SicknessComponent implements OnInit {
   }
 
   public onSubmit(): void {
-    console.log(this.selectedQueryType, this.keyword);
+    this.keyword = this.keyword.trim();
+    if(!this.keyword) return;
     const firstPage: number = this.pageIndex + 1;
     this.paginator.pageIndex = 0;
-    console.log(this.paginator)
     this.diseaseDataBase.getDiseasesByPage(this.keyword, firstPage);
   }
 
@@ -110,7 +110,7 @@ export class SicknessComponent implements OnInit {
     // TODO: http://umr.test.pajkdc.com/innerApi/tag/disease/config?tagId=1001000
     // 打开配置设置模态框, 先调service请求该疾病的配置，请求成功后打开模态框，请求失败，全局模态框错误提示。
 
-    this._diseaseConfigService.getConfigByTagId(disease.tagId).subscribe((config: any) => {
+    this._diseaseConfigService.getByTagId(disease.tagId).subscribe((config: any) => {
       const dialogRef: MdDialogRef<ConfigDialogComponent> = this._dialog.open(ConfigDialogComponent, {
         data: {
           disease,
@@ -133,9 +133,9 @@ export class DiseaseDataBase {
   }
 
   total: number;
-  dataChange: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
+  dataChange: BehaviorSubject<IDisease[]> = new BehaviorSubject<IDisease[]>([]);
 
-  getData(): any[] {
+  getData(): IDisease[] {
     return this.dataChange.value;
   }
 
@@ -144,7 +144,6 @@ export class DiseaseDataBase {
       const { model, error, errorCode } = data;
       const diseases: IDisease[] = model.t;
       const total: number = model.count;
-
       this.dataChange.next(diseases);
       this.total = total;
     });
@@ -160,12 +159,19 @@ export class DiseaseDataSource extends DataSource<any>{
   }
 
   connect(): Observable<any> {
-    return this._diseaseDataBase.dataChange.asObservable().map(() => {
-      const diseases = this._diseaseDataBase.getData() || [];
-      // const startIndex: number = this._paginator.pageIndex * this._paginator.pageSize;
-      // return books.splice(startIndex, this._paginator.pageSize);
-      return diseases;
+    const displayDataChanges = [
+      this._diseaseDataBase.dataChange,
+      this._paginator.page
+    ];
+
+    return Observable.merge(...displayDataChanges).map(() => {
+      const diseases: IDisease[] = this._diseaseDataBase.getData().slice();
+      const { pageIndex, pageSize } = this._paginator;
+
+      const startIndex: number = pageIndex * pageSize;
+      return diseases.splice(startIndex, pageSize);
     });
+
   }
 
   disconnect() {
