@@ -55,11 +55,10 @@ export class HttpInterceptorService extends Http {
     }).catch((err, source) => {
       console.log(err);
       if (err.gwError) {
-        //TODO: 网关错误
+        //TODO: gateway error
       } else if (err.hasError) {
-        //TODO: api接口错误
+        //TODO: api error
 
-        //TODO: 通用模态框没有正确显示传过去的文案信息
         // this.dialogRef = this.dialog.open(DialogComponent, {
         //   data: {
         //     msg: GLOBAL_ERROR.get(err.errorCode.toString())
@@ -70,7 +69,7 @@ export class HttpInterceptorService extends Http {
           alert(GLOBAL_ERROR.get(err.errorCode.toString()));
         }
       } else if (err.status < 200 || err.status >= 300) {
-        //TODO: http状态码错误
+        //TODO: http status error
       }
 
       return Observable.throw(err);

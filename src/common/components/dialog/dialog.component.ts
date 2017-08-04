@@ -7,6 +7,7 @@ import { MdDialogRef, MD_DIALOG_DATA } from '@angular/material';
 })
 export class DialogComponent implements OnInit {
   msg: string;
+  title: string;
 
   constructor(
     public dialogRef: MdDialogRef<DialogComponent>,
