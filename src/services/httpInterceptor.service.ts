@@ -11,7 +11,7 @@ const GLOBAL_ERROR: Map<string, string> = new Map<string, string>([
 @Injectable()
 export class HttpInterceptorService extends Http {
   dialogRef: MdDialogRef<DialogComponent>;
-
+  alert: boolean;
   constructor(
     backend: ConnectionBackend,
     defaultOptions: RequestOptions,
@@ -31,12 +31,8 @@ export class HttpInterceptorService extends Http {
     return this.intercept(super.post(url, body, this.getRequestOptionArgs(options)));
   }
 
-  put(url: string, body: any, options?: RequestOptionsArgs): Observable<Response> {
-    return this.intercept(super.put(url, body, this.getRequestOptionArgs(options)));
-  }
-
-  delete(url: string, options?: RequestOptionsArgs): Observable<Response> {
-    return this.intercept(super.put(url, this.getRequestOptionArgs(options)));
+  options(url: string, options?: RequestOptionsArgs): Observable<Response> {
+    return this.intercept(super.options(url, this.getRequestOptionArgs(options)));
   }
 
   getRequestOptionArgs(options?: RequestOptionsArgs): RequestOptionsArgs {
@@ -48,8 +44,8 @@ export class HttpInterceptorService extends Http {
   }
 
   intercept(observable: Observable<Response>): Observable<Response> {
-    console.log('intercept')
     return observable.map((res: any) => {
+      console.log(res);
       const data = res.json();
       if (data.hasError) {
         throw data;
@@ -57,24 +53,29 @@ export class HttpInterceptorService extends Http {
         return res;
       }
     }).catch((err, source) => {
-      if(err.gwError) {
+      console.log(err);
+      if (err.gwError) {
         //TODO: 网关错误
       } else if (err.hasError) {
         //TODO: api接口错误
 
         //TODO: 通用模态框没有正确显示传过去的文案信息
-        // this.dialogRef && this.dialogRef.close();
         // this.dialogRef = this.dialog.open(DialogComponent, {
         //   data: {
         //     msg: GLOBAL_ERROR.get(err.errorCode.toString())
         //   }
         // });
-        alert(GLOBAL_ERROR.get(err.errorCode.toString()));
+        if (!this.alert) {
+          this.alert = true;
+          alert(GLOBAL_ERROR.get(err.errorCode.toString()));
+        }
       } else if (err.status < 200 || err.status >= 300) {
         //TODO: http状态码错误
       }
 
       return Observable.throw(err);
-    });
+    }).finally(() => {
+      this.alert = false;
+    })
   }
 }
