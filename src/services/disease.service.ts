@@ -1,5 +1,7 @@
-import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { Injectable, Inject } from '@angular/core';
+import { Http, Response, RequestOptions, URLSearchParams } from '@angular/http';
+import { APP_CONFIG, IAppConfig } from '../modules/app/app.config';
+import { HttpInterceptorService } from './httpInterceptor.service';
 
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
@@ -11,14 +13,31 @@ import * as diseases from './diseases.json';
 export class DiseaseService {
 
   constructor(
-    private _http: Http
+    @Inject(APP_CONFIG) private appConfig: IAppConfig,
+    private _http: HttpInterceptorService
   ) { }
 
-  getDiseasesByPage(q: string, page: number) {
-    return Observable.of(diseases);
-  }
+  getDiseasesByPage(name: string = '测试', page: number, pageSize: number = 10): Observable<any> {
+    const params: URLSearchParams = new URLSearchParams();
+    const requestOptions: RequestOptions = new RequestOptions();
 
-  handleError(e: any): any {
-    console.log(e);
+    params.set('tagName', name);
+    params.set('pageNo', page.toString());
+    params.set('pageSize', pageSize.toString());
+
+    requestOptions.params = params;
+
+    const url: string = `${this.appConfig.api}/tag/disease/pageQuery`;
+
+    // if (this.appConfig.mockApi) {
+    //   return Observable.of(diseases);
+    // }
+
+    return this._http.get(url, requestOptions)
+      .map((res: Response) => res.json())
+      .catch((err: any) => {
+        return Observable.throw(err);
+      })
+
   }
 }
