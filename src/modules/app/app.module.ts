@@ -14,7 +14,7 @@ import { AppComponent } from './app.component';
 import { SidebarComponent } from './sidebar';
 import { ContentComponent } from './content';
 import { BreadcrumbComponent } from 'common/components/breadcrumb';
-import { DialogComponent } from 'common/components/dialog';
+import { TipDialogComponent } from 'common/components/dialog';
 
 import { StringService, NavigationService, PaginatorService } from 'common/services';
 import { DeptService, HttpInterceptorService } from 'root/src/services';
@@ -28,7 +28,7 @@ import './style.async.css';
     ContentComponent,
     SidebarComponent,
     BreadcrumbComponent,
-    DialogComponent
+    TipDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -40,7 +40,7 @@ import './style.async.css';
   ],
   bootstrap: [AppComponent],
   entryComponents: [
-    DialogComponent
+    TipDialogComponent
   ],
   providers: [
     { provide: APP_CONFIG, useValue: AppConfig },

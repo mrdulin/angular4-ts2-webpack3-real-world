@@ -43,7 +43,7 @@ export class SicknessComponent implements OnInit {
     { key: 'operator', name: '操作', cell: (row: IDisease) => `` }
   ];
   public selectedQueryType: IQueryType;
-  public keyword: string;
+  public keyword: string = '';
   public displayedColumns: string[] = [];
   public pageSize: number;
   public pageIndex: number;
@@ -71,10 +71,10 @@ export class SicknessComponent implements OnInit {
   }
 
   public onSubmit(): void {
-    console.log(this.selectedQueryType, this.keyword);
+    this.keyword = this.keyword.trim();
+    if(!this.keyword) return;
     const firstPage: number = this.pageIndex + 1;
     this.paginator.pageIndex = 0;
-    console.log(this.paginator)
     this.diseaseDataBase.getDiseasesByPage(this.keyword, firstPage);
   }
 

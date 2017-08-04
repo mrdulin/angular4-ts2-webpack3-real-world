@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Request, Response, RequestOptionsArgs, ConnectionBackend, RequestOptions, Http } from '@angular/http';
 import { Observable } from 'rxjs';
 import { MdDialog, MdDialogRef } from '@angular/material';
-import { DialogComponent } from 'common/components/dialog';
+import { TipDialogComponent } from 'common/components/dialog';
 
 const GLOBAL_ERROR: Map<string, string> = new Map<string, string>([
   ['-103', '无效的登录状态']
@@ -10,7 +10,7 @@ const GLOBAL_ERROR: Map<string, string> = new Map<string, string>([
 
 @Injectable()
 export class HttpInterceptorService extends Http {
-  dialogRef: MdDialogRef<DialogComponent>;
+  dialogRef: MdDialogRef<TipDialogComponent>;
   alert: boolean;
   constructor(
     backend: ConnectionBackend,
@@ -59,15 +59,15 @@ export class HttpInterceptorService extends Http {
       } else if (err.hasError) {
         //TODO: api error
 
-        // this.dialogRef = this.dialog.open(DialogComponent, {
-        //   data: {
-        //     msg: GLOBAL_ERROR.get(err.errorCode.toString())
-        //   }
-        // });
-        if (!this.alert) {
-          this.alert = true;
-          alert(GLOBAL_ERROR.get(err.errorCode.toString()));
-        }
+        this.dialogRef = this.dialog.open(TipDialogComponent, {
+          data: {
+            msg: GLOBAL_ERROR.get(err.errorCode.toString())
+          }
+        });
+        // if (!this.alert) {
+        //   this.alert = true;
+        //   alert(GLOBAL_ERROR.get(err.errorCode.toString()));
+        // }
       } else if (err.status < 200 || err.status >= 300) {
         //TODO: http status error
       }

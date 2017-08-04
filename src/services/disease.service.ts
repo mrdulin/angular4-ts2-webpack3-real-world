@@ -3,9 +3,6 @@ import { Http, Response, RequestOptions, URLSearchParams } from '@angular/http';
 import { APP_CONFIG, IAppConfig } from '../modules/app/app.config';
 import { HttpInterceptorService } from './httpInterceptor.service';
 
-import { MdDialog, MdDialogRef } from '@angular/material';
-import { DialogComponent } from 'common/components/dialog';
-
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { Observable } from 'rxjs';
@@ -17,8 +14,7 @@ export class DiseaseService {
 
   constructor(
     @Inject(APP_CONFIG) private appConfig: IAppConfig,
-    private _http: HttpInterceptorService,
-    private _dialog: MdDialog
+    private _http: HttpInterceptorService
   ) { }
 
   getDiseasesByPage(name: string = '测试', page: number, pageSize: number = 10): Observable<any> {
@@ -33,9 +29,9 @@ export class DiseaseService {
 
     const url: string = `${this.appConfig.api}/tag/disease/pageQuery`;
 
-    if (this.appConfig.mockApi) {
-      return Observable.of(diseases);
-    }
+    // if (this.appConfig.mockApi) {
+    //   return Observable.of(diseases);
+    // }
 
     return this._http.get(url, requestOptions)
       .map((res: Response) => res.json())
