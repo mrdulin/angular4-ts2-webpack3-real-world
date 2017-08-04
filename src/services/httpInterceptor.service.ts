@@ -76,6 +76,7 @@ export class HttpInterceptorService extends Http {
       return Observable.throw(err);
     }).finally(() => {
       this.alert = false;
+      this.dialogRef && this.dialogRef.close();
     })
   }
 }
