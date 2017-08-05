@@ -4,8 +4,9 @@ import { DataSource } from '@angular/cdk';
 
 import { DeptService } from 'root/src/services';
 import { PaginatorService } from 'common/services';
+import { DeptDataSource } from './depart-data-source';
 
-import { TipDialogComponent } from 'common/components/dialog';
+import { DeptEditDialogComponent } from './deptEditDialog';
 
 @Component({
   selector: 'department',
@@ -16,6 +17,8 @@ export class DepartmentComponent implements OnInit {
   pageSize: number;
   pageIndex: number;
   pageSizeOptions: number[];
+
+  dataSource: DeptDataSource | null;
 
   dept: string = '';
 
@@ -33,34 +36,44 @@ export class DepartmentComponent implements OnInit {
     private paginatorService: PaginatorService,
     private dialog: MdDialog
   ) {
-
     this.pageIndex = this.paginatorService.pageIndex;
     this.pageSize = this.paginatorService.pageSize;
     this.pageSizeOptions = this.paginatorService.pageSizeOptions;
-
   }
 
   ngOnInit() {
     this.displayedColumns = this.tableHeaders.map((header) => header.key);
-
+    this.dataSource = new DeptDataSource(this.deptService);
   }
 
   onSumbit() {
     this.dept = this.dept.trim();
     if (!this.dept) return;
-    console.log(this.dept);
+    const firstPage = 1;
+
+    this.deptService.getDeptsByPage(this.dept, firstPage);
   }
 
-  edit() {
-    this.dialog.open(TipDialogComponent, {
-      data: {
-        msg: 123123123123
-      }
+  edit(dept: any) {
+    this.dialog.open(DeptEditDialogComponent, {
+      data: dept
     });
+  }
+
+  setProperties(dept: any) {
+
   }
 
   onPageChange() {
 
   }
 
+  useTrackBy(index: number, item: any) {
+    // console.log('useTrackBy', item);
+    return item.tagId;
+  }
+
 }
+
+
+

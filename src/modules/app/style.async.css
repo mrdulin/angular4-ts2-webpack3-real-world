@@ -9,3 +9,16 @@ body{
 .full-width{
   width: 100%;
 }
+
+.table-cell{
+  font-size: 12px;
+}
+
+.operator-button-list > a{
+  cursor: pointer;
+  color: #3f51b5;
+}
+
+.form-control-row{
+  padding-bottom: 1.29688em;
+}

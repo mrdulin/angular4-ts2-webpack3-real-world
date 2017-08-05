@@ -20,6 +20,7 @@ export class DiseaseService {
   getDiseasesByPage(name: string = '测试', page: number, pageSize: number = 10): Observable<any> {
     const params: URLSearchParams = new URLSearchParams();
     const requestOptions: RequestOptions = new RequestOptions();
+    const url: string = `${this.appConfig.api}/tag/disease/pageQuery`;
 
     params.set('tagName', name);
     params.set('pageNo', page.toString());
@@ -27,11 +28,9 @@ export class DiseaseService {
 
     requestOptions.params = params;
 
-    const url: string = `${this.appConfig.api}/tag/disease/pageQuery`;
-
-    // if (this.appConfig.mockApi) {
-    //   return Observable.of(diseases);
-    // }
+    if (this.appConfig.mockApi) {
+      return Observable.of(diseases);
+    }
 
     return this._http.get(url, requestOptions)
       .map((res: Response) => res.json())

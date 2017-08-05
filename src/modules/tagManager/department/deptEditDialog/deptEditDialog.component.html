@@ -1,0 +1,30 @@
+<h2 md-dialog-title>编辑</h2>
+<md-dialog-content>
+  <form novalidate>
+
+    <md-input-container class='full-width' type='text'>
+      <input mdInput disabled placeholder="科室ID" name="tagId" [value]="dept.tagId">
+    </md-input-container>
+
+    <div class='form-control-row'>
+      <button md-raised-button>上传图片</button>
+    </div>
+
+    <md-input-container class='full-width' type='text'>
+      <input mdInput name="tagName" placeholder="科室名称" [value]="dept.tagName" required>
+    </md-input-container>
+
+    <md-input-container class='full-width' type='text'>
+      <input mdInput disabled name="tagLevel" placeholder="科室级别" [value]="dept.tagLevel">
+    </md-input-container>
+
+    <md-input-container class='full-width' type='text'>
+      <input mdInput disabled name="parentName" placeholder="所属科室" [value]="dept.parentName">
+    </md-input-container>
+
+  </form>
+</md-dialog-content>
+<md-dialog-actions>
+  <button md-raised-button md-dialog-close>取消</button>
+  <button md-raised-button (click)='onSubmit()'>确定</button>
+</md-dialog-actions>
