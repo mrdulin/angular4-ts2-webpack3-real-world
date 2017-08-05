@@ -1,0 +1,23 @@
+<h2 md-dialog-title>新增科室</h2>
+<md-dialog-content>
+  <form novalidate>
+    <md-input-container class='full-width'>
+      <input mdInput type="text" name="tagName" placeholder="科室名称" [(ngModel)]='tagName' required>
+    </md-input-container>
+
+    <div class='row'>
+      <button md-raised-button>上传</button>
+    </div>
+
+    <div>
+      <md-select class='full-width' placeholder='科室级别' name='deptLevel' [(ngModel)]='selectedTagLevel' required>
+        <md-option *ngFor='let deptLevel of deptLevels' [value]='deptLevel'>{{deptLevel + '级'}}</md-option>
+      </md-select>
+    </div>
+
+  </form>
+</md-dialog-content>
+<md-dialog-actions>
+  <button md-button md-dialog-close>取消</button>
+  <button md-button (click)='onSubmit()'>确定</button>
+</md-dialog-actions>

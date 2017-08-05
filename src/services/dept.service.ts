@@ -2,9 +2,11 @@ import { Injectable, Inject } from '@angular/core';
 import { Http, Response } from '@angular/http';
 
 import { APP_CONFIG, IAppConfig } from '../modules/app/app.config';
+import { HttpInterceptorService } from './httpInterceptor.service';
+
 import * as data from './deptsLevel1.json';
 import * as getDeptsByPageResponse from './depts.json';
-import { HttpInterceptorService } from './httpInterceptor.service';
+import * as addDeptSuccessResponse from './addDeptSuccess.json';
 
 import { Observable } from 'rxjs';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -56,5 +58,18 @@ export class DeptService {
 
   getDeptsData(): any[] {
     return this.dataChange.value;
+  }
+
+  addDept(dept: any) {
+    const url: string = `${this.appConfig.api}/tag/dept/save`;
+    if(this.appConfig.mockApi) {
+      return Observable.of(addDeptSuccessResponse);
+    }
+    return this.http.post(url, dept)
+      .map((res: Response) => res.json())
+      .catch((err: any) => {
+        console.error(err);
+        return Observable.throw(err);
+      });
   }
 }

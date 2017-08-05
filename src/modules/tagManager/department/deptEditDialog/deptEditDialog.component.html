@@ -6,7 +6,7 @@
       <input mdInput disabled placeholder="科室ID" name="tagId" [value]="dept.tagId">
     </md-input-container>
 
-    <div class='form-control-row'>
+    <div class='row'>
       <button md-raised-button>上传图片</button>
     </div>
 
@@ -25,6 +25,6 @@
   </form>
 </md-dialog-content>
 <md-dialog-actions>
-  <button md-raised-button md-dialog-close>取消</button>
-  <button md-raised-button (click)='onSubmit()'>确定</button>
+  <button md-button md-dialog-close>取消</button>
+  <button md-button (click)='onSubmit()'>确定</button>
 </md-dialog-actions>

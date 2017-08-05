@@ -8,7 +8,7 @@ import { TagManagerRoutingModule } from './tm-routing.module';
 import { TagManagerMaterialModule } from './tagManager-material.module';
 
 import { SicknessComponent, EditDialogComponent, ConfigDialogComponent } from './sickness';
-import { DepartmentComponent, DeptEditDialogComponent } from './department';
+import { DepartmentComponent, DeptEditDialogComponent, AddDeptDialogComponent } from './department';
 import { AttributeComponent } from './attribute';
 
 import { DiseaseService, DiseaseConfigService } from 'root/src/services';
@@ -20,7 +20,8 @@ import { DiseaseService, DiseaseConfigService } from 'root/src/services';
     AttributeComponent,
     EditDialogComponent,
     ConfigDialogComponent,
-    DeptEditDialogComponent
+    DeptEditDialogComponent,
+    AddDeptDialogComponent
   ],
   imports: [
     TagManagerRoutingModule,
@@ -32,7 +33,8 @@ import { DiseaseService, DiseaseConfigService } from 'root/src/services';
   entryComponents: [
     EditDialogComponent,
     ConfigDialogComponent,
-    DeptEditDialogComponent
+    DeptEditDialogComponent,
+    AddDeptDialogComponent
   ],
   providers: [DiseaseService, DiseaseConfigService]
 

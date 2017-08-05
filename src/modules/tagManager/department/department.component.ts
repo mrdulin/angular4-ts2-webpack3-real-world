@@ -7,6 +7,7 @@ import { PaginatorService } from 'common/services';
 import { DeptDataSource } from './depart-data-source';
 
 import { DeptEditDialogComponent } from './deptEditDialog';
+import { AddDeptDialogComponent } from './addDeptDialog';
 
 @Component({
   selector: 'department',
@@ -49,7 +50,7 @@ export class DepartmentComponent implements OnInit {
   onSumbit() {
     this.dept = this.dept.trim();
     if (!this.dept) return;
-    const firstPage = 1;
+    const firstPage: number = 1;
 
     this.deptService.getDeptsByPage(this.dept, firstPage);
   }
@@ -62,6 +63,13 @@ export class DepartmentComponent implements OnInit {
 
   setProperties(dept: any) {
 
+  }
+
+  addDept() {
+    const dialogRef: MdDialogRef<AddDeptDialogComponent> = this.dialog.open(AddDeptDialogComponent);
+    dialogRef.afterClosed().subscribe((dept: any) => {
+      console.log(dept);
+    });
   }
 
   onPageChange() {

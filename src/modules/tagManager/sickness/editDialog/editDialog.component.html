@@ -5,7 +5,7 @@
       <input mdInput disabled placeholder="疾病ID" name="tagId" [value]="disease.tagId">
     </md-input-container>
 
-    <div class='form-control-row'>
+    <div class='row'>
       <button md-raised-button>上传图片</button>
     </div>
 
@@ -51,13 +51,13 @@
       </md-select>
     </div>
 
-    <div class='form-control-row'>
+    <div class='row'>
       <button md-raised-button (click)='associate()'>关联</button>
     </div>
 
   </form>
 </md-dialog-content>
 <md-dialog-actions>
-  <button md-raised-button md-dialog-close>取消</button>
-  <button md-raised-button [md-dialog-close]='true'>确定</button>
+  <button md-button md-dialog-close>取消</button>
+  <button md-button [md-dialog-close]='true'>确定</button>
 </md-dialog-actions>
