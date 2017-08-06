@@ -8,11 +8,11 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: '/go-to-hospital',
+        redirectTo: 'home-page',
         pathMatch: 'full'
       },
       {
-        path: '',
+        path: 'home-page',
         component: HomePageComponent
       }
     ]
