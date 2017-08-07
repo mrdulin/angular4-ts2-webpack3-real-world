@@ -6,8 +6,17 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./upload.component.css']
 })
 export class uploadComponent{
+  imgUrl: string
   @Input() beforeUpload: Function
+  @Input() disabled: boolean
+  @Input() src?: string
   @Input() text?: string
+
+  getImgUrl(src: string): any {
+    console.log(this.src)
+    const imgSrc = this.src ? `http://static.test.pajkdc.com/v1/tfs//${this.src}` : ''
+    return imgSrc
+  }
 
   handleClick($inputEl: any): void {
     $inputEl.click()

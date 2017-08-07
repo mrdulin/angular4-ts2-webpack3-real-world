@@ -5,38 +5,38 @@
   </header>
 
   <section class="container">
-    <md-card class="item-card" *ngFor="let i of [{},{}, {}, {}]">
+    <md-card class="item-card" *ngFor="let v of entranceData">
       <md-card-content>
         <md-input-container class="inline-item">
-          <input mdInput placeholder="排序" value="">
+          <input mdInput placeholder="排序" disabled value={{v.sortFactor}}>
         </md-input-container>
 
         <md-input-container class="inline-item">
-          <input mdInput placeholder="名称" value="">
+          <input mdInput placeholder="名称" disabled value={{v.name}}>
         </md-input-container>
 
         <md-input-container class="inline-item">
-          <input mdInput placeholder="URL" value="">
+          <input mdInput placeholder="URL" disabled value={{v.linkUrl}}>
         </md-input-container>
 
         <section class="inline-item">
-          <upload [text]="'上传图标'" [beforeUpload]="handleIconBeforeUpload"></upload>
+          <upload [text]="'图标'" disabled src={{v.icon}} [beforeUpload]="handleIconBeforeUpload"></upload>
         </section>
 
         <section class="inline-item">
-          <upload [text]="'上传封面'" [beforeUpload]="handleBannerBeforeUpload"></upload>
+          <upload [text]="'封面'" disabled src={{v.poster}} [beforeUpload]="handleBannerBeforeUpload"></upload>
         </section>
 
         <section class="inline-item">
           <label>渠道：</label>
-          <md-checkbox value="1">寿险</md-checkbox>
-          <md-checkbox value="2">平安好医生</md-checkbox>
-          <md-checkbox value="3">主客</md-checkbox>
-          <md-checkbox value="4">H</md-checkbox>
+          <md-checkbox value="1" disabled>寿险</md-checkbox>
+          <md-checkbox value="2" disabled>平安好医生</md-checkbox>
+          <md-checkbox value="3" disabled>主客</md-checkbox>
+          <md-checkbox value="4" disabled>H</md-checkbox>
         </section>
       </md-card-content>
       <md-card-actions>
-        <button md-button class="primary">编辑</button>
+        <button md-button class="primary" (click)="toggleShow()">编辑</button>
         <button md-button class="warnning">删除</button>
       </md-card-actions>
     </md-card>

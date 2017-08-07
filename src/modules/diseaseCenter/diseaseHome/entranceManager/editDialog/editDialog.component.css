@@ -1,0 +1,28 @@
+.mat-dialog-actions{
+  display: block;
+  text-align: center;
+}
+
+.mat-dialog-actions .mat-button{
+  margin-left: 20px;
+}
+
+.mat-dialog-actions .mat-button.primary{
+  background-color: #108ee9;
+  border-color: #108ee9;
+  color: #fff;
+}
+
+.mat-dialog-actions .mat-button.warnning{
+  background-color: rgb(240, 65, 52);
+  border-color: rgb(240, 65, 52);
+  color: #fff;
+}
+
+.mat-dialog-content .inline-item{
+  display: block;
+}
+
+.mat-dialog-content .inline-item .mat-checkbox{
+  margin-right: 10px;
+}
