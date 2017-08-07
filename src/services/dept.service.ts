@@ -69,11 +69,13 @@ export class DeptService {
       if ((<any>addDeptSuccessResponse).success) {
         dept.tagId = (<any>addDeptSuccessResponse).model;
         const depts: any[] = this.getDeptsData();
-        this.count += 1;
-        const newDepts = [dept, ...depts];
-        this.dataChange.next(newDepts);
-        return Observable.of(addDeptSuccessResponse);
+        if (depts.length > 0) {
+          this.count += 1;
+          const newDepts = [dept, ...depts];
+          this.dataChange.next(newDepts);
+        }
       }
+      return Observable.of(addDeptSuccessResponse);
     }
     return this.http.post(url, dept)
       .map((res: Response) => res.json())
