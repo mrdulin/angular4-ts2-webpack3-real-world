@@ -17,6 +17,7 @@ export class DeptService {
   deptsLevel1: any[] = [];
 
   dataChange: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
+  count: number;
 
   constructor(
     @Inject(APP_CONFIG) private appConfig: IAppConfig,
@@ -42,7 +43,9 @@ export class DeptService {
     const url: string = `${this.appConfig.api}/tag/dept/pageQuery?tagName=${name}&pageNo=${page}&pageSize=${pageSize}`;
     if (this.appConfig.mockApi) {
       setTimeout(() => {
-        this.dataChange.next((<any>getDeptsByPageResponse).model);
+        const { model: { count, t } } = <any>getDeptsByPageResponse;
+        this.count = count;
+        this.dataChange.next(t);
       }, 1000);
     }
     this.http.get(url)
@@ -62,8 +65,15 @@ export class DeptService {
 
   addDept(dept: any) {
     const url: string = `${this.appConfig.api}/tag/dept/save`;
-    if(this.appConfig.mockApi) {
-      return Observable.of(addDeptSuccessResponse);
+    if (this.appConfig.mockApi) {
+      if ((<any>addDeptSuccessResponse).success) {
+        dept.tagId = (<any>addDeptSuccessResponse).model;
+        const depts: any[] = this.getDeptsData();
+        this.count += 1;
+        const newDepts = [dept, ...depts];
+        this.dataChange.next(newDepts);
+        return Observable.of(addDeptSuccessResponse);
+      }
     }
     return this.http.post(url, dept)
       .map((res: Response) => res.json())

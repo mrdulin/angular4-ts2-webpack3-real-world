@@ -23,6 +23,8 @@ export class DepartmentComponent implements OnInit {
 
   dept: string = '';
 
+  @ViewChild(MdPaginator) paginator: MdPaginator;
+
   tableHeaders: any[] = [
     { key: 'tagName', name: '科室名称', cell: (row: any) => `${row.tagId}` },
     { key: 'tagId', name: '疾病名称', cell: (row: any) => `${row.tagName}` },
@@ -44,7 +46,7 @@ export class DepartmentComponent implements OnInit {
 
   ngOnInit() {
     this.displayedColumns = this.tableHeaders.map((header) => header.key);
-    this.dataSource = new DeptDataSource(this.deptService);
+    this.dataSource = new DeptDataSource(this.deptService, this.paginator);
   }
 
   onSumbit() {
