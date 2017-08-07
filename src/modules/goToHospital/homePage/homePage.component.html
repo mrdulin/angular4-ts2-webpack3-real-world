@@ -1,1 +1,33 @@
-<div>hellow world!</div>
+<form class="home-page">
+
+  <md-input-container class="operating-title">
+    <input mdInput placeholder="运营位标题" disabled value={{title}}>
+  </md-input-container>
+
+  <button md-raised-button type="submit">编辑</button>
+
+  <table cellspacing="0">
+    <tr>
+      <td>
+        <md-input-container class="example-full-width">
+          <input mdInput placeholder="First name">
+        </md-input-container>
+      </td>
+      <td>
+        <md-input-container class="example-full-width">
+          <input mdInput placeholder="Long Last Name That Will Be Truncated">
+        </md-input-container>
+      </td>
+    </tr>
+  </table>
+
+  <p>
+    <md-input-container class="example-full-width">
+      <textarea mdInput placeholder="Address">1600 Amphitheatre Pkwy</textarea>
+    </md-input-container>
+    <md-input-container class="example-full-width">
+      <textarea mdInput placeholder="Address 2"></textarea>
+    </md-input-container>
+  </p>
+
+</form>

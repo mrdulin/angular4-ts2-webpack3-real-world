@@ -4,6 +4,7 @@ import { SidebarComponent } from './sidebar';
 import { ContentComponent } from './content';
 
 import { TagManagerModule } from '../tagManager';
+import { GoToHospitalModule } from '../goToHospital';
 import { RouterService } from 'common/services';
 
 const routes: Routes = [
@@ -21,6 +22,10 @@ const routes: Routes = [
         path: '',
         loadChildren: () => TagManagerModule
       },
+      {
+        path: '',
+        loadChildren: () => GoToHospitalModule
+      },
       // --
 
       // -- 异步加载的特性模块 --
@@ -31,10 +36,6 @@ const routes: Routes = [
       {
         path: '',
         loadChildren: '../doctorCenter/doctorCenter.module.ts#DoctorCenterModule'
-      },
-      {
-        path: '',
-        loadChildren: '../goToHospital/goToHospital.module.ts#GoToHospitalModule'
       }
       // --
     ]
