@@ -84,6 +84,3 @@ export class DepartmentComponent implements OnInit {
   }
 
 }
-
-
-

@@ -1,0 +1,134 @@
+{
+  "success": true,
+  "errorCode": 0,
+  "error": null,
+  "model": {
+    "count": 7,
+    "pageSize": 10,
+    "pageNo": 1,
+    "pageTotal": 1,
+    "t": [
+      {
+        "propertyId": 10146,
+        "propertyName": "测试多选",
+        "parentId": null,
+        "parentName": null,
+        "choice": "2",
+        "propertyValues": [
+          {
+            "propertyId": 10146,
+            "propertyValue": "但是舒服",
+            "propertyValueId": 501,
+            "checked": null
+          },
+          {
+            "propertyId": 10146,
+            "propertyValue": "多选三",
+            "propertyValueId": 500,
+            "checked": null
+          },
+          {
+            "propertyId": 10146,
+            "propertyValue": "多选二",
+            "propertyValueId": 502,
+            "checked": null
+          },
+          {
+            "propertyId": 10146,
+            "propertyValue": "的撒的",
+            "propertyValueId": 503,
+            "checked": null
+          }
+        ]
+      },
+      {
+        "propertyId": 10126,
+        "propertyName": "属性项测试1",
+        "parentId": null,
+        "parentName": null,
+        "choice": "2",
+        "propertyValues": [
+          {
+            "propertyId": 10126,
+            "propertyValue": "属性值1",
+            "propertyValueId": 59,
+            "checked": null
+          }
+        ]
+      },
+      {
+        "propertyId": 10101,
+        "propertyName": "测试属性项lwl",
+        "parentId": null,
+        "parentName": null,
+        "choice": "1",
+        "propertyValues": [
+          {
+            "propertyId": 10101,
+            "propertyValue": "值一",
+            "propertyValueId": 50,
+            "checked": null
+          },
+          {
+            "propertyId": 10101,
+            "propertyValue": "值三",
+            "propertyValueId": 48,
+            "checked": null
+          },
+          {
+            "propertyId": 10101,
+            "propertyValue": "值二",
+            "propertyValueId": 49,
+            "checked": null
+          }
+        ]
+      },
+      {
+        "propertyId": 10062,
+        "propertyName": "测试属性lwl",
+        "parentId": null,
+        "parentName": null,
+        "choice": "1",
+        "propertyValues": [
+          {
+            "propertyId": 10062,
+            "propertyValue": "BB",
+            "propertyValueId": 21,
+            "checked": null
+          }
+        ]
+      },
+      {
+        "propertyId": 20020,
+        "propertyName": "搜索测试孙属性项",
+        "parentId": 20010,
+        "parentName": "搜索测试子属性项",
+        "choice": "2",
+        "propertyValues": [
+          {
+            "propertyId": 20020,
+            "propertyValue": "的说法",
+            "propertyValueId": 504,
+            "checked": null
+          }
+        ]
+      },
+      {
+        "propertyId": 20010,
+        "propertyName": "搜索测试子属性项",
+        "parentId": 20000,
+        "parentName": "搜索测试属性项",
+        "choice": "1",
+        "propertyValues": null
+      },
+      {
+        "propertyId": 20000,
+        "propertyName": "搜索测试属性项",
+        "parentId": null,
+        "parentName": null,
+        "choice": "2",
+        "propertyValues": null
+      }
+    ]
+  }
+}

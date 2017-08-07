@@ -1,1 +1,38 @@
-<p>this is AttributeComponent</p>
+<form novalidate (ngSubmit)='onSubmit()'>
+  <md-select name='propertyOption' placeholder='查询类别' [(ngModel)]='selectedOption'>
+    <md-option *ngFor='let option of propertyOptions' [value]='option'>
+      {{option.name}}
+    </md-option>
+  </md-select>
+
+  <md-input-container>
+    <input mdInput type="text" name="keyword" placeholder="类别关键字" [(ngModel)]='keyword' required />
+  </md-input-container>
+  <button md-raised-button type='submit'>查询</button>
+</form>
+
+<md-card>
+  <md-table [dataSource]='dataSource'>
+    <ng-container *ngFor='let tableHeader of tableHeaders; let last = last;' [cdkColumnDef]='tableHeader.key'>
+      <md-header-cell *cdkHeaderCellDef> {{tableHeader.name}} </md-header-cell>
+      <md-cell class='table-cell' *cdkCellDef="let row">
+        <span *ngIf='!last'>{{tableHeader.cell(row)}}</span>
+        <span *ngIf='last' class='operator-button-list'>
+          <a (click)='edit(row)'>编辑</a>
+          <a (click)='managePropertyValues(row)'>属性值管理</a>
+        </span>
+      </md-cell>
+    </ng-container>
+
+    <md-header-row *cdkHeaderRowDef="displayedColumns"></md-header-row>
+    <md-row *cdkRowDef="let row; columns: displayedColumns;"></md-row>
+  </md-table>
+
+  <p class='no-data-tip' [hidden]='this.dataSource.dataTotal'>暂无数据</p>
+
+  <div [hidden]='!this.dataSource.dataTotal'>
+    <md-paginator (page)='onPageChange($event)' [length]="this.dataSource.dataTotal" [pageIndex]="pageIndex" [pageSize]="pageSize"
+      [pageSizeOptions]="pageSizeOptions">
+    </md-paginator>
+  </div>
+</md-card>

@@ -3,6 +3,7 @@ import { MdPaginator, PageEvent, MdDialog, MdDialogRef } from '@angular/material
 import { DataSource } from '@angular/cdk';
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 
 import { DiseaseService, DiseaseConfigService } from 'root/src/services';
@@ -52,6 +53,8 @@ export class SicknessComponent implements OnInit {
   @ViewChild(MdPaginator)
   public paginator: MdPaginator;
 
+  formChange$: Subject<boolean> = new Subject<boolean>();
+
   constructor(
     private _diseaseService: DiseaseService,
     private _paginatorService: PaginatorService,
@@ -67,14 +70,14 @@ export class SicknessComponent implements OnInit {
     this.selectedQueryType = this.queryTypes[0];
     this.displayedColumns = this.tableHeaders.map((header: ITableHeader) => header.key);
     this.diseaseDataBase = new DiseaseDataBase(this._diseaseService);
-    this.dataSource = new DiseaseDataSource(this.diseaseDataBase, this.paginator);
+    this.dataSource = new DiseaseDataSource(this.diseaseDataBase, this.paginator, this.formChange$);
   }
 
   public onSubmit(): void {
     this.keyword = this.keyword.trim();
-    if(!this.keyword) return;
+    if (!this.keyword) return;
     const firstPage: number = this.pageIndex + 1;
-    this.paginator.pageIndex = 0;
+    this.formChange$.next(true);
     this.diseaseDataBase.getDiseasesByPage(this.keyword, firstPage);
   }
 
@@ -153,7 +156,8 @@ export class DiseaseDataBase {
 export class DiseaseDataSource extends DataSource<any>{
   constructor(
     private _diseaseDataBase: DiseaseDataBase,
-    private _paginator: MdPaginator
+    private _paginator: MdPaginator,
+    private _formChange$: Subject<boolean>
   ) {
     super();
   }
@@ -161,8 +165,13 @@ export class DiseaseDataSource extends DataSource<any>{
   connect(): Observable<any> {
     const displayDataChanges = [
       this._diseaseDataBase.dataChange,
-      this._paginator.page
+      this._paginator.page,
+      this._formChange$,
     ];
+
+    this._formChange$.subscribe(() => {
+       this._paginator.pageIndex = 0;
+    });
 
     return Observable.merge(...displayDataChanges).map(() => {
       const diseases: IDisease[] = this._diseaseDataBase.getData().slice();

@@ -9,9 +9,10 @@ import { TagManagerMaterialModule } from './tagManager-material.module';
 
 import { SicknessComponent, EditDialogComponent, ConfigDialogComponent } from './sickness';
 import { DepartmentComponent, DeptEditDialogComponent, AddDeptDialogComponent } from './department';
-import { AttributeComponent } from './attribute';
+import { AttributeComponent, PropertyEditDialogComponent } from './attribute';
 
-import { DiseaseService, DiseaseConfigService } from 'root/src/services';
+import { DiseaseService, DiseaseConfigService, PropertySerivce } from 'root/src/services';
+
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { DiseaseService, DiseaseConfigService } from 'root/src/services';
     EditDialogComponent,
     ConfigDialogComponent,
     DeptEditDialogComponent,
-    AddDeptDialogComponent
+    AddDeptDialogComponent,
+    PropertyEditDialogComponent
   ],
   imports: [
     TagManagerRoutingModule,
@@ -34,9 +36,10 @@ import { DiseaseService, DiseaseConfigService } from 'root/src/services';
     EditDialogComponent,
     ConfigDialogComponent,
     DeptEditDialogComponent,
-    AddDeptDialogComponent
+    AddDeptDialogComponent,
+    PropertyEditDialogComponent
   ],
-  providers: [DiseaseService, DiseaseConfigService]
+  providers: [DiseaseService, DiseaseConfigService, PropertySerivce]
 
 })
 export class TagManagerModule {
