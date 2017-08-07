@@ -30,13 +30,14 @@ export class DeptService {
       this.deptsLevel1 = (<any>data).model;
       return;
     }
-    this.http.get(url).map((res: Response) => {
-      const data: any = res.json();
-      this.deptsLevel1 = data.model;
-    }).catch((e: any) => {
-      console.error(e);
-      return Observable.throw(e);
-    });
+    this.http.get(url)
+      .map((res: Response) => res.json())
+      .catch((e: any) => {
+        console.error(e);
+        return Observable.throw(e);
+      }).subscribe((data) => {
+        this.deptsLevel1 = data.model;
+      })
   }
 
   getDeptsByPage(name: string, page: number, pageSize: number = 10): void {
@@ -63,8 +64,9 @@ export class DeptService {
     return this.dataChange.value;
   }
 
-  addDept(dept: any) {
+  addDept(dept: any): Observable<any> {
     const url: string = `${this.appConfig.api}/tag/dept/save`;
+
     if (this.appConfig.mockApi) {
       if ((<any>addDeptSuccessResponse).success) {
         dept.tagId = (<any>addDeptSuccessResponse).model;
@@ -77,6 +79,7 @@ export class DeptService {
       }
       return Observable.of(addDeptSuccessResponse);
     }
+
     return this.http.post(url, dept)
       .map((res: Response) => res.json())
       .catch((err: any) => {

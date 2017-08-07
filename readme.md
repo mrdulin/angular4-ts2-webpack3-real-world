@@ -4,6 +4,26 @@ __姿势:__
 * `yarn start`启动`webpack-dev-server`（支持异步`chunk`模块加载）
 * `yarn run build:dev`, 使用`webpack.dev.ts`配置编译打包出开发环境下的静态资源
 * `yarn run build`, 使用`webpack.prod.ts`配置编译打包出生产环境下的静态资源
+* `nginx`添加如下配置:
+
+```
+#运营后台
+server {
+  listen 80;
+  server_name turin.test.pajkdc.com;
+  error_page 500 502 503 504  /50x.html;
+  location = /50x.html {
+      root   html;
+  }
+  location / {
+      proxy_pass http://localhost:2222/;
+  }
+}
+```
+
+* `hosts`文件添加一条记录
+
+`127.0.0.1 turin.test.pajkdc.com`  
 
 __注意：__
 

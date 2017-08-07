@@ -22,6 +22,7 @@ const config: webpack.Configuration = Merge(webpackCommonConfig, {
     contentBase: path.resolve(__dirname, '../dist'),
     port: PORT,
     host: '0.0.0.0',
+    disableHostCheck: true,
     historyApiFallback: false
   },
 
