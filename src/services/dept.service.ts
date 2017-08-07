@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import { Response } from '@angular/http';
 
 import { APP_CONFIG, IAppConfig } from '../modules/app/app.config';
 import { HttpInterceptorService } from './httpInterceptor.service';

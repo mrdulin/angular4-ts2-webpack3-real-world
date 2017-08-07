@@ -17,8 +17,10 @@ import { BreadcrumbComponent } from 'common/components/breadcrumb';
 import { TipDialogComponent } from 'common/components/dialog';
 
 import { StringService, NavigationService, PaginatorService } from 'common/services';
+
 import { DeptService, HttpInterceptorService } from 'root/src/services';
 import { MdDialog } from '@angular/material';
+import { Pluck } from 'common/pipes';
 
 import './style.async.css';
 
@@ -28,7 +30,8 @@ import './style.async.css';
     ContentComponent,
     SidebarComponent,
     BreadcrumbComponent,
-    TipDialogComponent
+    TipDialogComponent,
+
   ],
   imports: [
     BrowserModule,
@@ -43,6 +46,7 @@ import './style.async.css';
     TipDialogComponent
   ],
   providers: [
+    Pluck,
     { provide: APP_CONFIG, useValue: AppConfig },
     { provide: HttpInterceptorService, useFactory: httpFactory, deps: [XHRBackend, RequestOptions, MdDialog] },
     StringService,

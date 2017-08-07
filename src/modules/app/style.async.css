@@ -22,3 +22,8 @@ body{
 .row{
   padding-bottom: 1.29688em;
 }
+
+.no-data-tip{
+  text-align: center;
+  padding-top: 20px;
+}

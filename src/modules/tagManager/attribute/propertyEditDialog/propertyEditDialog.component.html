@@ -1,0 +1,25 @@
+<h2 md-dialog-title>编辑</h2>
+<md-dialog-content>
+  <form novalidate>
+    <md-input-container class='full-width'>
+      <input mdInput type="text" placeholder='属性ID' name="propertyId" [value]="property.propertyId" disabled>
+    </md-input-container>
+
+    <md-input-container class='full-width'>
+      <input mdInput type="text" placeholder='属性名称' name="propertyName" [value]="property.propertyName" #propertyNameInput required>
+    </md-input-container>
+
+    <div>
+      <md-select placeholder='选择类型' name='choice' class='full-width' required [(ngModel)]='selectedOption'>
+        <md-option *ngFor='let option of options' [value]='option'>
+          {{option.name}}
+        </md-option>
+      </md-select>
+    </div>
+
+  </form>
+</md-dialog-content>
+<md-dialog-actions>
+  <button md-button md-dialog-close>取消</button>
+  <button md-button (click)='onSubmit(propertyNameInput.value)'>确定</button>
+</md-dialog-actions>
