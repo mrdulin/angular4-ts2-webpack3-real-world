@@ -27,7 +27,12 @@ export class entranceManagerComponent{
     console.log(file.value)
   }
 
-  toggleShow(): void{
-    const ref = this.dialog.open(EntranceEdit)
+  editEntranceForm(record: object): void{
+    const dialogRef = this.dialog.open(EntranceEdit, {
+      data: record
+    })
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(result)
+    })
   }
 }
