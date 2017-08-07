@@ -24,7 +24,7 @@ export class DeptDataSource extends DataSource<any> {
     });
   }
 
-  disconnect(): void {
+  disconnect() {
     this.deptService.dataChange.complete();
   }
 }

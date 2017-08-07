@@ -20,11 +20,11 @@ export class HttpInterceptorService extends Http {
   }
 
   request(url: string | Request, options?: RequestOptionsArgs): Observable<Response> {
-    return this.intercept(super.request(url, options));
+    return this.intercept(super.request(url, this.getRequestOptionArgs(options)));
   }
 
   get(url: string, options?: RequestOptionsArgs): Observable<Response> {
-    return this.intercept(super.get(url, options));
+    return this.intercept(super.get(url, this.getRequestOptionArgs(options)));
   }
 
   post(url: string, body: any, options?: RequestOptionsArgs): Observable<Response> {
@@ -36,9 +36,13 @@ export class HttpInterceptorService extends Http {
   }
 
   getRequestOptionArgs(options?: RequestOptionsArgs): RequestOptionsArgs {
-    // if (options == null) {
-    //   options = new RequestOptions();
-    // }
+    if (options == null) {
+      options = new RequestOptions({
+        'withCredentials': true
+      });
+    }
+
+    options.withCredentials = true;
     // options.headers.append('Content-Type', 'application/json');
     return options;
   }

@@ -12,6 +12,7 @@ export class AppComponent {
   ) { }
 
   ngOnInit() {
-    this.deptService.getDeptsByTagLevel(1);
+    const tagLevel: number = 1;
+    this.deptService.getDeptsByTagLevel(tagLevel);
   }
 }

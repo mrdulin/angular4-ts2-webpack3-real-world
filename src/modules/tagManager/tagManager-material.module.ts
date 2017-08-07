@@ -19,7 +19,6 @@ import { CdkTableModule } from '@angular/cdk';
     MdPaginatorModule,
     MdTableModule,
     MdSelectModule
-
   ],
   exports: [
     CdkTableModule,
@@ -31,7 +30,6 @@ import { CdkTableModule } from '@angular/cdk';
     MdPaginatorModule,
     MdTableModule,
     MdSelectModule
-
   ]
 })
 export class TagManagerMaterialModule {

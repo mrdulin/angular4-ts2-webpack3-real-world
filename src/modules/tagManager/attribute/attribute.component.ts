@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MdPaginator, PageEvent, MdDialog, MdDialogRef } from '@angular/material';
 import { DataSource } from '@angular/cdk';
 
-
 import { PropertySerivce } from 'root/src/services';
 import { PropertyDataSource } from './property-data-source';
 import { PaginatorService } from 'common/services';
@@ -35,7 +34,7 @@ export class AttributeComponent implements OnInit {
   pageSize: number;
   pageSizeOptions: number[];
 
-  keyword: string;
+  keyword: string = '';
 
   propertyOptions: any[] = [
     { key: 'propertyName', name: '属性项名称' }
