@@ -11,7 +11,7 @@ import { SicknessComponent, EditDialogComponent, ConfigDialogComponent } from '.
 import { DepartmentComponent, DeptEditDialogComponent, AddDeptDialogComponent } from './department';
 import { AttributeComponent, PropertyEditDialogComponent } from './attribute';
 
-import { DiseaseService, DiseaseConfigService, PropertySerivce } from 'root/src/services';
+import { DiseaseService, PropertySerivce } from 'root/src/services';
 
 
 @NgModule({
@@ -39,7 +39,7 @@ import { DiseaseService, DiseaseConfigService, PropertySerivce } from 'root/src/
     AddDeptDialogComponent,
     PropertyEditDialogComponent
   ],
-  providers: [DiseaseService, DiseaseConfigService, PropertySerivce]
+  providers: [DiseaseService, PropertySerivce]
 
 })
 export class TagManagerModule {

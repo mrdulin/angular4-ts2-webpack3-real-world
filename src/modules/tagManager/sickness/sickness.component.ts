@@ -1,33 +1,27 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { MdPaginator, PageEvent, MdDialog, MdDialogRef } from '@angular/material';
 import { DataSource } from '@angular/cdk';
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 
-import { DiseaseService, DiseaseConfigService } from 'root/src/services';
+import { DiseaseService, IGetDiseasesByPageData } from 'root/src/services';
 import { PaginatorService } from 'common/services';
 import { Disease, IDisease } from 'root/src/models';
 
 import { EditDialogComponent } from './editDialog';
 import { ConfigDialogComponent } from './configDialog';
 
-interface IQueryType {
-  key: string;
-  name: string;
-}
-
-interface ITableHeader extends IQueryType {
-  cell(row: any): string;
-}
+import {IQueryType, ITableHeader} from 'common/interfaces';
 
 @Component({
   selector: 'sickness',
   templateUrl: './sickness.component.html',
   styleUrls: ['./sickness.component.css']
 })
-export class SicknessComponent implements OnInit {
+export class SicknessComponent implements OnInit, OnDestroy {
   public queryTypes: IQueryType[] = [
     { key: 'diseaseName', name: '疾病名称' },
     { key: 'ICD', name: 'ICD标准码' }
@@ -54,11 +48,11 @@ export class SicknessComponent implements OnInit {
   public paginator: MdPaginator;
 
   formChange$: Subject<boolean> = new Subject<boolean>();
+  subscripton: Subscription = new Subscription();
 
   constructor(
     private _diseaseService: DiseaseService,
     private _paginatorService: PaginatorService,
-    private _diseaseConfigService: DiseaseConfigService,
     private _dialog: MdDialog
   ) {
     this.pageIndex = this._paginatorService.pageIndex;
@@ -73,21 +67,36 @@ export class SicknessComponent implements OnInit {
     this.dataSource = new DiseaseDataSource(this.diseaseDataBase, this.paginator, this.formChange$);
   }
 
+  public ngOnDestroy() {
+    this.subscripton.unsubscribe();
+  }
+
   public onSubmit(): void {
     this.keyword = this.keyword.trim();
     if (!this.keyword) return;
     const firstPage: number = this.pageIndex + 1;
     this.formChange$.next(true);
-    this.diseaseDataBase.getDiseasesByPage(this.keyword, firstPage);
+    const data: IGetDiseasesByPageData = this.getRequestData();
+    this.diseaseDataBase.getDiseasesByPage(data, firstPage);
   }
+
 
   public onPageChange(e: PageEvent) {
     const pageIndex: number = e.pageIndex + 1;
-    this.diseaseDataBase.getDiseasesByPage(this.keyword, pageIndex);
+    const data: IGetDiseasesByPageData = this.getRequestData();
+    this.diseaseDataBase.getDiseasesByPage(data, pageIndex);
   }
 
   public trackByFn(index: number, tableHeader: ITableHeader) {
     return tableHeader.key;
+  }
+
+  private getRequestData(): IGetDiseasesByPageData {
+    const data: IGetDiseasesByPageData = {
+      type: this.selectedQueryType.key,
+      value: this.keyword
+    };
+    return data;
   }
 
   /**
@@ -113,14 +122,16 @@ export class SicknessComponent implements OnInit {
     // TODO: http://umr.test.pajkdc.com/innerApi/tag/disease/config?tagId=1001000
     // 打开配置设置模态框, 先调service请求该疾病的配置，请求成功后打开模态框，请求失败，全局模态框错误提示。
 
-    this._diseaseConfigService.getByTagId(disease.tagId).subscribe((config: any) => {
-      const dialogRef: MdDialogRef<ConfigDialogComponent> = this._dialog.open(ConfigDialogComponent, {
-        data: {
-          disease,
-          config
-        }
-      });
-    });
+    this.subscripton.add(
+      this._diseaseService.getByTagId(disease.tagId).subscribe((config: any) => {
+        const dialogRef: MdDialogRef<ConfigDialogComponent> = this._dialog.open(ConfigDialogComponent, {
+          data: {
+            disease,
+            config
+          }
+        });
+      })
+    );
   }
 
   private setProperties(disease: IDisease) {
@@ -142,9 +153,9 @@ export class DiseaseDataBase {
     return this.dataChange.value;
   }
 
-  getDiseasesByPage(q: string, pageIndex: number) {
-    return this._diseaseService.getDiseasesByPage(q, pageIndex).subscribe((data: any) => {
-      const { model, error, errorCode } = data;
+  getDiseasesByPage(data: IGetDiseasesByPageData, pageIndex: number) {
+    return this._diseaseService.getDiseasesByPage(data, pageIndex).subscribe((res: any) => {
+      const { model, error, errorCode } = res;
       const diseases: IDisease[] = model.t;
       const total: number = model.count;
       this.dataChange.next(diseases);
@@ -165,20 +176,17 @@ export class DiseaseDataSource extends DataSource<any>{
   connect(): Observable<any> {
     const displayDataChanges = [
       this._diseaseDataBase.dataChange,
-      this._paginator.page,
+      // this._paginator.page,
       this._formChange$,
     ];
 
     this._formChange$.subscribe(() => {
-       this._paginator.pageIndex = 0;
+      this._paginator.pageIndex = 0;
     });
 
     return Observable.merge(...displayDataChanges).map(() => {
-      const diseases: IDisease[] = this._diseaseDataBase.getData().slice();
-      const { pageIndex, pageSize } = this._paginator;
-
-      const startIndex: number = pageIndex * pageSize;
-      return diseases.splice(startIndex, pageSize);
+      const diseases: IDisease[] = this._diseaseDataBase.getData();
+      return diseases;
     });
 
   }

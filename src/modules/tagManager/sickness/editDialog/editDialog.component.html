@@ -1,6 +1,6 @@
 <h2 md-dialog-title>编辑疾病</h2>
 <md-dialog-content>
-  <form novalidate>
+  <form id='edit-form' novalidate #form='ngForm' (ngSubmit)='onSubmit(form)'>
     <md-input-container class='full-width' type='text'>
       <input mdInput disabled placeholder="疾病ID" name="tagId" [value]="disease.tagId">
     </md-input-container>
@@ -10,20 +10,20 @@
     </div>
 
     <md-input-container class='full-width' type='text'>
-      <input mdInput name="tagName" placeholder="疾病名称" [value]="disease.tagName">
+      <input mdInput name="tagName" placeholder="疾病名称" [(ngModel)]="disease.tagName" required>
     </md-input-container>
 
     <md-input-container class='full-width' type='text'>
-      <input mdInput name="aliasName" placeholder="疾病别名" [value]="disease.aliasName">
+      <input mdInput name="aliasName" placeholder="疾病别名" [(ngModel)]="disease.aliasName">
     </md-input-container>
 
     <div>
       <md-input-container type='text'>
-        <input mdInput name="standardCode" placeholder="ICD标准码" [value]="disease.standardCode">
+        <input mdInput name="standardCode" placeholder="ICD标准码" [(ngModel)]="disease.standardCode">
       </md-input-container>
 
       <md-input-container type='text'>
-        <input mdInput name="extraCode" placeholder="ICD标准码" [value]="disease.extraCode">
+        <input mdInput name="extraCode" placeholder="ICD标准码" [(ngModel)]="disease.extraCode">
       </md-input-container>
 
       <md-input-container type='text'>
@@ -36,7 +36,7 @@
     </md-input-container>
 
     <div>
-      <md-select placeholder='关联一级科室' name='deptLv1' class="full-width dept-list" [(ngModel)]='selectedDeptLevel1'>
+      <md-select (change)='onDeptLevel1Changed($event)' placeholder='关联一级科室' name='deptLv1' class="full-width dept-list" [(ngModel)]='selectedDeptLevel1'>
         <md-option *ngFor='let deptLevel1 of deptsLevel1' [value]='deptLevel1'>
           {{deptLevel1.tagName}}
         </md-option>
@@ -52,12 +52,19 @@
     </div>
 
     <div class='row'>
-      <button md-raised-button (click)='associate()'>关联</button>
+      <button md-raised-button type='button' (click)='addAssociateDept()'>关联</button>
+    </div>
+
+    <div class='row'>
+      <span class='tag' *ngFor='let dept of deptAssiociated'>
+        <span (click)='deleteAssociatedDept(dept)'>x</span>
+        <span>{{dept.tagName}}</span>;
+      </span>
     </div>
 
   </form>
 </md-dialog-content>
 <md-dialog-actions>
   <button md-button md-dialog-close>取消</button>
-  <button md-button [md-dialog-close]='true'>确定</button>
+  <button md-button type='submit' form='edit-form' [disabled]='!form.valid'>确定</button>
 </md-dialog-actions>

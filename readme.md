@@ -48,4 +48,4 @@ __废弃:__
 
 __坑:__
 
-* `MdDialog`注入到`HttpInterceptorService`中，调用`MdDialog`的`open`方法打开全局模态框组件，全局模态框组件的`selector`不能是`dialog`。
+* `MdDialog`注入到`HttpInterceptorService`中，调用`MdDialog`的`open`方法打开全局模态框组件，全局模态框组件的`selector`不能是`dialog`，因为`dialog`是`html`原生标签。

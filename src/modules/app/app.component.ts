@@ -21,7 +21,12 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnInit() {
     const tagLevel: number = 1;
     this.deptService.getDeptsByTagLevel(tagLevel);
-    this.subscription.add(this.userService.getUser().subscribe((user: IUserApi) => this.user = user));
+    this.subscription.add(
+      this.userService.getUser().subscribe(
+        (user: IUserApi) => this.user = user,
+        (err: any) => console.error(err)
+      )
+    );
   }
 
   logout() {
