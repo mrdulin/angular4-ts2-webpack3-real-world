@@ -2,7 +2,7 @@ import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { MD_DIALOG_DATA, MdDialogRef } from '@angular/material';
 
 import { IDisease } from 'root/src/models';
-import { DiseaseConfigService } from 'root/src/services';
+import { DiseaseService } from 'root/src/services';
 
 import { IDiseaseConfig, IDiseaseMainInfo } from 'root/src/models';
 
@@ -18,7 +18,7 @@ export class ConfigDialogComponent implements OnInit {
 
   constructor(
     @Inject(MD_DIALOG_DATA) public data: any,
-    private diseaseConfigService: DiseaseConfigService,
+    private diseaseService: DiseaseService,
     private dialogRef: MdDialogRef<ConfigDialogComponent>
   ) { }
 
@@ -41,7 +41,7 @@ export class ConfigDialogComponent implements OnInit {
     };
 
     //TODO: 保存失败异常处理
-    this.diseaseConfigService.save(data).subscribe((res: any) => {
+    this.diseaseService.save(data).subscribe((res: any) => {
       console.log(res);
       if(res.model) {
         this.dialogRef.close();

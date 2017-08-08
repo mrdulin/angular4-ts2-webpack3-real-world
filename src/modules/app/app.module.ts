@@ -16,7 +16,7 @@ import { ContentComponent } from './content';
 import { BreadcrumbComponent } from 'common/components/breadcrumb';
 import { TipDialogComponent } from 'common/components/dialog';
 
-import { StringService, NavigationService, PaginatorService } from 'common/services';
+import { StringService, NavigationService, PaginatorService, UtilService } from 'common/services';
 
 import { DeptService, HttpInterceptorService, UserService } from 'root/src/services';
 import { MdDialog } from '@angular/material';
@@ -53,7 +53,8 @@ import './style.async.css';
     NavigationService,
     PaginatorService,
     DeptService,
-    UserService
+    UserService,
+    UtilService
   ]
 }
 )
