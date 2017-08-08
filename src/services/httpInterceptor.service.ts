@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Request, Response, RequestOptionsArgs, ConnectionBackend, RequestOptions, Http } from '@angular/http';
+import { Request, Response, RequestOptionsArgs, ConnectionBackend, RequestOptions, Http, Headers } from '@angular/http';
 import { Observable } from 'rxjs';
-import { MdDialog, MdDialogRef } from '@angular/material';
-import { TipDialogComponent } from 'common/components/dialog';
+import { MdSnackBar, MdSnackBarRef, SimpleSnackBar } from '@angular/material';
 
 const GLOBAL_ERROR: Map<string, string> = new Map<string, string>([
   ['-103', '无效的登录状态']
@@ -10,12 +9,12 @@ const GLOBAL_ERROR: Map<string, string> = new Map<string, string>([
 
 @Injectable()
 export class HttpInterceptorService extends Http {
-  dialogRef: MdDialogRef<TipDialogComponent>;
+  snackBarRef: MdSnackBarRef<SimpleSnackBar>;
 
   constructor(
     backend: ConnectionBackend,
     defaultOptions: RequestOptions,
-    private dialog: MdDialog) {
+    private snackBar: MdSnackBar) {
     super(backend, defaultOptions);
   }
 
@@ -36,19 +35,27 @@ export class HttpInterceptorService extends Http {
   }
 
   getRequestOptionArgs(options?: RequestOptionsArgs): RequestOptionsArgs {
-    if (options == null) {
+    if (!options) {
       options = new RequestOptions({
-        'withCredentials': true
+        withCredentials: true
       });
     }
-
+    if(!options.headers) {
+      options.headers = new Headers();
+    }
     options.withCredentials = true;
     // options.headers.append('Content-Type', 'application/json');
+    options.headers.set('Accept', 'application/json');
+
     return options;
   }
 
   intercept(observable: Observable<Response>): Observable<Response> {
     return observable.map((res: any) => {
+      if(res.text() === 'need cookie: _tk') {
+        const err = {hasError: true, errorCode: '-103'};
+        throw err;
+      };
       const data = res.json();
       if (data.hasError) {
         throw data;
@@ -61,20 +68,15 @@ export class HttpInterceptorService extends Http {
         //TODO: gateway error
       } else if (err.hasError) {
         //TODO: api error
-
-        this.dialogRef = this.dialog.open(TipDialogComponent, {
-          data: {
-            msg: GLOBAL_ERROR.get(err.errorCode.toString())
-          }
+        const msg: string =  GLOBAL_ERROR.get(err.errorCode.toString());
+        this.snackBarRef = this.snackBar.open(msg, null, {
+          duration: 2000
         });
       } else if (err.status < 200 || err.status >= 300) {
         //TODO: http status error
       }
 
       return Observable.throw(err);
-    })
-    .finally(() => {
-      this.dialogRef && this.dialogRef.close();
     });
   }
 }

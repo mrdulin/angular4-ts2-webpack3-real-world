@@ -19,7 +19,7 @@ import { TipDialogComponent } from 'common/components/dialog';
 import { StringService, NavigationService, PaginatorService, UtilService } from 'common/services';
 
 import { DeptService, HttpInterceptorService, UserService } from 'root/src/services';
-import { MdDialog } from '@angular/material';
+import { MdSnackBar } from '@angular/material';
 import { Pluck } from 'common/pipes';
 
 import './style.async.css';
@@ -48,7 +48,7 @@ import './style.async.css';
   providers: [
     Pluck,
     { provide: APP_CONFIG, useValue: AppConfig },
-    { provide: HttpInterceptorService, useFactory: httpFactory, deps: [XHRBackend, RequestOptions, MdDialog] },
+    { provide: HttpInterceptorService, useFactory: httpFactory, deps: [XHRBackend, RequestOptions, MdSnackBar] },
     StringService,
     NavigationService,
     PaginatorService,

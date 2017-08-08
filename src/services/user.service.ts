@@ -40,7 +40,6 @@ export class UserService {
         return data;
       })
       .catch((err: any) => {
-        console.error(err);
         return Observable.throw(err);
       });
   }
@@ -49,5 +48,9 @@ export class UserService {
     const returnUrl: string = encodeURI(window.location.href);
     const loginUrl: string = `${this.appConfig.LOGIN_HOST}/login/logout?appId=${this.appConfig.APP_ID}&returnUrl=${returnUrl}`;
     window.location.href = loginUrl;
+  }
+
+  login() {
+    this.logout();
   }
 }
