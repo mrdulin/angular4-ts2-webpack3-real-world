@@ -18,7 +18,7 @@ import { TipDialogComponent } from 'common/components/dialog';
 
 import { StringService, NavigationService, PaginatorService } from 'common/services';
 
-import { DeptService, HttpInterceptorService } from 'root/src/services';
+import { DeptService, HttpInterceptorService, UserService } from 'root/src/services';
 import { MdDialog } from '@angular/material';
 import { Pluck } from 'common/pipes';
 
@@ -53,6 +53,7 @@ import './style.async.css';
     NavigationService,
     PaginatorService,
     DeptService,
+    UserService
   ]
 }
 )

@@ -1,6 +1,17 @@
-<nav class='app-nav'>
-  <h1 class='app-title'>社会医疗险<small class="app-subtitle">运营后台</small></h1>
-</nav>
+<header class='app-header'>
+  <nav class='app-nav'>
+    <h1 class='app-title'>社会医疗险<small class="app-subtitle">运营后台</small></h1>
+
+  </nav>
+  <div class='app-user-profile'>
+    <i class="material-icons md-light">account_box</i>
+    <span class='app-user-name'>
+      {{user?.name}}
+    </span>
+    <button md-raised-button (click)='logout()'>注销</button>
+  </div>
+</header>
+
 <main id='app'>
   <router-outlet name='sidebar'></router-outlet>
   <router-outlet></router-outlet>

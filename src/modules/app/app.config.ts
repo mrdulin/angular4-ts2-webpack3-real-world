@@ -16,7 +16,7 @@ export const AppConfig: IAppConfig = {
   mockApi: false,
 
   //单点登陆域名
-  LOGIN_HOST: 'http://test.pajkdc.com',
+  LOGIN_HOST: '//test.pajkdc.com',
 
   APP_ID: '9002'
 };

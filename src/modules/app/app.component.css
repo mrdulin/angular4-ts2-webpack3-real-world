@@ -1,8 +1,18 @@
-.app-nav{
+.app-header{
   height: 56px;
   padding: 0 20px;
   border-bottom: 1px solid #ddd;
   background: #3f51b5;
+  display: flex;
+  justify-content: space-between;
+}
+.app-nav{
+  height: 100%;
+}
+
+.app-user-profile{
+  display: flex;
+  align-items: center;
 }
 
 .app-title{
@@ -17,4 +27,9 @@
   color: #fff;
   opacity: .8;
   margin-left: 10px;
+}
+
+.app-user-name{
+  color: #fff;
+  margin-right: 10px;
 }
