@@ -1,10 +1,10 @@
 <section class="upload">
-  <input #fileIpt type="file" [disabled]="disabled" (change)="handleOnChange(fileIpt)" value="">
+  <input #fileIpt type="file" aria-disabled="disabled" (change)="handleOnChange(fileIpt)" value="">
   <button md-raised-button [disabled]="disabled" (click)="handleClick(fileIpt)">
     <md-icon>file_upload</md-icon>上传{{text || 'Upload'}}
   </button>
-  <section class="upload-img-box" *ngIf="src || fileIpt.value">
-    <div class="delete-mask" *ngIf="disabled"><md-icon (click)="handleDelete(fileIpt)">delete</md-icon></div>
-    <img [src]="src && getImgUrl(src) || fileIpt.value">
+  <section class="upload-img-box" *ngIf="imgUrl">
+    <div class="delete-mask" *ngIf="!disabled"><md-icon (click)="handleDelete(fileIpt)">delete</md-icon></div>
+    <img [src]="imgUrl">
   </section>
 </section>

@@ -19,14 +19,6 @@ export class entranceManagerComponent{
     this.entranceData = entranceList && entranceList.model.t || []
   }
 
-  handleIconBeforeUpload(file: any): void {
-    console.log(file.value)
-  }
-
-  handleBannerBeforeUpload(file: any): void {
-    console.log(file.value)
-  }
-
   editEntranceForm(record: object): void{
     const dialogRef = this.dialog.open(EntranceEdit, {
       data: record

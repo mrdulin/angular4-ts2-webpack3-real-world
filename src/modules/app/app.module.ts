@@ -16,7 +16,7 @@ import { ContentComponent } from './content';
 import { BreadcrumbComponent } from 'common/components/breadcrumb';
 import { TipDialogComponent } from 'common/components/dialog';
 
-import { StringService, NavigationService, PaginatorService, UtilService } from 'common/services';
+import { StringService, NavigationService, PaginatorService, UploadService, UtilService } from 'common/services';
 
 import { DeptService, HttpInterceptorService, UserService } from 'root/src/services';
 import { MdSnackBar } from '@angular/material';
@@ -54,6 +54,7 @@ import './style.async.css';
     PaginatorService,
     DeptService,
     UserService,
+    UploadService,
     UtilService
   ]
 }
