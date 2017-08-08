@@ -15,11 +15,11 @@
       </md-input-container>
 
       <section class="inline-item">
-        <upload [text]="'上传图标'" [beforeUpload]="handleIconBeforeUpload"></upload>
+        <upload [text]="'图标'" [src]="formData.icon" disabled={{false}} [beforeUpload]="handleIconBeforeUpload"></upload>
       </section>
 
       <section class="inline-item">
-        <upload [text]="'上传封面'" [beforeUpload]="handlePosterBeforeUpload"></upload>
+        <upload [text]="'封面'" [src]="formData.poster" disabled={{false}} [beforeUpload]="handlePosterBeforeUpload"></upload>
       </section>
 
       <section class="inline-item">

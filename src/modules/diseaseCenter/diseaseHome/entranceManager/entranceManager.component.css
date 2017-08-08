@@ -44,6 +44,10 @@
   width: 100%;
 }
 
+.entrance-manager .container .item-card .inline-item.check-group label{
+  color: rgba(0,0,0,.38);
+}
+
 .entrance-manager .container .item-card .inline-item label{
   vertical-align: middle;
 }

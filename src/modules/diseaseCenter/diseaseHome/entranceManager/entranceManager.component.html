@@ -20,14 +20,14 @@
         </md-input-container>
 
         <section class="inline-item">
-          <upload [text]="'图标'" disabled src={{v.icon}} [beforeUpload]="handleIconBeforeUpload"></upload>
+          <upload [text]="'图标'" disabled={{true}} src={{v.icon}} [beforeUpload]="handleIconBeforeUpload"></upload>
         </section>
 
         <section class="inline-item">
-          <upload [text]="'封面'" disabled src={{v.poster}} [beforeUpload]="handleBannerBeforeUpload"></upload>
+          <upload [text]="'封面'" disabled={{true}} src={{v.poster}} [beforeUpload]="handleBannerBeforeUpload"></upload>
         </section>
 
-        <section class="inline-item">
+        <section class="inline-item check-group">
           <label>渠道：</label>
           <md-checkbox value="1" disabled>寿险</md-checkbox>
           <md-checkbox value="2" disabled>平安好医生</md-checkbox>
@@ -36,7 +36,7 @@
         </section>
       </md-card-content>
       <md-card-actions>
-        <button md-button class="primary" (click)="toggleShow()">编辑</button>
+        <button md-button class="primary" (click)="editEntranceForm(v)">编辑</button>
         <button md-button class="warnning">删除</button>
       </md-card-actions>
     </md-card>
