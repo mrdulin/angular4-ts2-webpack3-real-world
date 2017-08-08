@@ -13,6 +13,12 @@
   color: #fff;
 }
 
+.mat-dialog-actions .mat-button.primary.disabled{
+  background-color: #dedede;
+  border-color: #dedede;
+  color: #fff;
+}
+
 .mat-dialog-actions .mat-button.warnning{
   background-color: rgb(240, 65, 52);
   border-color: rgb(240, 65, 52);

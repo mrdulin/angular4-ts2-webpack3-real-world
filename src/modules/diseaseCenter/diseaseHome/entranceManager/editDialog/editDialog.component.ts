@@ -39,4 +39,9 @@ export class EntranceEdit{
   handlePosterBeforeUpload(value: any): void{
     console.log(value)
   }
+
+  handleSubmit(): void {
+    // TODO...调接口保存数据
+    this.dialogRef.close(this.entranceEditForm.value)
+  }
 }

@@ -1,14 +1,23 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, forwardRef } from '@angular/core'
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms'
 import { UtilService, UploadService } from '../../services'
+
+export const EXE_COUNTER_VALUE_ACCESSOR: any = {
+    provide: NG_VALUE_ACCESSOR,
+    useExisting: forwardRef(() => UploadComponent),
+    multi: true
+};
 
 @Component({
   selector: 'upload',
   templateUrl: './upload.component.html',
-  styleUrls: ['./upload.component.css']
+  styleUrls: ['./upload.component.css'],
+  providers: [EXE_COUNTER_VALUE_ACCESSOR]
 })
-export class uploadComponent implements OnInit{
+export class UploadComponent implements OnInit, ControlValueAccessor{
   imgUrl: string
   fileList: any[]
+  propagateChange: Function = (_: any) => {}
   @Input() beforeUpload?: Function = () => {}
   @Input() disabled?: boolean = false
   @Input() src?: string
@@ -18,6 +27,18 @@ export class uploadComponent implements OnInit{
   @Input() timeout?: number
 
   constructor(private _utilService: UtilService, private _uploadService: UploadService) {}
+
+  writeValue(value: any): void {
+    if(value) {
+      this.imgUrl = this._utilService.getPublicImageUrl(value)
+    }
+  }
+
+  registerOnChange(fn: any) {
+    this.propagateChange = fn
+  }
+
+  registerOnTouched(fn: any) {}
 
   ngOnInit(): void {
     this.imgUrl = this.src ? this._utilService.getPublicImageUrl(this.src) : null
@@ -35,6 +56,7 @@ export class uploadComponent implements OnInit{
 
   handleDelete($inputEl: any): void {
     this.imgUrl = null
+    this.propagateChange(null)
     $inputEl.value = null
   }
 
@@ -64,6 +86,7 @@ export class uploadComponent implements OnInit{
               this.fileList.push(item)
             }
             this.imgUrl = this.fileList[0].thumbUrl
+            this.propagateChange(this.fileList[0].url)
             this.beforeUpload(this.fileList[0])
           }
         },

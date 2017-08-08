@@ -1,38 +1,38 @@
-<h2 md-dialog-title>编辑</h2>
-<md-dialog-content>
-  <form [formGroup]="entranceEditForm" novalidate>
-    <div>
-      <md-input-container class="inline-item">
-        <input mdInput formControlName="sortFactor" placeholder="排序">
-      </md-input-container>
+<form [formGroup]="entranceEditForm" (ngSubmit)="handleSubmit()" novalidate>
+  <h2 md-dialog-title>编辑</h2>
+  <md-dialog-content>
+      <div>
+        <md-input-container class="inline-item">
+          <input mdInput formControlName="sortFactor" placeholder="排序">
+        </md-input-container>
 
-      <md-input-container class="inline-item">
-        <input mdInput formControlName="name" placeholder="名称">
-      </md-input-container>
+        <md-input-container class="inline-item">
+          <input mdInput formControlName="name" placeholder="名称">
+        </md-input-container>
 
-      <md-input-container class="inline-item">
-        <input mdInput formControlName="linkUrl" placeholder="URL">
-      </md-input-container>
+        <md-input-container class="inline-item">
+          <input mdInput formControlName="linkUrl" placeholder="URL">
+        </md-input-container>
 
-      <section class="inline-item">
-        <upload [text]="'图标'" [src]="formData.icon" [beforeUpload]="handleIconBeforeUpload"></upload>
-      </section>
+        <section class="inline-item">
+          <upload [text]="'图标'" formControlName="icon" [src]="formData.icon" [beforeUpload]="handleIconBeforeUpload"></upload>
+        </section>
 
-      <section class="inline-item">
-        <upload [text]="'封面'" [src]="formData.poster" [beforeUpload]="handlePosterBeforeUpload"></upload>
-      </section>
+        <section class="inline-item">
+          <upload [text]="'封面'" formControlName="poster" [src]="formData.poster" [beforeUpload]="handlePosterBeforeUpload"></upload>
+        </section>
 
-      <section class="inline-item">
-        <label>渠道：</label>
-        <md-checkbox value="1" formControlName="channels1">寿险</md-checkbox>
-        <md-checkbox value="2" formControlName="channels2">平安好医生</md-checkbox>
-        <md-checkbox value="3" formControlName="channels3">主客</md-checkbox>
-        <md-checkbox value="4" formControlName="channels4">H</md-checkbox>
-      </section>
-    </div>
-  </form>
-</md-dialog-content>
-<md-dialog-actions>
-  <button md-button class="primary">确定</button>
-  <button md-button class="warnning" md-dialog-close>取消</button>
-</md-dialog-actions>
+        <section class="inline-item">
+          <label>渠道：</label>
+          <md-checkbox value="1" formControlName="channels1">寿险</md-checkbox>
+          <md-checkbox value="2" formControlName="channels2">平安好医生</md-checkbox>
+          <md-checkbox value="3" formControlName="channels3">主客</md-checkbox>
+          <md-checkbox value="4" formControlName="channels4">H</md-checkbox>
+        </section>
+      </div>
+  </md-dialog-content>
+  <md-dialog-actions>
+    <button md-button class="primary" [class.disabled]="entranceEditForm.invalid" type="submit" [disabled]="entranceEditForm.invalid">确定</button>
+    <button md-button class="warnning" md-dialog-close>取消</button>
+  </md-dialog-actions>
+</form>
