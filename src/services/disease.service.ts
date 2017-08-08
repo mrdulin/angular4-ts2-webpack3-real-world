@@ -1,17 +1,19 @@
 import { Injectable, Inject } from '@angular/core';
 import { Http, Response, RequestOptions, URLSearchParams } from '@angular/http';
 import { APP_CONFIG, IAppConfig } from '../modules/app/app.config';
-import { HttpInterceptorService } from './httpInterceptor.service';
 
+import { HttpInterceptorService } from './httpInterceptor.service';
+import { UtilService } from 'common/services';
 import { IDiseaseMainInfo, IDiseaseConfig } from 'root/src/models';
+
 import * as data from './diseaseConfig.json';
 import * as saveDiseaseConfigResponse from './saveDiseaseConfig.json';
+import * as diseases from './diseases.json';
 
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { Observable } from 'rxjs';
 
-import * as diseases from './diseases.json';
 
 export interface IGetDiseasesByPageData {
   type: string;
@@ -23,7 +25,8 @@ export class DiseaseService {
 
   constructor(
     @Inject(APP_CONFIG) private appConfig: IAppConfig,
-    private http: HttpInterceptorService
+    private http: HttpInterceptorService,
+    private utilService: UtilService
   ) { }
 
   /**
@@ -93,7 +96,7 @@ export class DiseaseService {
    * @returns
    * @memberof DiseaseService
    */
-  save(diseaseInfo: IDiseaseMainInfo & IDiseaseConfig) {
+  saveConfig(diseaseInfo: IDiseaseMainInfo & IDiseaseConfig) {
     const url: string = `${this.appConfig.api}/tag/disease/save/config`;
     if (this.appConfig.mockApi) {
       return Observable.of(saveDiseaseConfigResponse);
@@ -104,5 +107,31 @@ export class DiseaseService {
         console.error(err);
         return Observable.throw(err);
       });
+  }
+
+  /**
+   * 保存疾病信息
+   *
+   * @param {*} postBody
+   * @returns
+   * @memberof DiseaseService
+   */
+  save(postBody: any) {
+    const url: string = `${this.appConfig.api}/tag/disease/save`;
+
+    const _postBody: any = this.utilService.filterFalsy(postBody);
+    if(!_postBody.relatedTags.length) {
+      delete _postBody.relatedTags;
+    }
+
+    console.log('_postBody', _postBody);
+
+    return this.http.post(url, _postBody).map((res: Response) => res.json())
+      .map((data: any) => {
+        if(data.errorCode) throw data.error;
+        return data;
+      })
+      .catch((err: any) => Observable.throw(err));
+
   }
 }

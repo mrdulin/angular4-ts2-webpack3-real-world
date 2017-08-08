@@ -10,7 +10,7 @@
     </div>
 
     <md-input-container class='full-width' type='text'>
-      <input mdInput name="tagName" placeholder="疾病名称" [(ngModel)]="disease.tagName">
+      <input mdInput name="tagName" placeholder="疾病名称" [(ngModel)]="disease.tagName" required>
     </md-input-container>
 
     <md-input-container class='full-width' type='text'>
@@ -36,7 +36,7 @@
     </md-input-container>
 
     <div>
-      <md-select placeholder='关联一级科室' name='deptLv1' class="full-width dept-list" [(ngModel)]='selectedDeptLevel1'>
+      <md-select (change)='onDeptLevel1Changed($event)' placeholder='关联一级科室' name='deptLv1' class="full-width dept-list" [(ngModel)]='selectedDeptLevel1'>
         <md-option *ngFor='let deptLevel1 of deptsLevel1' [value]='deptLevel1'>
           {{deptLevel1.tagName}}
         </md-option>
@@ -51,13 +51,20 @@
       </md-select>
     </div>
 
+    <div>
+      <span class='tag' *ngFor='let dept of deptAssiociated'>
+        <span (click)='deleteAssociatedDept(dept)'>x</span>
+        <span>{{dept.tagName}}</span>;
+      </span>
+    </div>
+
     <div class='row'>
-      <button md-raised-button (click)='associate()'>关联</button>
+      <button md-raised-button type='button' (click)='addAssociateDept()'>关联</button>
     </div>
 
   </form>
 </md-dialog-content>
 <md-dialog-actions>
   <button md-button md-dialog-close>取消</button>
-  <button md-button type='submit' form='edit-form'>确定</button>
+  <button md-button type='submit' form='edit-form' [disabled]='!form.valid'>确定</button>
 </md-dialog-actions>

@@ -49,15 +49,14 @@ export class HttpInterceptorService extends Http {
 
   intercept(observable: Observable<Response>): Observable<Response> {
     return observable.map((res: any) => {
-      console.log(res);
       const data = res.json();
       if (data.hasError) {
         throw data;
       } else {
         return res;
       }
-    }).catch((err, source) => {
-      console.log(err);
+    })
+    .catch((err, source) => {
       if (err.gwError) {
         //TODO: gateway error
       } else if (err.hasError) {
@@ -73,8 +72,9 @@ export class HttpInterceptorService extends Http {
       }
 
       return Observable.throw(err);
-    }).finally(() => {
-      this.dialogRef && this.dialogRef.close();
     })
+    .finally(() => {
+      this.dialogRef && this.dialogRef.close();
+    });
   }
 }

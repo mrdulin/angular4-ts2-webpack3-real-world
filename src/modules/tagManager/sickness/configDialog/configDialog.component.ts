@@ -41,7 +41,7 @@ export class ConfigDialogComponent implements OnInit {
     };
 
     //TODO: 保存失败异常处理
-    this.diseaseService.save(data).subscribe((res: any) => {
+    this.diseaseService.saveConfig(data).subscribe((res: any) => {
       console.log(res);
       if(res.model) {
         this.dialogRef.close();

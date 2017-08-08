@@ -37,7 +37,24 @@ export class DeptService {
         return Observable.throw(e);
       }).subscribe((data) => {
         this.deptsLevel1 = data.model;
+      });
+  }
+
+  getDeptsByTagId(id: number | string) {
+    const url: string = `${this.appConfig.api}/tag/dept/child?tagId=${id}`;
+
+    return this.http.get(url)
+      .map((res: Response) => res.json())
+      .map((data: any) => {
+        if(data.errorCode) {
+          throw data.error;
+        }
+        return data.model;
       })
+      .catch((e: any) => {
+        console.error(e);
+        return Observable.throw(e);
+      });
   }
 
   getDeptsByPage(name: string, page: number, pageSize: number = 10): void {

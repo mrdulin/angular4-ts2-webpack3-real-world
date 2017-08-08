@@ -4,7 +4,8 @@ import {
   MdCardModule,
   MdDialogModule, MdIconModule, MdInputModule,
   MdTableModule,
-  MdSelectModule
+  MdSelectModule,
+  MdSnackBarModule
 } from '@angular/material';
 import { CdkTableModule } from '@angular/cdk';
 
@@ -18,7 +19,8 @@ import { CdkTableModule } from '@angular/cdk';
     MdInputModule,
     MdPaginatorModule,
     MdTableModule,
-    MdSelectModule
+    MdSelectModule,
+    MdSnackBarModule
   ],
   exports: [
     CdkTableModule,
@@ -29,7 +31,8 @@ import { CdkTableModule } from '@angular/cdk';
     MdInputModule,
     MdPaginatorModule,
     MdTableModule,
-    MdSelectModule
+    MdSelectModule,
+    MdSnackBarModule
   ]
 })
 export class TagManagerMaterialModule {
