@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
 import { MdPaginator, PageEvent, MdDialog, MdDialogRef, MdSnackBar, MdSnackBarRef, SimpleSnackBar } from '@angular/material';
 import { DataSource } from '@angular/cdk';
 
@@ -21,7 +21,7 @@ import { IQueryType, ITableHeader } from 'common/interfaces';
   templateUrl: './sickness.component.html',
   styleUrls: ['./sickness.component.css']
 })
-export class SicknessComponent implements OnInit, OnDestroy {
+export class SicknessComponent implements OnInit, OnDestroy, AfterViewInit {
   public queryTypes: IQueryType[] = [
     { key: 'diseaseName', name: '疾病名称' },
     { key: 'ICD', name: 'ICD标准码' }
@@ -56,9 +56,12 @@ export class SicknessComponent implements OnInit, OnDestroy {
     private _dialog: MdDialog,
     private _snackbar: MdSnackBar
   ) {
-    this.pageIndex = this._paginatorService.pageIndex;
-    this.pageSize = this._paginatorService.pageSize;
-    this.pageSizeOptions = this._paginatorService.pageSizeOptions;
+    const { pageIndex, pageSize, pageSizeOptions } = this._paginatorService;
+
+    this.pageIndex = pageIndex;
+    this.pageSize = pageSize;
+    this.pageSizeOptions = pageSizeOptions;
+
   }
 
   public ngOnInit() {
@@ -66,6 +69,10 @@ export class SicknessComponent implements OnInit, OnDestroy {
     this.displayedColumns = this.tableHeaders.map((header: ITableHeader) => header.key);
     this.diseaseDataBase = new DiseaseDataBase(this._diseaseService, this._snackbar);
     this.dataSource = new DiseaseDataSource(this.diseaseDataBase, this.paginator, this.formChange$);
+  }
+
+  public ngAfterViewInit() {
+    this._paginatorService.setI18n(this.paginator);
   }
 
   public ngOnDestroy() {
@@ -115,7 +122,7 @@ export class SicknessComponent implements OnInit, OnDestroy {
   private edit(disease: IDisease) {
     const dialogRef: MdDialogRef<EditDialogComponent> = this._dialog.open(EditDialogComponent, { data: disease });
     dialogRef.afterClosed().subscribe((data: any) => {
-      if(data) {
+      if (data) {
         this.requestByCurrentData();
       }
     });
