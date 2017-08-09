@@ -57,7 +57,7 @@ export class HttpInterceptorService extends Http {
         throw err;
       };
       const data = res.json();
-      if (data.hasError || !data.success) {
+      if (data.hasError || data.errorCode) {
         throw data;
       } else {
         return res;

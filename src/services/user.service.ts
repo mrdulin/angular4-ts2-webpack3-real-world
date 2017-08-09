@@ -39,9 +39,7 @@ export class UserService {
         this.user = data;
         return data;
       })
-      .catch((err: any) => {
-        return Observable.throw(err);
-      });
+      // .catch((err: any) => Observable.throw(err));
   }
 
   logout() {
