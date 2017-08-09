@@ -29,10 +29,7 @@
 
         <section class="inline-item check-group">
           <label>渠道：</label>
-          <md-checkbox value="1" disabled>寿险</md-checkbox>
-          <md-checkbox value="2" disabled>平安好医生</md-checkbox>
-          <md-checkbox value="3" disabled>主客</md-checkbox>
-          <md-checkbox value="4" disabled>H</md-checkbox>
+          <checkbox-group class="ckg" [options]="checkboxOptions" value={{v.channels}} disabled={{true}}></checkbox-group>
         </section>
       </md-card-content>
       <md-card-actions>

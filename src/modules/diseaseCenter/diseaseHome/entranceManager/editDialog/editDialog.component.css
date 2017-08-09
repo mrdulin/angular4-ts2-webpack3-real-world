@@ -29,6 +29,14 @@
   display: block;
 }
 
-.mat-dialog-content .inline-item .mat-checkbox{
-  margin-right: 10px;
+.mat-dialog-content .inline-item.check-group{
+  display: flex;
+}
+
+.mat-dialog-content .inline-item.check-group .ckg{
+  flex: 1;
+}
+
+.mat-dialog-content .inline-item.check-group label{
+  line-height: 24px;
 }

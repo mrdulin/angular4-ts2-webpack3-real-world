@@ -1,0 +1,11 @@
+<section class="checkbox-group">
+  <md-checkbox 
+    #checkbox
+    *ngFor="let v of options" 
+    [value]="v.value" 
+    [disabled]="v.disabled || disabled" 
+    [checked]="v.checked || selectedValues.indexOf(v.value) !== -1"
+    (change)="handleOnOptionChange(checkbox)" >
+    {{v.label}}
+  </md-checkbox>
+</section>

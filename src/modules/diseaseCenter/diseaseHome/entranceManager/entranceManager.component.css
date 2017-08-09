@@ -44,15 +44,19 @@
   width: 100%;
 }
 
+.entrance-manager .container .item-card .inline-item.check-group{
+  display: flex;
+}
+
+.entrance-manager .container .item-card .inline-item.check-group .ckg{
+  flex: 1;
+}
+
 .entrance-manager .container .item-card .inline-item.check-group label{
   color: rgba(0,0,0,.38);
+  line-height: 24px;
 }
 
 .entrance-manager .container .item-card .inline-item label{
   vertical-align: middle;
-}
-
-.entrance-manager .container .item-card .inline-item .mat-checkbox{
-  display: inline-block;
-  margin-right: 15px;
 }

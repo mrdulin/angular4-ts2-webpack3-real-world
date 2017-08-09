@@ -22,12 +22,9 @@
           <upload [text]="'封面'" formControlName="poster" [src]="formData.poster" [beforeUpload]="handlePosterBeforeUpload"></upload>
         </section>
 
-        <section class="inline-item">
+        <section class="inline-item check-group">
           <label>渠道：</label>
-          <md-checkbox value="1" formControlName="channels1">寿险</md-checkbox>
-          <md-checkbox value="2" formControlName="channels2">平安好医生</md-checkbox>
-          <md-checkbox value="3" formControlName="channels3">主客</md-checkbox>
-          <md-checkbox value="4" formControlName="channels4">H</md-checkbox>
+          <checkbox-group class="ckg" [options]="options" formControlName="channels"></checkbox-group>
         </section>
       </div>
   </md-dialog-content>

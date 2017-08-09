@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core'
 import { MdDialogRef, MD_DIALOG_DATA } from '@angular/material'
-import { FormGroup, FormBuilder, Validators } from '@angular/forms'
+import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms'
 import { IDiseaseCenter } from 'root/src/models'
 import { EntranceEditService } from 'root/src/services'
 
@@ -11,6 +11,7 @@ import { EntranceEditService } from 'root/src/services'
 })
 export class EntranceEdit implements OnInit{
   entranceEditForm: FormGroup
+  options: any[]
   constructor(
     @Inject(MD_DIALOG_DATA) public formData: IDiseaseCenter,
     private fb: FormBuilder,
@@ -26,11 +27,21 @@ export class EntranceEdit implements OnInit{
       linkUrl: linkUrl,
       icon: icon,
       poster: poster,
-      channels1: channels,
-      channels2: channels,
-      channels3: channels,
-      channels4: channels
+      channels: [channels]
     });
+    this.options = [{
+      label: '寿险',
+      value: 2
+    }, {
+      label: '平安好医生',
+      value: 9
+    }, {
+      label: '主客',
+      value: 1
+    }, {
+      label: 'H',
+      value: 15
+    }]
   }
 
   handleIconBeforeUpload(value: any): void{
