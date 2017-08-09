@@ -67,9 +67,16 @@ export class DiseaseService {
 
     return this.http.get(url, requestOptions)
       .map((res: Response) => res.json())
-      .catch((err: any) => Observable.throw('获取疾病列表失败'));
+      .catch(() => Observable.throw('获取疾病列表失败'));
   }
 
+  /**
+   * 根据疾病tagId获取疾病配置信息
+   *
+   * @param {(number | string)} id
+   * @returns {Observable<any>}
+   * @memberof DiseaseService
+   */
   getByTagId(id: number | string): Observable<any> {
     const url: string = `${this.appConfig.api}/tag/disease/config?tagId=${id}`;
 
@@ -77,13 +84,10 @@ export class DiseaseService {
       return Observable.of((<any>data).model);
     }
 
-    return this.http.get(url).map((res: Response) => {
-      const data: any = res.json();
-      return data.model;
-    }).catch((e: any) => {
-      console.error(e);
-      return Observable.throw(e);
-    });
+    return this.http.get(url)
+      .map((res: Response) => res.json())
+      .map((data: any) => data.model)
+      .catch(() => Observable.throw('获取疾病配置信息失败'));
   }
 
   /**
@@ -100,12 +104,7 @@ export class DiseaseService {
     if (this.appConfig.mockApi) {
       return Observable.of(saveDiseaseConfigResponse);
     }
-    return this.http.post(url, diseaseInfo)
-      .map((res: Response) => res.json())
-      .catch((err: any) => {
-        console.error(err);
-        return Observable.throw(err);
-      });
+    return this.http.post(url, diseaseInfo).catch(() => Observable.throw('保存失败'));
   }
 
   /**
@@ -122,15 +121,8 @@ export class DiseaseService {
     if (!_postBody.relatedTags.length) {
       delete _postBody.relatedTags;
     }
-
-    console.log('_postBody', _postBody);
-
-    return this.http.post(url, _postBody).map((res: Response) => res.json())
-      .map((data: any) => {
-        if (data.errorCode) throw data.error;
-        return data;
-      })
+    return this.http.post(url, _postBody)
+      .map((res: any) => res.json())
       .catch((err: any) => Observable.throw('保存失败'));
-
   }
 }

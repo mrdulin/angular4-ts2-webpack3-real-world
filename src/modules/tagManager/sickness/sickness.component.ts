@@ -114,7 +114,11 @@ export class SicknessComponent implements OnInit, OnDestroy {
    */
   private edit(disease: IDisease) {
     const dialogRef: MdDialogRef<EditDialogComponent> = this._dialog.open(EditDialogComponent, { data: disease });
-    dialogRef.afterClosed().subscribe(() => this.requestByCurrentData());
+    dialogRef.afterClosed().subscribe((data: any) => {
+      if(data) {
+        this.requestByCurrentData();
+      }
+    });
   }
 
   /**
@@ -126,16 +130,17 @@ export class SicknessComponent implements OnInit, OnDestroy {
   private config(disease: IDisease) {
     let dialogRef: MdDialogRef<ConfigDialogComponent>;
     this.subscripton.add(
-      this._diseaseService.getByTagId(disease.tagId).subscribe((config: any) => {
-        dialogRef = this._dialog.open(ConfigDialogComponent, {
-          data: { disease, config }
-        });
+      this._diseaseService.getByTagId(disease.tagId).subscribe(
+        (config: any) => {
+          dialogRef = this._dialog.open(ConfigDialogComponent, {
+            data: { disease, config }
+          });
 
-        dialogRef.afterClosed().subscribe(() => this.requestByCurrentData());
-      })
+          dialogRef.afterClosed().subscribe(() => this.requestByCurrentData());
+        },
+        (errMsg: string) => this._snackbar.open(errMsg, null, { duration: 2000 })
+      )
     );
-
-
   }
 
   private setProperties(disease: IDisease) {

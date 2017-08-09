@@ -72,7 +72,7 @@ export class EditDialogComponent implements OnInit {
       relatedTags: this.deptAssiociated.map((dept: any) => ({ tagName: dept.tagName, tagId: dept.tagId }))
     };
     this.diseaseService.save(postBody).subscribe(
-      () => this.dialogRef.close(),
+      (data: any) => this.dialogRef.close(data),
       (errMsg: string) => this.snackBar.open(errMsg, null, { duration: 2000 })
     )
   }

@@ -13,14 +13,15 @@ export class DeptDataSource extends DataSource<any> {
 
   connect(): Observable<any[]> {
     const displayDataChanges = [
-      this.deptService.dataChange,
-      this.paginator.page
+      this.deptService.dataChange
+      // this.paginator.page
     ];
     return Observable.merge(...displayDataChanges).map(() => {
-      const depts: any = this.deptService.getDeptsData().slice();
-      const { pageSize, pageIndex } = this.paginator;
-      const startIndex: number = pageIndex * pageSize;
-      return depts.splice(startIndex, pageSize);
+      const depts: any = this.deptService.getDeptsData();
+      // const { pageSize, pageIndex } = this.paginator;
+      // const startIndex: number = pageIndex * pageSize;
+      // return depts.splice(startIndex, pageSize);
+      return depts;
     });
   }
 

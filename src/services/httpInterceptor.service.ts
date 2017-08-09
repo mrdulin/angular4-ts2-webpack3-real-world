@@ -9,7 +9,6 @@ const GLOBAL_ERROR: Map<string, string> = new Map<string, string>([
 
 @Injectable()
 export class HttpInterceptorService extends Http {
-  snackBarRef: MdSnackBarRef<SimpleSnackBar>;
 
   constructor(
     backend: ConnectionBackend,
@@ -70,10 +69,14 @@ export class HttpInterceptorService extends Http {
           //TODO: api error
           if (err.errorCode === -103) {
             const msg: string = GLOBAL_ERROR.get(err.errorCode.toString());
-            this.snackBarRef = this.snackBar.open(msg, null, { duration: 2000 });
+            this.snackBar.open(msg, null, { duration: 2000 });
           }
         } else if (err.status < 200 || err.status >= 300) {
           //TODO: http status error
+          const snackBarRef: MdSnackBarRef<SimpleSnackBar> = this.snackBar.open('http请求异常', '刷新');
+          snackBarRef.onAction().subscribe(() => {
+            window.location.reload();
+          });
         }
 
         return Observable.throw(err);

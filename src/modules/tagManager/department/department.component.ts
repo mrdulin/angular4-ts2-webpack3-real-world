@@ -21,15 +21,15 @@ export class DepartmentComponent implements OnInit {
 
   dataSource: DeptDataSource | null;
 
-  dept: string = '';
+  tagName: string = '';
 
   @ViewChild(MdPaginator) paginator: MdPaginator;
 
   tableHeaders: any[] = [
     { key: 'tagName', name: '科室名称', cell: (row: any) => `${row.tagId}` },
-    { key: 'tagId', name: '疾病名称', cell: (row: any) => `${row.tagName}` },
-    { key: 'tagLevel', name: 'ICD标准码', cell: (row: any) => `${row.standardCode}` },
-    { key: 'parentName', name: 'IDC附加码', cell: (row: any) => `${row.extraCode}` },
+    { key: 'tagId', name: '科室ID', cell: (row: any) => `${row.tagName}` },
+    { key: 'tagLevel', name: '科室级别', cell: (row: any) => `${row.tagLevel}` },
+    { key: 'parentName', name: '上级科室', cell: (row: any) => `${row.parentName}` },
     { key: 'operator', name: '操作', cell: (row: any) => `` }
   ];
   displayedColumns: string[] = [];
@@ -50,16 +50,22 @@ export class DepartmentComponent implements OnInit {
   }
 
   onSumbit() {
-    this.dept = this.dept.trim();
-    if (!this.dept) return;
+    this.tagName = this.tagName.trim();
     const firstPage: number = 1;
+    this.deptService.getDeptsByPage(this.tagName, firstPage);
+  }
 
-    this.deptService.getDeptsByPage(this.dept, firstPage);
+  requestByCurrentData() {
+    const pageIndex: number = this.paginator.pageIndex + 1;
+    this.deptService.getDeptsByPage(this.tagName, pageIndex);
   }
 
   edit(dept: any) {
-    this.dialog.open(DeptEditDialogComponent, {
-      data: dept
+    const dialogRef: MdDialogRef<DeptEditDialogComponent> = this.dialog.open(DeptEditDialogComponent, { data: dept });
+    dialogRef.afterClosed().subscribe((data) => {
+      if (data && !this.deptService.count) {
+        this.requestByCurrentData();
+      }
     });
   }
 
@@ -69,18 +75,16 @@ export class DepartmentComponent implements OnInit {
 
   addDept() {
     const dialogRef: MdDialogRef<AddDeptDialogComponent> = this.dialog.open(AddDeptDialogComponent);
-    dialogRef.afterClosed().subscribe((dept: any) => {
-      console.log(dept);
+    dialogRef.afterClosed().subscribe((data: any) => {
+      if (data) {
+        this.requestByCurrentData();
+      }
     });
   }
 
-  onPageChange() {
-
-  }
-
-  useTrackBy(index: number, item: any) {
-    // console.log('useTrackBy', item);
-    return item.tagId;
+  onPageChange(event: PageEvent) {
+    const pageIndex: number = event.pageIndex + 1;
+    this.deptService.getDeptsByPage(this.tagName, pageIndex);
   }
 
 }
