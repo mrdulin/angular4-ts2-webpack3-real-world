@@ -1,6 +1,6 @@
 <section class="upload">
   <input #fileIpt type="file" aria-disabled="disabled" (change)="handleOnChange(fileIpt)" value="">
-  <button md-raised-button [disabled]="disabled" (click)="handleClick(fileIpt)">
+  <button md-raised-button [disabled]="disabled" type="button" (click)="handleClick(fileIpt)">
     <md-icon>file_upload</md-icon>上传{{text || 'Upload'}}
   </button>
   <section class="upload-img-box" *ngIf="imgUrl">
