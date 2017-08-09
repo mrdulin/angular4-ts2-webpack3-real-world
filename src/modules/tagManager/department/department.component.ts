@@ -39,9 +39,11 @@ export class DepartmentComponent implements OnInit {
     private paginatorService: PaginatorService,
     private dialog: MdDialog
   ) {
-    this.pageIndex = this.paginatorService.pageIndex;
-    this.pageSize = this.paginatorService.pageSize;
-    this.pageSizeOptions = this.paginatorService.pageSizeOptions;
+    const { pageIndex, pageSize, pageSizeOptions } = this.paginatorService;
+
+    this.pageIndex = pageIndex;
+    this.pageSize = pageSize;
+    this.pageSizeOptions = pageSizeOptions;
   }
 
   ngOnInit() {
@@ -60,10 +62,16 @@ export class DepartmentComponent implements OnInit {
     this.deptService.getDeptsByPage(this.tagName, pageIndex);
   }
 
+  /**
+   * 编辑科室
+   *
+   * @param {*} dept
+   * @memberof DepartmentComponent
+   */
   edit(dept: any) {
     const dialogRef: MdDialogRef<DeptEditDialogComponent> = this.dialog.open(DeptEditDialogComponent, { data: dept });
     dialogRef.afterClosed().subscribe((data) => {
-      if (data && !this.deptService.count) {
+      if (data && this.deptService.count) {
         this.requestByCurrentData();
       }
     });
@@ -73,6 +81,11 @@ export class DepartmentComponent implements OnInit {
 
   }
 
+  /**
+   * 新增科室
+   *
+   * @memberof DepartmentComponent
+   */
   addDept() {
     const dialogRef: MdDialogRef<AddDeptDialogComponent> = this.dialog.open(AddDeptDialogComponent);
     dialogRef.afterClosed().subscribe((data: any) => {

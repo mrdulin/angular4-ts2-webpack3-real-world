@@ -3,9 +3,7 @@ import { Request, Response, RequestOptionsArgs, ConnectionBackend, RequestOption
 import { Observable } from 'rxjs';
 import { MdSnackBar, MdSnackBarRef, SimpleSnackBar } from '@angular/material';
 
-const GLOBAL_ERROR: Map<string, string> = new Map<string, string>([
-  ['-103', '无效的登录状态']
-])
+import { GLOBAL_ERROR } from '../modules/app/error.config';
 
 @Injectable()
 export class HttpInterceptorService extends Http {

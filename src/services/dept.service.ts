@@ -3,6 +3,7 @@ import { Response, RequestOptions, URLSearchParams } from '@angular/http';
 import { MdSnackBar } from '@angular/material';
 
 import { APP_CONFIG, IAppConfig } from '../modules/app/app.config';
+import { GLOBAL_ERROR } from 'app/error.config';
 import { HttpInterceptorService } from './httpInterceptor.service';
 
 import * as data from './deptsLevel1.json';
@@ -45,8 +46,8 @@ export class DeptService {
       .map((res: Response) => res.json())
       .catch((e: any) => Observable.throw('获取一级科室失败'))
       .subscribe(
-      (data) => this.deptsLevel1 = data.model,
-      (errMsg: string) => this.snackBar.open(errMsg, null, { duration: 2000 })
+        (data) => this.deptsLevel1 = data.model,
+        (errMsg: string) => this.snackBar.open(errMsg, null, { duration: 2000 })
       );
   }
 
@@ -143,7 +144,10 @@ export class DeptService {
         }
         return data;
       })
-      .catch(() => Observable.throw('新增科室失败'));
+      .catch((data: any) => {
+        const msg: string = GLOBAL_ERROR.get(data.errorCode.toString()) || '新增科室失败';
+        return Observable.throw(msg);
+      });
   }
 
   /**

@@ -37,7 +37,10 @@ export class DeptEditDialogComponent implements OnInit {
     const postBody: any = { icon, tagId, tagName, parentName };
 
     this.deptService.save(postBody).subscribe(
-      (data: any) => this.dialogRef.close(data),
+      (data: any) => {
+        this.snackBar.open('编辑成功!', null, { duration: 2000 });
+        this.dialogRef.close(data)
+      },
       (errMsg: string) => this.snackBar.open(errMsg, null, { duration: 2000 })
     );
   }
