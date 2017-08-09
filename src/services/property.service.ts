@@ -13,6 +13,7 @@ import * as propertySaveSuccessRes from './propertySaveSuccessRes.json';
 export class PropertySerivce {
 
   dataChange: BehaviorSubject<any> = new BehaviorSubject<any>({});
+  private currentEditProperty: any;
 
   constructor(
     @Inject(APP_CONFIG) private appConfig: IAppConfig,
@@ -68,5 +69,13 @@ export class PropertySerivce {
     return this.http.post(url, data)
       .map((res) => res.json())
       .catch(() => Observable.throw('编辑失败'));
+  }
+
+  setCurrentEditProperty(property: any) {
+    this.currentEditProperty = property;
+  }
+
+  getCurrentEditProperty() {
+    return this.currentEditProperty;
   }
 }

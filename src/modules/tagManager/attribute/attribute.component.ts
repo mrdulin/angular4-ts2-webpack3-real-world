@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MdPaginator, PageEvent, MdDialog, MdDialogRef, MdSnackBar } from '@angular/material';
 import { DataSource } from '@angular/cdk';
+import { Router, ActivatedRoute } from '@angular/router';
 
 import { PropertySerivce } from 'root/src/services';
 import { PropertyDataSource } from './property-data-source';
@@ -48,7 +49,9 @@ export class AttributeComponent implements OnInit {
     private paginatorService: PaginatorService,
     private pluckPipe: Pluck,
     private dialog: MdDialog,
-    private snackBar: MdSnackBar
+    private snackBar: MdSnackBar,
+    private router: Router,
+    private activatedRoute: ActivatedRoute
   ) {
     const { pageIndex, pageSize, pageSizeOptions } = this.paginatorService;
 
@@ -61,6 +64,8 @@ export class AttributeComponent implements OnInit {
     this.dataSource = new PropertyDataSource(this.paginator, this.propertyService);
     this.displayedColumns = this.tableHeaders.map((header) => header.key);
     this.selectedOption = this.propertyOptions[0];
+
+    this.paginatorService.i18n(this.paginator, 'cn');
   }
 
   onSubmit() {
@@ -95,7 +100,9 @@ export class AttributeComponent implements OnInit {
     });
   }
 
-  managePropertyValues() {
-
+  managePropertyValues(property: any) {
+    const { propertyId } = property;
+    this.propertyService.setCurrentEditProperty(property);
+    this.router.navigate(['edit', propertyId], { relativeTo: this.activatedRoute });
   }
 }

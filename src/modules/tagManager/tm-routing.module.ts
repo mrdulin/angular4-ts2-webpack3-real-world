@@ -2,7 +2,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { SicknessComponent } from './sickness';
 import { DepartmentComponent } from './department';
-import { AttributeComponent } from './attribute';
+import { AttributeComponent, AttrEditComponent } from './attribute';
 
 export const routes: Routes = [
   {
@@ -35,6 +35,13 @@ export const routes: Routes = [
         component: AttributeComponent,
         data: {
           name: '属性库管理'
+        }
+      },
+      {
+        path: 'attribute/edit/:id',
+        component: AttrEditComponent,
+        data: {
+          name: '属性值管理'
         }
       }
     ]

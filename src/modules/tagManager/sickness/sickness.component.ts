@@ -72,7 +72,7 @@ export class SicknessComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   public ngAfterViewInit() {
-    this._paginatorService.setI18n(this.paginator);
+    this._paginatorService.i18n(this.paginator, 'cn');
   }
 
   public ngOnDestroy() {

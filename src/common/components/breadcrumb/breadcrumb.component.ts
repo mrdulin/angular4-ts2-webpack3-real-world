@@ -58,10 +58,13 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
 
       const nav: ISidebarNav = this.navs.find((nav: ISidebarNav) => nav.key === url);
 
-      this.urls.push({
-        key: url,
-        name: nav.name
-      });
+      if (nav) {
+        this.urls.push({
+          key: url,
+          name: nav.name
+        });
+      }
+
     });
 
     const isRoot: boolean = url.lastIndexOf('/') > 0;

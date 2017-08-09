@@ -9,7 +9,7 @@ import { TagManagerMaterialModule } from './tagManager-material.module';
 
 import { SicknessComponent, EditDialogComponent, ConfigDialogComponent } from './sickness';
 import { DepartmentComponent, DeptEditDialogComponent, AddDeptDialogComponent } from './department';
-import { AttributeComponent, PropertyEditDialogComponent } from './attribute';
+import { AttributeComponent, PropertyEditDialogComponent, AttrEditComponent } from './attribute';
 
 import { DiseaseService, PropertySerivce } from 'root/src/services';
 
@@ -23,7 +23,8 @@ import { DiseaseService, PropertySerivce } from 'root/src/services';
     ConfigDialogComponent,
     DeptEditDialogComponent,
     AddDeptDialogComponent,
-    PropertyEditDialogComponent
+    PropertyEditDialogComponent,
+    AttrEditComponent
   ],
   imports: [
     TagManagerRoutingModule,
