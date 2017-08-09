@@ -45,13 +45,15 @@ export class DiseaseService {
     const requestOptions: RequestOptions = new RequestOptions();
     const url: string = `${this.appConfig.api}/tag/disease/pageQuery`;
 
-    switch (data.type) {
-      case 'diseaseName':
-        params.set('tagName', data.value);
-        break;
-      case 'ICD':
-        params.set('standardCode', data.value);
-        break;
+    if (data.value) {
+      switch (data.type) {
+        case 'diseaseName':
+          params.set('tagName', data.value);
+          break;
+        case 'ICD':
+          params.set('standardCode', data.value);
+          break;
+      }
     }
 
     params.set('pageNo', page.toString());
@@ -65,10 +67,7 @@ export class DiseaseService {
 
     return this.http.get(url, requestOptions)
       .map((res: Response) => res.json())
-      .catch((err: any) => {
-        return Observable.throw(err);
-      });
-
+      .catch((err: any) => Observable.throw('获取疾病列表失败'));
   }
 
   getByTagId(id: number | string): Observable<any> {
@@ -120,7 +119,7 @@ export class DiseaseService {
     const url: string = `${this.appConfig.api}/tag/disease/save`;
 
     const _postBody: any = this.utilService.filterFalsy(postBody);
-    if(!_postBody.relatedTags.length) {
+    if (!_postBody.relatedTags.length) {
       delete _postBody.relatedTags;
     }
 
@@ -128,10 +127,10 @@ export class DiseaseService {
 
     return this.http.post(url, _postBody).map((res: Response) => res.json())
       .map((data: any) => {
-        if(data.errorCode) throw data.error;
+        if (data.errorCode) throw data.error;
         return data;
       })
-      .catch((err: any) => Observable.throw(err));
+      .catch((err: any) => Observable.throw('保存失败'));
 
   }
 }

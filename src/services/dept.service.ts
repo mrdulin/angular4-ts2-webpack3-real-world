@@ -32,10 +32,8 @@ export class DeptService {
     }
     this.http.get(url)
       .map((res: Response) => res.json())
-      .catch((e: any) => {
-        console.error(e);
-        return Observable.throw(e);
-      }).subscribe((data) => {
+      .catch((e: any) => Observable.throw(e))
+      .subscribe((data) => {
         this.deptsLevel1 = data.model;
       });
   }
@@ -45,16 +43,8 @@ export class DeptService {
 
     return this.http.get(url)
       .map((res: Response) => res.json())
-      .map((data: any) => {
-        if(data.errorCode) {
-          throw data.error;
-        }
-        return data.model;
-      })
-      .catch((e: any) => {
-        console.error(e);
-        return Observable.throw(e);
-      });
+      .map((data: any) => data.model)
+      .catch((e: any) => Observable.throw('获取二级科室出错'));
   }
 
   getDeptsByPage(name: string, page: number, pageSize: number = 10): void {

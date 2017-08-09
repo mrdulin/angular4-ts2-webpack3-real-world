@@ -40,7 +40,7 @@ export class HttpInterceptorService extends Http {
         withCredentials: true
       });
     }
-    if(!options.headers) {
+    if (!options.headers) {
       options.headers = new Headers();
     }
     options.withCredentials = true;
@@ -52,31 +52,31 @@ export class HttpInterceptorService extends Http {
 
   intercept(observable: Observable<Response>): Observable<Response> {
     return observable.map((res: any) => {
-      if(res.text() === 'need cookie: _tk') {
-        const err = {hasError: true, errorCode: '-103'};
+      if (res.text() === 'need cookie: _tk') {
+        const err = { hasError: true, errorCode: '-103' };
         throw err;
       };
       const data = res.json();
-      if (data.hasError) {
+      if (data.hasError || !data.success) {
         throw data;
       } else {
         return res;
       }
     })
-    .catch((err, source) => {
-      if (err.gwError) {
-        //TODO: gateway error
-      } else if (err.hasError) {
-        //TODO: api error
-        const msg: string =  GLOBAL_ERROR.get(err.errorCode.toString());
-        this.snackBarRef = this.snackBar.open(msg, null, {
-          duration: 2000
-        });
-      } else if (err.status < 200 || err.status >= 300) {
-        //TODO: http status error
-      }
+      .catch((err, source) => {
+        if (err.gwError) {
+          //TODO: gateway error
+        } else if (err.hasError) {
+          //TODO: api error
+          if (err.errorCode === -103) {
+            const msg: string = GLOBAL_ERROR.get(err.errorCode.toString());
+            this.snackBarRef = this.snackBar.open(msg, null, { duration: 2000 });
+          }
+        } else if (err.status < 200 || err.status >= 300) {
+          //TODO: http status error
+        }
 
-      return Observable.throw(err);
-    });
+        return Observable.throw(err);
+      });
   }
 }
