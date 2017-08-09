@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MdPaginator, PageEvent, MdDialog, MdDialogRef } from '@angular/material';
+import { MdPaginator, PageEvent, MdDialog, MdDialogRef, MdSnackBar } from '@angular/material';
 import { DataSource } from '@angular/cdk';
 
 import { PropertySerivce } from 'root/src/services';
@@ -47,11 +47,14 @@ export class AttributeComponent implements OnInit {
     private propertyService: PropertySerivce,
     private paginatorService: PaginatorService,
     private pluckPipe: Pluck,
-    private dialog: MdDialog
+    private dialog: MdDialog,
+    private snackBar: MdSnackBar
   ) {
-    this.pageIndex = this.paginatorService.pageIndex;
-    this.pageSize = this.paginatorService.pageSize;
-    this.pageSizeOptions = this.paginatorService.pageSizeOptions;
+    const { pageIndex, pageSize, pageSizeOptions } = this.paginatorService;
+
+    this.pageIndex = pageIndex;
+    this.pageSize = pageSize;
+    this.pageSizeOptions = pageSizeOptions;
   }
 
   ngOnInit() {
@@ -64,7 +67,14 @@ export class AttributeComponent implements OnInit {
     const keyword: string = this.keyword.trim();
     if (!keyword) return;
     const firstPage: number = 1;
-    this.propertyService.getPropertiesByName(keyword, firstPage);
+    this.getPropertiesByName(keyword, firstPage);
+  }
+
+  getPropertiesByName(keyword: string, pageIndex: number) {
+    this.propertyService.getPropertiesByName(keyword, pageIndex).subscribe(
+      () => null,
+      (errMsg: string) => this.snackBar.open(errMsg, null, { duration: 2000 })
+    );
   }
 
   onPageChange(e: PageEvent) {
@@ -74,16 +84,14 @@ export class AttributeComponent implements OnInit {
 
   edit(property: any) {
     const dialogRef: MdDialogRef<PropertyEditDialogComponent> = this.dialog.open(PropertyEditDialogComponent, {
-      data: {
-        property,
-        choiceMap
-      }
+      data: { property, choiceMap }
     });
 
-    dialogRef.afterClosed().subscribe(() => {
-      const pageIndex: number = this.paginator.pageIndex + 1;
-      console.log(this.keyword, pageIndex);
-      this.propertyService.getPropertiesByName(this.keyword, pageIndex);
+    dialogRef.afterClosed().subscribe((data) => {
+      if (data) {
+        const pageIndex: number = this.paginator.pageIndex + 1;
+        this.getPropertiesByName(this.keyword, pageIndex);
+      }
     });
   }
 

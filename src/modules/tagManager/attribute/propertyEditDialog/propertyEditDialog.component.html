@@ -1,12 +1,12 @@
 <h2 md-dialog-title>编辑</h2>
 <md-dialog-content>
-  <form novalidate>
+  <form #form='ngForm' id='property-edit-dialog-form' novalidate (ngSubmit)='onSubmit()'>
     <md-input-container class='full-width'>
-      <input mdInput type="text" placeholder='属性ID' name="propertyId" [value]="property.propertyId" disabled>
+      <input mdInput type="text" placeholder='属性ID' name="propertyId" [value]="data.property.propertyId" disabled>
     </md-input-container>
 
     <md-input-container class='full-width'>
-      <input mdInput type="text" placeholder='属性名称' name="propertyName" [value]="property.propertyName" #propertyNameInput required>
+      <input mdInput type="text" placeholder='属性名称' name="propertyName" [(ngModel)]="propertyName" required>
     </md-input-container>
 
     <div>
@@ -20,6 +20,6 @@
   </form>
 </md-dialog-content>
 <md-dialog-actions>
-  <button md-button md-dialog-close>取消</button>
-  <button md-button (click)='onSubmit(propertyNameInput.value)'>确定</button>
+  <button md-button md-dialog-close type='button'>取消</button>
+  <button md-button type='submit' form='property-edit-dialog-form' [disabled]='!form.valid'>确定</button>
 </md-dialog-actions>

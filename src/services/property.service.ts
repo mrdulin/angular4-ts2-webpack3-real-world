@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpInterceptorService } from './httpInterceptor.service';
 import { APP_CONFIG, IAppConfig } from '../modules/app/app.config';
-import { Response } from '@angular/http';
+import { Response, RequestOptions, URLSearchParams } from '@angular/http';
 
 import { Observable } from 'rxjs';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -19,22 +19,36 @@ export class PropertySerivce {
     private http: HttpInterceptorService
   ) { }
 
+  /**
+   * 根据类别关键字获取属性项
+   *
+   * @param {string} name
+   * @param {number} pageNo
+   * @param {number} [pageSize=10]
+   * @memberof PropertySerivce
+   */
   getPropertiesByName(name: string, pageNo: number, pageSize: number = 10) {
-    let url: string = `${this.appConfig.api}/property/name/pageQuery?propertyName=${name}&pageNo=${pageNo}&pageSize=${pageSize}`;
-    url = encodeURI(url);
+    const params: URLSearchParams = new URLSearchParams();
+    const requestOptions: RequestOptions = new RequestOptions();
+
+    let url: string = `${this.appConfig.api}/property/name/pageQuery`;
+
+    params.set('propertyName', name);
+    params.set('pageNo', pageNo.toString());
+    params.set('pageSize', pageSize.toString());
+    requestOptions.params = params;
 
     if (this.appConfig.mockApi) {
       this.dataChange.next((<any>getPropertiesResponse).model);
     }
 
-    this.http.get(url)
-      .map((res: Response) => res.json())
-      .map((data) => {
+    return this.http.get(url, requestOptions)
+      .map((res: Response) => res.json().model)
+      .map((data: any) => {
         this.dataChange.next(data);
+        return data;
       })
-      .catch((err: any) => {
-        return Observable.throw(err);
-      });
+      .catch(() => Observable.throw('获取属性项列表失败'))
   }
 
   /**
@@ -53,8 +67,6 @@ export class PropertySerivce {
 
     return this.http.post(url, data)
       .map((res) => res.json())
-      .catch((err: any) => {
-        return Observable.throw(err);
-      })
+      .catch(() => Observable.throw('编辑失败'));
   }
 }

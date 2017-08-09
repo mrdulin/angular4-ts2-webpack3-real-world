@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MD_DIALOG_DATA, MdDialogRef } from '@angular/material';
+import { MD_DIALOG_DATA, MdDialogRef, MdSnackBar } from '@angular/material';
 
 import { PropertySerivce } from 'root/src/services';
 
@@ -12,15 +12,16 @@ export class PropertyEditDialogComponent implements OnInit {
     { key: '1', name: '单选' },
     { key: '2', name: '多选' }
   ]
-  property: any;
   selectedOption: any;
+  propertyName: string;
 
   constructor(
     @Inject(MD_DIALOG_DATA) public data: any,
     private dialogRef: MdDialogRef<PropertyEditDialogComponent>,
-    private propertyService: PropertySerivce
+    private propertyService: PropertySerivce,
+    private snackBar: MdSnackBar
   ) {
-    this.property = this.data.property;
+    this.propertyName = this.data.property.propertyName;
   }
 
   ngOnInit() {
@@ -32,16 +33,19 @@ export class PropertyEditDialogComponent implements OnInit {
   }
 
   onSubmit(value: string) {
-    const propertyName = value.trim();
     const postBody = {
       choice: this.selectedOption.key,
-      propertyId: this.property.propertyId,
-      propertyName,
+      propertyId: this.data.property.propertyId,
+      propertyName: this.propertyName
     };
 
-    this.propertyService.save(postBody).subscribe((data) => {
-      this.dialogRef.close();
-    });
+    this.propertyService.save(postBody).subscribe(
+      (data) => {
+        this.snackBar.open('编辑成功！', null, { duration: 2000 });
+        this.dialogRef.close(data);
+      },
+      (errMsg: string) => this.snackBar.open(errMsg, null, { duration: 2000 })
+    );
 
   }
 }

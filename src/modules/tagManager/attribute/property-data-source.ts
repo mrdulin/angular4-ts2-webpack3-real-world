@@ -17,25 +17,22 @@ export class PropertyDataSource extends DataSource<any> {
   connect(): Observable<any> {
     const displayDataChanges = [
       this.propertyService.dataChange,
-      this.paginator.page
+      // this.paginator.page
     ];
 
     return Observable.merge(...displayDataChanges).map(() => {
       const data: any = this.propertyService.dataChange.value;
-      const { pageIndex, pageSize } = this.paginator;
-      if (data.t) {
-        const properties: any[] = data.t.slice();
-        this.dataTotal = data.count;
-        const startIndex: number = pageIndex * pageSize;
+      // const { pageIndex, pageSize } = this.paginator;
+      const properties: any[] = data.t;
+      this.dataTotal = data.count;
+      // const startIndex: number = pageIndex * pageSize;
+      // return properties.splice(startIndex, pageSize);
 
-        return properties.splice(startIndex, pageSize);
-      } else {
-        return [];
-      }
+      return properties;
     })
   }
 
   disconnect() {
-
+    this.propertyService.dataChange.complete();
   }
 }
