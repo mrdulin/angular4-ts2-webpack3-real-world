@@ -1,7 +1,9 @@
 import { Injectable, Inject } from '@angular/core';
-import { Response } from '@angular/http';
+import { Response, RequestOptions, URLSearchParams } from '@angular/http';
+import { MdSnackBar } from '@angular/material';
 
 import { APP_CONFIG, IAppConfig } from '../modules/app/app.config';
+import { GLOBAL_ERROR } from 'app/error.config';
 import { HttpInterceptorService } from './httpInterceptor.service';
 
 import * as data from './deptsLevel1.json';
@@ -21,44 +23,71 @@ export class DeptService {
 
   constructor(
     @Inject(APP_CONFIG) private appConfig: IAppConfig,
-    private http: HttpInterceptorService
+    private http: HttpInterceptorService,
+    private snackBar: MdSnackBar
   ) { }
 
+  /**
+   * 根据科室等级获取科室
+   *
+   * @param {(number | string)} lv
+   * @returns {void}
+   * @memberof DeptService
+   */
   getDeptsByTagLevel(lv: number | string): void {
     const url: string = `${this.appConfig.api}/tag/dept/child?tagLevel=${lv}`;
+
     if (this.appConfig.mockApi) {
       this.deptsLevel1 = (<any>data).model;
       return;
     }
+
     this.http.get(url)
       .map((res: Response) => res.json())
-      .catch((e: any) => {
-        console.error(e);
-        return Observable.throw(e);
-      }).subscribe((data) => {
-        this.deptsLevel1 = data.model;
-      });
+      .catch((e: any) => Observable.throw('获取一级科室失败'))
+      .subscribe(
+        (data) => this.deptsLevel1 = data.model,
+        (errMsg: string) => this.snackBar.open(errMsg, null, { duration: 2000 })
+      );
   }
 
+  /**
+   * 根据科室id获取子科室
+   *
+   * @param {(number | string)} id
+   * @returns
+   * @memberof DeptService
+   */
   getDeptsByTagId(id: number | string) {
     const url: string = `${this.appConfig.api}/tag/dept/child?tagId=${id}`;
 
     return this.http.get(url)
       .map((res: Response) => res.json())
-      .map((data: any) => {
-        if(data.errorCode) {
-          throw data.error;
-        }
-        return data.model;
-      })
-      .catch((e: any) => {
-        console.error(e);
-        return Observable.throw(e);
-      });
+      .map((data: any) => data.model)
+      .catch(() => Observable.throw('获取二级科室出错'));
   }
 
+  /**
+   * 根据科室名称获取科室
+   *
+   * @param {string} name
+   * @param {number} page
+   * @param {number} [pageSize=10]
+   * @memberof DeptService
+   */
   getDeptsByPage(name: string, page: number, pageSize: number = 10): void {
-    const url: string = `${this.appConfig.api}/tag/dept/pageQuery?tagName=${name}&pageNo=${page}&pageSize=${pageSize}`;
+    const params: URLSearchParams = new URLSearchParams();
+    const requestOptions: RequestOptions = new RequestOptions();
+    const url: string = `${this.appConfig.api}/tag/dept/pageQuery`;
+
+    params.set('pageNo', page.toString());
+    params.set('pageSize', pageSize.toString());
+
+    if (name) {
+      params.set('tagName', name);
+    }
+    requestOptions.params = params;
+
     if (this.appConfig.mockApi) {
       setTimeout(() => {
         const { model: { count, t } } = <any>getDeptsByPageResponse;
@@ -66,21 +95,28 @@ export class DeptService {
         this.dataChange.next(t);
       }, 1000);
     }
-    this.http.get(url)
+
+    this.http.get(url, requestOptions)
       .map((res: Response) => res.json())
-      .map((data: any) => {
-        this.dataChange.next(data);
-      })
-      .catch((err: any) => {
-        console.log(err);
-        return Observable.throw(err);
-      });
+      .catch((err: any) => Observable.throw('获取科室列表失败'))
+      .subscribe((data: any) => {
+        const { model: { count, t: depts } } = data;
+        this.count = count;
+        this.dataChange.next(depts);
+      }, (errMsg: string) => this.snackBar.open(errMsg, null, { duration: 2000 }))
   }
 
   getDeptsData(): any[] {
     return this.dataChange.value;
   }
 
+  /**
+   * 新增科室
+   *
+   * @param {*} dept
+   * @returns {Observable<any>}
+   * @memberof DeptService
+   */
   addDept(dept: any): Observable<any> {
     const url: string = `${this.appConfig.api}/tag/dept/save`;
 
@@ -90,18 +126,39 @@ export class DeptService {
         const depts: any[] = this.getDeptsData();
         if (depts.length > 0) {
           this.count += 1;
-          const newDepts = [dept, ...depts];
-          this.dataChange.next(newDepts);
+          this.dataChange.next([dept, ...depts]);
         }
       }
       return Observable.of(addDeptSuccessResponse);
     }
 
     return this.http.post(url, dept)
-      .map((res: Response) => res.json())
-      .catch((err: any) => {
-        console.error(err);
-        return Observable.throw(err);
+      .map((res: Response) => {
+        const data: any = res.json();
+
+        dept.tagId = data.tagId;
+        const depts: any[] = this.getDeptsData();
+        if (depts.length > 0) {
+          this.count += 1;
+          this.dataChange.next([dept, ...depts]);
+        }
+        return data;
+      })
+      .catch((data: any) => {
+        const msg: string = GLOBAL_ERROR.get(data.errorCode.toString()) || '新增科室失败';
+        return Observable.throw(msg);
       });
+  }
+
+  /**
+   * 保存科室信息修改
+   *
+   * @param {*} postBody
+   * @returns
+   * @memberof DeptService
+   */
+  save(postBody: any) {
+    const url: string = `${this.appConfig.api}/tag/dept/save`;
+    return this.http.post(url, postBody).map((res: Response) => res.json()).catch(() => Observable.throw('保存科室信息失败'));
   }
 }

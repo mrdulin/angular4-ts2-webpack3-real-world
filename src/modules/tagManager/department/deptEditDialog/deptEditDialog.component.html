@@ -1,6 +1,6 @@
 <h2 md-dialog-title>编辑</h2>
 <md-dialog-content>
-  <form novalidate>
+  <form #form='ngForm' id='dept-edit-dialog-form' novalidate (ngSubmit)='onSubmit()'>
 
     <md-input-container class='full-width' type='text'>
       <input mdInput disabled placeholder="科室ID" name="tagId" [value]="dept.tagId">
@@ -11,7 +11,7 @@
     </div>
 
     <md-input-container class='full-width' type='text'>
-      <input mdInput name="tagName" placeholder="科室名称" [value]="dept.tagName" required>
+      <input mdInput name="tagName" placeholder="科室名称" [(ngModel)]="tagName" required>
     </md-input-container>
 
     <md-input-container class='full-width' type='text'>
@@ -25,6 +25,6 @@
   </form>
 </md-dialog-content>
 <md-dialog-actions>
-  <button md-button md-dialog-close>取消</button>
-  <button md-button (click)='onSubmit()'>确定</button>
+  <button md-button md-dialog-close type="button">取消</button>
+  <button md-button type='submit' form='dept-edit-dialog-form' [disabled]='!form.valid'>确定</button>
 </md-dialog-actions>

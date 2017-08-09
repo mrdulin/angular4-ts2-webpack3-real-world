@@ -26,7 +26,8 @@ const config: webpack.Configuration = {
       'normalize.css': helpers.resolve('../node_modules/normalize.css/normalize.css'),
       'root': helpers.resolve('..'),
       'common': helpers.resolve('../src/common'),
-      'services': helpers.resolve('../src/services')
+      'services': helpers.resolve('../src/services'),
+      'app': helpers.resolve('../src/modules/app')
     }
   },
 

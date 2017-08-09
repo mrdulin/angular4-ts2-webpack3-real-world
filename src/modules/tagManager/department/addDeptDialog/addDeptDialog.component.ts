@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { MdDialogRef } from '@angular/material';
+import { MdDialogRef, MdSnackBar } from '@angular/material';
 
 import { DeptService } from 'root/src/services';
 
@@ -15,7 +15,8 @@ export class AddDeptDialogComponent {
 
   constructor(
     private dialogRef: MdDialogRef<AddDeptDialogComponent>,
-    private deptService: DeptService
+    private deptService: DeptService,
+    private snackBar: MdSnackBar
   ) { }
 
   onSubmit() {
@@ -23,9 +24,12 @@ export class AddDeptDialogComponent {
       tagLevel: this.selectedTagLevel,
       tagName: this.tagName
     };
-    this.deptService.addDept(dept).subscribe((data) => {
-      dept.tagId = data.model;
-      this.dialogRef.close(dept);
-    });
+    this.deptService.addDept(dept).subscribe(
+      (data: any) => {
+        this.snackBar.open('新增科室成功！', null, {duration: 2000});
+        this.dialogRef.close(data);
+      },
+      (errMsg: string) => this.snackBar.open(errMsg, null, { duration: 2000 })
+    );
   }
 }

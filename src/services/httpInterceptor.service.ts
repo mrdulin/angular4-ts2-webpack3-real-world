@@ -3,13 +3,10 @@ import { Request, Response, RequestOptionsArgs, ConnectionBackend, RequestOption
 import { Observable } from 'rxjs';
 import { MdSnackBar, MdSnackBarRef, SimpleSnackBar } from '@angular/material';
 
-const GLOBAL_ERROR: Map<string, string> = new Map<string, string>([
-  ['-103', '无效的登录状态']
-])
+import { GLOBAL_ERROR } from '../modules/app/error.config';
 
 @Injectable()
 export class HttpInterceptorService extends Http {
-  snackBarRef: MdSnackBarRef<SimpleSnackBar>;
 
   constructor(
     backend: ConnectionBackend,
@@ -40,7 +37,7 @@ export class HttpInterceptorService extends Http {
         withCredentials: true
       });
     }
-    if(!options.headers) {
+    if (!options.headers) {
       options.headers = new Headers();
     }
     options.withCredentials = true;
@@ -52,31 +49,35 @@ export class HttpInterceptorService extends Http {
 
   intercept(observable: Observable<Response>): Observable<Response> {
     return observable.map((res: any) => {
-      if(res.text() === 'need cookie: _tk') {
-        const err = {hasError: true, errorCode: '-103'};
+      if (res.text() === 'need cookie: _tk') {
+        const err = { hasError: true, errorCode: '-103' };
         throw err;
       };
       const data = res.json();
-      if (data.hasError) {
+      if (data.hasError || data.errorCode) {
         throw data;
       } else {
         return res;
       }
     })
-    .catch((err, source) => {
-      if (err.gwError) {
-        //TODO: gateway error
-      } else if (err.hasError) {
-        //TODO: api error
-        const msg: string =  GLOBAL_ERROR.get(err.errorCode.toString());
-        this.snackBarRef = this.snackBar.open(msg, null, {
-          duration: 2000
-        });
-      } else if (err.status < 200 || err.status >= 300) {
-        //TODO: http status error
-      }
+      .catch((err, source) => {
+        if (err.gwError) {
+          //TODO: gateway error
+        } else if (err.hasError) {
+          //TODO: api error
+          if (err.errorCode === -103) {
+            const msg: string = GLOBAL_ERROR.get(err.errorCode.toString());
+            this.snackBar.open(msg, null, { duration: 2000 });
+          }
+        } else if (err.status < 200 || err.status >= 300) {
+          //TODO: http status error
+          const snackBarRef: MdSnackBarRef<SimpleSnackBar> = this.snackBar.open('http请求异常', '刷新');
+          snackBarRef.onAction().subscribe(() => {
+            window.location.reload();
+          });
+        }
 
-      return Observable.throw(err);
-    });
+        return Observable.throw(err);
+      });
   }
 }

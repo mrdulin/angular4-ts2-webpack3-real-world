@@ -1,6 +1,6 @@
 <form novalidate (submit)='onSumbit()'>
   <md-input-container type='text'>
-    <input mdInput type="text" name="dept" [(ngModel)]='dept' placeholder="科室名称">
+    <input mdInput type="text" name="tagName" [(ngModel)]='tagName' placeholder="科室名称">
   </md-input-container>
   <button md-raised-button type='submit'>查询</button>
 </form>
@@ -11,7 +11,7 @@
 
 <md-card>
 
-  <md-table [dataSource]='dataSource' [trackBy]='useTrackBy'>
+  <md-table [dataSource]='dataSource'>
     <ng-container *ngFor='let tableHeader of tableHeaders; let last = last; trackBy: trackByFn' [cdkColumnDef]='tableHeader.key'>
       <md-header-cell *cdkHeaderCellDef> {{tableHeader.name}} </md-header-cell>
       <md-cell class='table-cell' *cdkCellDef="let row">
@@ -27,9 +27,9 @@
     <md-row *cdkRowDef="let row; columns: displayedColumns;"></md-row>
   </md-table>
 
-  <p class='no-data-tip' [hidden]='this.deptService.total'>暂无数据</p>
+  <p class='no-data-tip' [hidden]='this.deptService.count'>暂无数据</p>
 
-  <div [hidden]='!this.deptService.total'>
+  <div [hidden]='!this.deptService.count'>
     <md-paginator (page)='onPageChange($event)' [length]="this.deptService.count" [pageIndex]="pageIndex" [pageSize]="pageSize"
       [pageSizeOptions]="pageSizeOptions"></md-paginator>
   </div>

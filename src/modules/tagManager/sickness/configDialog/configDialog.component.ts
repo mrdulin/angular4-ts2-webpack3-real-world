@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
-import { MD_DIALOG_DATA, MdDialogRef } from '@angular/material';
+import { MD_DIALOG_DATA, MdDialogRef, MdSnackBar } from '@angular/material';
 
 import { IDisease } from 'root/src/models';
 import { DiseaseService } from 'root/src/services';
@@ -19,11 +19,11 @@ export class ConfigDialogComponent implements OnInit {
   constructor(
     @Inject(MD_DIALOG_DATA) public data: any,
     private diseaseService: DiseaseService,
-    private dialogRef: MdDialogRef<ConfigDialogComponent>
+    private dialogRef: MdDialogRef<ConfigDialogComponent>,
+    private snackBar: MdSnackBar
   ) { }
 
   ngOnInit() {
-    console.log(this.data);
     this.disease = this.data.disease;
     this.config = this.data.config;
   }
@@ -33,20 +33,19 @@ export class ConfigDialogComponent implements OnInit {
    * @memberof ConfigDialogComponent
    */
   onSumit() {
-    console.log(this.config);
     const data: IDiseaseMainInfo & IDiseaseConfig = {
       tagId: this.disease.tagId,
       tagName: this.disease.tagName,
       ...this.config
     };
 
-    //TODO: 保存失败异常处理
-    this.diseaseService.saveConfig(data).subscribe((res: any) => {
-      console.log(res);
-      if(res.model) {
+    this.diseaseService.saveConfig(data).subscribe(
+      () => {
+        this.snackBar.open('编辑疾病配置成功！', null, { duration: 2000 });
         this.dialogRef.close();
-      }
-    });
+      },
+      (errMsg: string) => this.snackBar.open(errMsg, null, { duration: 2000 })
+    );
   }
 
 }

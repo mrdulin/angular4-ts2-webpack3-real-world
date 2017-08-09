@@ -1,6 +1,6 @@
 <h2 md-dialog-title>新增科室</h2>
 <md-dialog-content>
-  <form novalidate>
+  <form id='add-dept-dialog-form' #form='ngForm' novalidate (ngSubmit)='onSubmit()'>
     <md-input-container class='full-width'>
       <input mdInput type="text" name="tagName" placeholder="科室名称" [(ngModel)]='tagName' required>
     </md-input-container>
@@ -18,6 +18,6 @@
   </form>
 </md-dialog-content>
 <md-dialog-actions>
-  <button md-button md-dialog-close>取消</button>
-  <button md-button (click)='onSubmit()'>确定</button>
+  <button md-button md-dialog-close type="button">取消</button>
+  <button md-button type='submit' form='add-dept-dialog-form' [disabled]='!form.valid'>确定</button>
 </md-dialog-actions>

@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { MdPaginator, PageEvent, MdDialog, MdDialogRef } from '@angular/material';
+import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
+import { MdPaginator, PageEvent, MdDialog, MdDialogRef, MdSnackBar, MdSnackBarRef, SimpleSnackBar } from '@angular/material';
 import { DataSource } from '@angular/cdk';
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -14,14 +14,14 @@ import { Disease, IDisease } from 'root/src/models';
 import { EditDialogComponent } from './editDialog';
 import { ConfigDialogComponent } from './configDialog';
 
-import {IQueryType, ITableHeader} from 'common/interfaces';
+import { IQueryType, ITableHeader } from 'common/interfaces';
 
 @Component({
   selector: 'sickness',
   templateUrl: './sickness.component.html',
   styleUrls: ['./sickness.component.css']
 })
-export class SicknessComponent implements OnInit, OnDestroy {
+export class SicknessComponent implements OnInit, OnDestroy, AfterViewInit {
   public queryTypes: IQueryType[] = [
     { key: 'diseaseName', name: '疾病名称' },
     { key: 'ICD', name: 'ICD标准码' }
@@ -53,18 +53,26 @@ export class SicknessComponent implements OnInit, OnDestroy {
   constructor(
     private _diseaseService: DiseaseService,
     private _paginatorService: PaginatorService,
-    private _dialog: MdDialog
+    private _dialog: MdDialog,
+    private _snackbar: MdSnackBar
   ) {
-    this.pageIndex = this._paginatorService.pageIndex;
-    this.pageSize = this._paginatorService.pageSize;
-    this.pageSizeOptions = this._paginatorService.pageSizeOptions;
+    const { pageIndex, pageSize, pageSizeOptions } = this._paginatorService;
+
+    this.pageIndex = pageIndex;
+    this.pageSize = pageSize;
+    this.pageSizeOptions = pageSizeOptions;
+
   }
 
   public ngOnInit() {
     this.selectedQueryType = this.queryTypes[0];
     this.displayedColumns = this.tableHeaders.map((header: ITableHeader) => header.key);
-    this.diseaseDataBase = new DiseaseDataBase(this._diseaseService);
+    this.diseaseDataBase = new DiseaseDataBase(this._diseaseService, this._snackbar);
     this.dataSource = new DiseaseDataSource(this.diseaseDataBase, this.paginator, this.formChange$);
+  }
+
+  public ngAfterViewInit() {
+    this._paginatorService.setI18n(this.paginator);
   }
 
   public ngOnDestroy() {
@@ -73,8 +81,7 @@ export class SicknessComponent implements OnInit, OnDestroy {
 
   public onSubmit(): void {
     this.keyword = this.keyword.trim();
-    if (!this.keyword) return;
-    const firstPage: number = this.pageIndex + 1;
+    const firstPage: number = 1;
     this.formChange$.next(true);
     const data: IGetDiseasesByPageData = this.getRequestData();
     this.diseaseDataBase.getDiseasesByPage(data, firstPage);
@@ -89,6 +96,12 @@ export class SicknessComponent implements OnInit, OnDestroy {
 
   public trackByFn(index: number, tableHeader: ITableHeader) {
     return tableHeader.key;
+  }
+
+  private requestByCurrentData() {
+    const pageIndex: number = this.paginator.pageIndex + 1;
+    const reqData: IGetDiseasesByPageData = this.getRequestData();
+    this.diseaseDataBase.getDiseasesByPage(reqData, pageIndex);
   }
 
   private getRequestData(): IGetDiseasesByPageData {
@@ -107,8 +120,11 @@ export class SicknessComponent implements OnInit, OnDestroy {
    * @memberof SicknessComponent
    */
   private edit(disease: IDisease) {
-    const dialogRef: MdDialogRef<EditDialogComponent> = this._dialog.open(EditDialogComponent, {
-      data: disease
+    const dialogRef: MdDialogRef<EditDialogComponent> = this._dialog.open(EditDialogComponent, { data: disease });
+    dialogRef.afterClosed().subscribe((data: any) => {
+      if (data) {
+        this.requestByCurrentData();
+      }
     });
   }
 
@@ -119,18 +135,18 @@ export class SicknessComponent implements OnInit, OnDestroy {
    * @memberof SicknessComponent
    */
   private config(disease: IDisease) {
-    // TODO: http://umr.test.pajkdc.com/innerApi/tag/disease/config?tagId=1001000
-    // 打开配置设置模态框, 先调service请求该疾病的配置，请求成功后打开模态框，请求失败，全局模态框错误提示。
-
+    let dialogRef: MdDialogRef<ConfigDialogComponent>;
     this.subscripton.add(
-      this._diseaseService.getByTagId(disease.tagId).subscribe((config: any) => {
-        const dialogRef: MdDialogRef<ConfigDialogComponent> = this._dialog.open(ConfigDialogComponent, {
-          data: {
-            disease,
-            config
-          }
-        });
-      })
+      this._diseaseService.getByTagId(disease.tagId).subscribe(
+        (config: any) => {
+          dialogRef = this._dialog.open(ConfigDialogComponent, {
+            data: { disease, config }
+          });
+
+          dialogRef.afterClosed().subscribe(() => this.requestByCurrentData());
+        },
+        (errMsg: string) => this._snackbar.open(errMsg, null, { duration: 2000 })
+      )
     );
   }
 
@@ -142,7 +158,8 @@ export class SicknessComponent implements OnInit, OnDestroy {
 export class DiseaseDataBase {
 
   constructor(
-    private _diseaseService: DiseaseService
+    private _diseaseService: DiseaseService,
+    private _snackbar: MdSnackBar
   ) {
   }
 
@@ -154,13 +171,15 @@ export class DiseaseDataBase {
   }
 
   getDiseasesByPage(data: IGetDiseasesByPageData, pageIndex: number) {
-    return this._diseaseService.getDiseasesByPage(data, pageIndex).subscribe((res: any) => {
-      const { model, error, errorCode } = res;
-      const diseases: IDisease[] = model.t;
-      const total: number = model.count;
-      this.dataChange.next(diseases);
-      this.total = total;
-    });
+    this._diseaseService.getDiseasesByPage(data, pageIndex).subscribe(
+      (res: any) => {
+        const { model } = res;
+        const diseases: IDisease[] = model.t;
+        this.total = model.count;
+        this.dataChange.next(diseases);
+      },
+      (errMsg: string) => this._snackbar.open(errMsg, null, { duration: 2000 })
+    );
   }
 }
 
