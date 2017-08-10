@@ -12,7 +12,6 @@ import { DiseaseCenterRoutingModule } from './diseaseCenter-routing.module';
 import { DiseaseCenterMaterialModule } from './diseaseCenter-material.module';
 
 import { EntranceService } from 'root/src/services'
-import { EntranceEditService } from 'root/src/services'
 
 @NgModule({
   declarations: [
@@ -31,6 +30,6 @@ import { EntranceEditService } from 'root/src/services'
   entryComponents: [
     EntranceEdit
   ],
-  providers: [EntranceService, EntranceEditService]
+  providers: [EntranceService]
 })
 export class DiseaseCenterModule { }

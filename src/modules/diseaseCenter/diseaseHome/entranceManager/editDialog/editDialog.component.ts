@@ -1,8 +1,11 @@
 import { Component, Inject, OnInit } from '@angular/core'
 import { MdDialogRef, MD_DIALOG_DATA } from '@angular/material'
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms'
-import { IDiseaseCenter } from 'root/src/models'
-import { EntranceEditService } from 'root/src/services'
+import { IDiseaseCenterEntranceData } from 'root/src/models'
+import { IOptions } from 'root/src/common/components/checkboxGroup'
+import { EntranceService } from 'root/src/services'
+
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'entrance-edit',
@@ -11,49 +14,42 @@ import { EntranceEditService } from 'root/src/services'
 })
 export class EntranceEdit implements OnInit{
   entranceEditForm: FormGroup
-  options: any[]
+  options: IOptions
   constructor(
-    @Inject(MD_DIALOG_DATA) public formData: IDiseaseCenter,
+    @Inject(MD_DIALOG_DATA) public formData: { record?: IDiseaseCenterEntranceData, options: IOptions },
     private fb: FormBuilder,
-    private entranceService: EntranceEditService,
+    private entranceService: EntranceService,
     public dialogRef: MdDialogRef<EntranceEdit>
   ){}
 
   ngOnInit(): void {
-    const { sortFactor, name, linkUrl, icon, poster, channels } = this.formData
+    const { record: { sortFactor, name, linkUrl, icon, poster, channels, id }, options } = this.formData
     this.entranceEditForm = this.fb.group({
-      sortFactor: [sortFactor, Validators.required],
+      sortFactor: sortFactor,
       name: [name, Validators.required],
       linkUrl: linkUrl,
-      icon: icon,
+      icon: [icon, Validators.required],
       poster: poster,
-      channels: [channels]
+      channels: [channels, Validators.required],
+      id: id
     });
-    this.options = [{
-      label: '寿险',
-      value: 2
-    }, {
-      label: '平安好医生',
-      value: 9
-    }, {
-      label: '主客',
-      value: 1
-    }, {
-      label: 'H',
-      value: 15
-    }]
+    this.options = options
   }
 
-  handleIconBeforeUpload(value: any): void{
-    console.log(value)
+  createDialogData(): Observable<any> {
+    return this.entranceService.createEntranceData(this.entranceEditForm.value)
   }
-
-  handlePosterBeforeUpload(value: any): void{
-    console.log(value)
+  
+  saveEditDialogData(): Observable<any> {
+    return this.entranceService.saveEntranceData(this.entranceEditForm.value)
   }
 
   handleSubmit(): void {
-    // TODO...调接口保存数据
-    this.dialogRef.close(this.entranceEditForm.value)
+    const isEdit = this.formData.record && this.formData.record.id
+    if (!isEdit) {
+      this.createDialogData().subscribe((res: any) => this.dialogRef.close(this.entranceEditForm.value))
+    } else {
+      this.saveEditDialogData().subscribe((res: any) => this.dialogRef.close(this.entranceEditForm.value))
+    }
   }
 }

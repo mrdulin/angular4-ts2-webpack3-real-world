@@ -1,5 +1,6 @@
 import { Component, Input, OnInit, forwardRef } from '@angular/core'
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms'
+import { MdSnackBar } from '@angular/material';
 import { UtilService, UploadService } from '../../services'
 
 export const EXE_COUNTER_VALUE_ACCESSOR: any = {
@@ -26,7 +27,11 @@ export class UploadComponent implements OnInit, ControlValueAccessor{
   @Input() maxSize?: number
   @Input() timeout?: number
 
-  constructor(private _utilService: UtilService, private _uploadService: UploadService) {}
+  constructor(
+    private _utilService: UtilService, 
+    private _uploadService: UploadService,
+    private snackbar: MdSnackBar
+  ) {}
 
   writeValue(value: any): void {
     if(value) {
@@ -86,21 +91,21 @@ export class UploadComponent implements OnInit, ControlValueAccessor{
               this.fileList.push(item)
             }
             this.imgUrl = this.fileList[0].thumbUrl
-            this.propagateChange(this.fileList[0].url)
+            this.propagateChange(this.fileList[0].uid)
             this.beforeUpload(this.fileList[0])
           }
         },
         errorCallback: (data: any) => {
           console.log(data);
-          console.log('上传失败');
+          this.snackbar.open('上传失败', null, { duration: 2000 })
         },
         timeoutCallback: (data: any) => {
           console.log(data);
-          console.log('上传失败, 请求超时');
+          this.snackbar.open('上传失败, 请求超时', null, { duration: 2000 })
         },
         overSizeCallback: (data: any) => {
           console.log(data);
-          console.log('上传失败, 超过最大尺寸')
+          this.snackbar.open('上传失败, 超过最大尺寸', null, { duration: 2000 })
         }
       }, {})
       this._uploadService.uploadFile(uploadConfig);

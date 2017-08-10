@@ -1,7 +1,7 @@
 <section class="entrance-manager">
   <header>
     <h1>中心入口配置</h1>
-    <button md-raised-button class="primary">新 增</button>
+    <button md-raised-button class="primary" (click)="editEntranceForm({}, checkboxOptions)">新 增</button>
   </header>
 
   <section class="container">
@@ -33,8 +33,8 @@
         </section>
       </md-card-content>
       <md-card-actions>
-        <button md-button class="primary" (click)="editEntranceForm(v)">编辑</button>
-        <button md-button class="warnning">删除</button>
+        <button md-button class="primary" (click)="editEntranceForm(v, checkboxOptions)">编辑</button>
+        <button md-button class="warnning" (click)="deleteEntranceForm(v.id)">删除</button>
       </md-card-actions>
     </md-card>
   </section>

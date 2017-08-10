@@ -1,4 +1,4 @@
-export interface IDiseaseCenter extends IDiseaseCenterMainInfo {
+export interface IDiseaseCenterEntranceData extends IDiseaseCenterMainInfo {
   name: string | null;
   code: number | null;
   linkUrl: string | null;
@@ -13,7 +13,7 @@ export interface IDiseaseCenterMainInfo {
 }
 
 export class DiseaseCenter {
-  constructor(public model: IDiseaseCenter) {
+  constructor(public model: IDiseaseCenterEntranceData) {
     Object.assign(this, model);
   }
 }

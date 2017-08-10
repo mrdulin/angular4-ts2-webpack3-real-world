@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { MdDialog } from '@angular/material';
+import { MdDialog, MdSnackBar } from '@angular/material';
 import { EntranceEdit } from './editDialog/editDialog.component';
 import { EntranceService } from 'root/src/services';
-import { IDiseaseCenter } from 'root/src/models';
-import { IOptions } from '../../../../common/components/checkboxGroup';
+import { IDiseaseCenterEntranceData } from 'root/src/models';
+import { IOptions } from 'common/components/checkboxGroup';
+import { IEntranceData } from 'src/services';
 
 @Component({
   selector: 'entrance-manager',
@@ -11,42 +12,52 @@ import { IOptions } from '../../../../common/components/checkboxGroup';
   styleUrls: ['./entranceManager.component.css']
 })
 export class entranceManagerComponent implements OnInit {
-  entranceData: IDiseaseCenter[]
+  entranceData: IDiseaseCenterEntranceData[]
   checkboxOptions: IOptions[]
   constructor(
     private dialog: MdDialog,
-    private entranceService: EntranceService
+    private entranceService: EntranceService,
+    private snackbar: MdSnackBar
   ){}
 
   ngOnInit (): void {
-    const entranceList = this.entranceService.getEntranceData()
-    this.entranceData = entranceList && entranceList.model.t || []
-    this.checkboxOptions = [{
-      label: '寿险',
-      value: 2
-    }, {
-      label: '平安好医生',
-      value: 9
-    }, {
-      label: '主客',
-      value: 1
-    }, {
-      label: 'H',
-      value: 15
-    }]
+    this.queryChannelsInfo()
+    this.queryEntranceInfo({ pageNo: 1, pageSize: 10 })
   }
 
-  handleOnchange(value: number[]): void {
-    console.log(value)
+  queryChannelsInfo(): void {
+    this.entranceService.getChannelsData().subscribe((res: any) => {
+      const { model } = res
+      this.checkboxOptions = model.map((item: any) => {
+        return {
+          label: item.name,
+          value: item.id
+        }
+      }) || []
+    },
+    (err: string) => this.snackbar.open(err, null, { duration: 2000 }))
   }
 
-  editEntranceForm(record: object): void{
+  queryEntranceInfo(data: IEntranceData) {
+    this.entranceService.getEntranceData(data).subscribe((res: any) => {
+      const { model } = res
+      this.entranceData = model.t || []
+    },
+    (err: string) => this.snackbar.open(err, null, { duration: 2000 }))
+  }
+
+  editEntranceForm(record: object, options: IOptions): void{
     const dialogRef = this.dialog.open(EntranceEdit, {
-      data: record,
+      data: { record, options },
       width: '400px'
     })
     dialogRef.afterClosed().subscribe(result => {
-      console.log(result)
+      this.queryEntranceInfo({ pageNo: 1, pageSize: 10 })
     })
+  }
+
+  deleteEntranceForm(id: number): void {
+    // TODO..confirm dialog
+    // this.entranceService.deleteEntranceData(id)
   }
 }
