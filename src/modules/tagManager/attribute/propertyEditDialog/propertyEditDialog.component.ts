@@ -39,7 +39,7 @@ export class PropertyEditDialogComponent implements OnInit {
       propertyName: this.propertyName
     };
 
-    this.propertyService.save(postBody).subscribe(
+    this.propertyService.save(postBody, 'edit-prop').subscribe(
       (data) => {
         this.snackBar.open('编辑成功！', null, { duration: 2000 });
         this.dialogRef.close(data);

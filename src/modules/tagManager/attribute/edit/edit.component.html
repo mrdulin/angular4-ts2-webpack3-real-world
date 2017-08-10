@@ -1,5 +1,5 @@
 <div class='row'>
-  <button type="button" md-raised-button>
+  <button type="button" md-raised-button (click)='back()'>
     <i class="material-icons">arrow_back</i>
     <span>返回属性库管理</span>
   </button>
@@ -14,16 +14,17 @@
     <input mdInput placeholder="属性名称" type="text" name="propertyName" value="{{property?.propertyName}}" disabled>
   </md-input-container>
 
-  <div>
-    <md-input-container>
-      <input mdInput #propertyValueInput placeholder="属性值名称" type="text" name="propertyValue">
-    </md-input-container>
-    <button type="button" md-mini-fab (click)='addPropertyValue(propertyValueInput)'>
-      <md-icon>add</md-icon>
-    </button>
-  </div>
+  <md-input-container>
+    <input mdInput #propertyValueInput placeholder="属性值名称" type="text" name="propertyValue">
+  </md-input-container>
+  <button type="button" md-mini-fab (click)='addPropertyValue(propertyValueInput)'>
+    <md-icon>add</md-icon>
+  </button>
 
   <div>
-    <span *ngFor='let pValue of propertyValues'>{{pValue}}</span>
+    <span class='tag' *ngFor='let p of propertyValues'>
+      <span class='tag-label'>{{p.propertyValue}}</span>
+      <md-icon (click)='delPropertyValue(p)' class='tag-del'>delete_forever</md-icon>
+    </span>
   </div>
 </form>

@@ -9,11 +9,24 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import * as getPropertiesResponse from './getPropertiesResponse.json';
 import * as propertySaveSuccessRes from './propertySaveSuccessRes.json';
 
+type ISaveType = 'edit-prop' | 'add-prop-val' | 'del-prop-val';
+
+export interface IQueryCondition{
+  keyword: string;
+  pageIndex: number;
+}
+
 @Injectable()
 export class PropertySerivce {
 
   dataChange: BehaviorSubject<any> = new BehaviorSubject<any>({});
   private currentEditProperty: any;
+  private condition: IQueryCondition;
+  private saveErrorMap: Map<string, string> = new Map([
+    ['edit-prop', '编辑失败'],
+    ['del-prop-val', '删除属性值失败'],
+    ['add-prop-val', '添加属性值失败']
+  ]);
 
   constructor(
     @Inject(APP_CONFIG) private appConfig: IAppConfig,
@@ -54,13 +67,15 @@ export class PropertySerivce {
 
   /**
    *
-   * 保存编辑的属性
+   * 保存属性项编辑
+   *
    * @param {*} data
    * @returns {Observable<any>}
    * @memberof PropertySerivce
    */
-  save(data: any): Observable<any> {
+  save(data: any, type: ISaveType): Observable<any> {
     const url: string = `${this.appConfig.api}/property/save`;
+    const errMsg: string = this.saveErrorMap.get(type);
 
     if (this.appConfig.mockApi) {
       return Observable.of(propertySaveSuccessRes);
@@ -68,7 +83,7 @@ export class PropertySerivce {
 
     return this.http.post(url, data)
       .map((res) => res.json())
-      .catch(() => Observable.throw('编辑失败'));
+      .catch(() => Observable.throw(errMsg));
   }
 
   setCurrentEditProperty(property: any) {
@@ -77,5 +92,13 @@ export class PropertySerivce {
 
   getCurrentEditProperty() {
     return this.currentEditProperty;
+  }
+
+  saveQueryCondition(condition: IQueryCondition) {
+    this.condition = condition;
+  }
+
+  getQueryCondition() {
+    return this.condition;
   }
 }

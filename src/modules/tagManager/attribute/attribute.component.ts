@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MdPaginator, PageEvent, MdDialog, MdDialogRef, MdSnackBar } from '@angular/material';
 import { DataSource } from '@angular/cdk';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 
-import { PropertySerivce } from 'root/src/services';
+import { PropertySerivce, IQueryCondition } from 'root/src/services';
 import { PropertyDataSource } from './property-data-source';
 import { PaginatorService } from 'common/services';
 import { Pluck } from 'common/pipes';
@@ -66,6 +66,22 @@ export class AttributeComponent implements OnInit {
     this.selectedOption = this.propertyOptions[0];
 
     this.paginatorService.i18n(this.paginator, 'cn');
+
+    this.router.events.filter((event) => event instanceof NavigationEnd).pairwise()
+      .subscribe((events: any) => {
+        const prevRouteUrl: string = events[0].url;
+        const currentRouteUrl: string = events[1].url;
+
+        if (prevRouteUrl.indexOf(`${currentRouteUrl}/edit`) !== -1) {
+          const lastQueryCondition: IQueryCondition = this.propertyService.getQueryCondition();
+          const { pageIndex, keyword } = lastQueryCondition;
+
+          //TODO: 这里重新复制，view没有更新
+          this.keyword = keyword;
+          this.paginator.pageIndex = pageIndex;
+          this.getPropertiesByName(keyword, pageIndex + 1);
+        }
+      });
   }
 
   onSubmit() {
@@ -102,7 +118,12 @@ export class AttributeComponent implements OnInit {
 
   managePropertyValues(property: any) {
     const { propertyId } = property;
+    const condition: IQueryCondition = {
+      keyword: this.keyword,
+      pageIndex: this.paginator.pageIndex
+    };
     this.propertyService.setCurrentEditProperty(property);
+    this.propertyService.saveQueryCondition(condition);
     this.router.navigate(['edit', propertyId], { relativeTo: this.activatedRoute });
   }
 }
