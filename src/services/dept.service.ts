@@ -47,7 +47,7 @@ export class DeptService {
       .catch((e: any) => Observable.throw('获取一级科室失败'))
       .subscribe(
         (data) => this.deptsLevel1 = data.model,
-        (errMsg: string) => this.snackBar.open(errMsg, null, { duration: 2000 })
+        (errMsg: string) => this.snackBar.open(errMsg, null, this.appConfig.mdSnackBarConfig)
       );
   }
 
@@ -103,7 +103,7 @@ export class DeptService {
         const { model: { count, t: depts } } = data;
         this.count = count;
         this.dataChange.next(depts);
-      }, (errMsg: string) => this.snackBar.open(errMsg, null, { duration: 2000 }))
+      }, (errMsg: string) => this.snackBar.open(errMsg, null, this.appConfig.mdSnackBarConfig))
   }
 
   getDeptsData(): any[] {

@@ -1,4 +1,4 @@
-<form  #form='ngForm' novalidate (ngSubmit)='onSubmit()'>
+<form #form='ngForm' novalidate (ngSubmit)='onSubmit()'>
 
   <md-select name='propertyOption' placeholder='查询类别' [(ngModel)]='selectedOption'>
     <md-option *ngFor='let option of propertyOptions' [value]='option'>

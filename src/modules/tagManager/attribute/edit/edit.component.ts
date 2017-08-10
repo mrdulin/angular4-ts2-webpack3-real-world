@@ -1,7 +1,8 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { MdSnackBar } from '@angular/material';
+import { MdSnackBar, MdSnackBarConfig } from '@angular/material';
 
+import { APP_CONFIG, IAppConfig } from 'app/app.config';
 import { PropertySerivce } from 'root/src/services';
 import { UtilService } from 'common/services';
 
@@ -14,6 +15,7 @@ export class AttrEditComponent implements OnInit {
   propertyValues: any[] = [];
 
   constructor(
+    @Inject(APP_CONFIG) private appConfig: IAppConfig,
     private propertyService: PropertySerivce,
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -53,11 +55,11 @@ export class AttrEditComponent implements OnInit {
 
     this.propertyService.save(postBody, 'add-prop-val').subscribe(
       () => {
-        this.snackBar.open('添加属性值成功', null, { duration: 2000 });
+        this.snackBar.open('添加属性值成功', null, this.appConfig.mdSnackBarConfig);
         this.propertyValues.push(p);
         inputRef.value = '';
       },
-      (errMsg: string) => this.snackBar.open(errMsg, null, { duration: 2000 })
+      (errMsg: string) => this.snackBar.open(errMsg, null, this.appConfig.mdSnackBarConfig)
     );
   }
 
@@ -77,9 +79,9 @@ export class AttrEditComponent implements OnInit {
     this.propertyService.save(postBody, 'del-prop-val').subscribe(
       () => {
         this.propertyValues = pValues;
-        this.snackBar.open('删除属性值成功！', null, { duration: 2000 });
+        this.snackBar.open('删除属性值成功！', null, this.appConfig.mdSnackBarConfig);
       },
-      (errMsg: string) => this.snackBar.open(errMsg, null, { duration: 2000 })
+      (errMsg: string) => this.snackBar.open(errMsg, null, this.appConfig.mdSnackBarConfig)
     );
   }
 }

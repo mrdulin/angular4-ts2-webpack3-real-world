@@ -3,6 +3,7 @@ import { Request, Response, RequestOptionsArgs, ConnectionBackend, RequestOption
 import { Observable } from 'rxjs';
 import { MdSnackBar, MdSnackBarRef, SimpleSnackBar } from '@angular/material';
 
+import { IAppConfig } from 'app/app.config';
 import { GLOBAL_ERROR } from '../modules/app/error.config';
 
 @Injectable()
@@ -11,7 +12,8 @@ export class HttpInterceptorService extends Http {
   constructor(
     backend: ConnectionBackend,
     defaultOptions: RequestOptions,
-    private snackBar: MdSnackBar) {
+    private snackBar: MdSnackBar
+  ) {
     super(backend, defaultOptions);
   }
 

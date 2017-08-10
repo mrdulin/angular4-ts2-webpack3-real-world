@@ -1,13 +1,17 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectorRef, Inject } from '@angular/core';
 import { MdPaginator, PageEvent, MdDialog, MdDialogRef, MdSnackBar } from '@angular/material';
 import { DataSource } from '@angular/cdk';
-import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
+import { Router, ActivatedRoute, NavigationEnd, Event } from '@angular/router';
+import { APP_CONFIG, IAppConfig } from 'app/app.config';
 
 import { PropertySerivce, IQueryCondition } from 'root/src/services';
 import { PropertyDataSource } from './property-data-source';
 import { PaginatorService } from 'common/services';
+import { ITableHeader } from 'common/interfaces';
 import { Pluck } from 'common/pipes';
 import { PropertyEditDialogComponent } from './propertyEditDialog';
+
+import { Subscription } from 'rxjs/Subscription';
 
 const choiceMap: Map<string, string> = new Map<string, string>([
   ['1', '单选'],
@@ -18,8 +22,8 @@ const choiceMap: Map<string, string> = new Map<string, string>([
   selector: 'attribute-cmp',
   templateUrl: './attribute.component.html'
 })
-export class AttributeComponent implements OnInit {
-  tableHeaders: any[] = [
+export class AttributeComponent implements OnInit, OnDestroy {
+  tableHeaders: ITableHeader[] = [
     { key: 'propertyName', name: '属性项名称', cell: (row: any) => row.propertyName },
     { key: 'propertyId', name: '属性ID', cell: (row: any) => row.propertyId },
     { key: 'choice', name: '选择类型', cell: (row: any) => choiceMap.get(row.choice) },
@@ -42,16 +46,20 @@ export class AttributeComponent implements OnInit {
   ];
   selectedOption: any;
 
+  private subscription: Subscription = new Subscription();
+
   @ViewChild(MdPaginator) public paginator: MdPaginator;
 
   constructor(
+    @Inject(APP_CONFIG) private appConfig: IAppConfig,
     private propertyService: PropertySerivce,
     private paginatorService: PaginatorService,
     private pluckPipe: Pluck,
     private dialog: MdDialog,
     private snackBar: MdSnackBar,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private cdRef: ChangeDetectorRef
   ) {
     const { pageIndex, pageSize, pageSizeOptions } = this.paginatorService;
 
@@ -62,26 +70,35 @@ export class AttributeComponent implements OnInit {
 
   ngOnInit() {
     this.dataSource = new PropertyDataSource(this.paginator, this.propertyService);
-    this.displayedColumns = this.tableHeaders.map((header) => header.key);
+    this.displayedColumns = this.tableHeaders.map((header: ITableHeader): string => header.key);
     this.selectedOption = this.propertyOptions[0];
 
     this.paginatorService.i18n(this.paginator, 'cn');
 
-    this.router.events.filter((event) => event instanceof NavigationEnd).pairwise()
-      .subscribe((events: any) => {
+    const sub: Subscription = this.router.events
+      .filter((event: Event): boolean => event instanceof NavigationEnd)
+      .pairwise()
+      .subscribe((events: [NavigationEnd, NavigationEnd]) => {
         const prevRouteUrl: string = events[0].url;
         const currentRouteUrl: string = events[1].url;
 
         if (prevRouteUrl.indexOf(`${currentRouteUrl}/edit`) !== -1) {
           const lastQueryCondition: IQueryCondition = this.propertyService.getQueryCondition();
-          const { pageIndex, keyword } = lastQueryCondition;
+          const { pageIndex, keyword }: { pageIndex: number, keyword: string } = lastQueryCondition;
 
-          //TODO: 这里重新复制，view没有更新
+          //TODO: 这里重新赋值没有触发view更新??
           this.keyword = keyword;
           this.paginator.pageIndex = pageIndex;
           this.getPropertiesByName(keyword, pageIndex + 1);
         }
       });
+
+    // TODO: 组件销毁时，unsubscribe router.events后，以后都不会触发route.events
+    // this.subscription.add(sub);
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   onSubmit() {
@@ -94,7 +111,7 @@ export class AttributeComponent implements OnInit {
   getPropertiesByName(keyword: string, pageIndex: number) {
     this.propertyService.getPropertiesByName(keyword, pageIndex).subscribe(
       () => null,
-      (errMsg: string) => this.snackBar.open(errMsg, null, { duration: 2000 })
+      (errMsg: string) => this.snackBar.open(errMsg, null, this.appConfig.mdSnackBarConfig)
     );
   }
 
