@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MD_DIALOG_DATA, MdDialogRef, MdSnackBar } from '@angular/material';
 
 import { PropertySerivce } from 'root/src/services';
+import { APP_CONFIG, IAppConfig } from 'app/app.config';
 
 @Component({
   selector: 'property-edit-dialog',
@@ -16,6 +17,7 @@ export class PropertyEditDialogComponent implements OnInit {
   propertyName: string;
 
   constructor(
+    @Inject(APP_CONFIG) private appConfig: IAppConfig,
     @Inject(MD_DIALOG_DATA) public data: any,
     private dialogRef: MdDialogRef<PropertyEditDialogComponent>,
     private propertyService: PropertySerivce,
@@ -39,12 +41,12 @@ export class PropertyEditDialogComponent implements OnInit {
       propertyName: this.propertyName
     };
 
-    this.propertyService.save(postBody).subscribe(
+    this.propertyService.save(postBody, 'edit-prop').subscribe(
       (data) => {
-        this.snackBar.open('编辑成功！', null, { duration: 2000 });
+        this.snackBar.open('编辑成功！', null, this.appConfig.mdSnackBarConfig);
         this.dialogRef.close(data);
       },
-      (errMsg: string) => this.snackBar.open(errMsg, null, { duration: 2000 })
+      (errMsg: string) => this.snackBar.open(errMsg, null, this.appConfig.mdSnackBarConfig)
     );
 
   }

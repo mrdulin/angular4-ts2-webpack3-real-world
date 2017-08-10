@@ -1,5 +1,5 @@
 import { InjectionToken } from '@angular/core';
-
+import { MdSnackBarConfig } from '@angular/material';
 export let APP_CONFIG = new InjectionToken('app.config');
 
 export interface IAppConfig {
@@ -7,6 +7,7 @@ export interface IAppConfig {
   mockApi: boolean;
   LOGIN_HOST: string;
   APP_ID: string;
+  mdSnackBarConfig: MdSnackBarConfig
 }
 
 interface ISettings {
@@ -18,6 +19,11 @@ interface ISettings {
   UMR_HOST: string
 }
 
+const mdSnackBarConfig: MdSnackBarConfig = new MdSnackBarConfig();
+mdSnackBarConfig.duration = 2000;
+mdSnackBarConfig.direction = 'ltr';
+mdSnackBarConfig.extraClasses = ['turin-snack-bar'];
+
 export const AppConfig: IAppConfig = {
   api: '//umr.test.pajkdc.com/innerApi',
 
@@ -27,7 +33,9 @@ export const AppConfig: IAppConfig = {
   //单点登陆域名
   LOGIN_HOST: '//test.pajkdc.com',
 
-  APP_ID: '9002'
+  APP_ID: '9002',
+
+  mdSnackBarConfig
 };
 
 const isTestHost = (location.href.indexOf('test.pajkdc.com') !== -1);
@@ -39,10 +47,10 @@ export const Settings: ISettings = isTestHost ? {
   CAMEL_HOST: 'http://camel.test.pajkdc.com/areadata',
   UMR_HOST: 'http://umr.test.pajkdc.com'
 } : {
-  WEBLOGIN_HOST: 'http://dev.pajkdc.com',
-  FILES_PUBLIC: 'http://static.dev.pajkdc.com/v1/tfs',
-  FILEGW_HOST: 'http://filegw.dev.pajkdc.com',
-  AREA_URL: 'http://www.dev.pajkdc.com/resource/areaData.json',
-  CAMEL_HOST: 'http://camel.dev.pajkdc.com/areadata',
-  UMR_HOST: 'http://umr.dev.pajkdc.com'
-};
+    WEBLOGIN_HOST: 'http://dev.pajkdc.com',
+    FILES_PUBLIC: 'http://static.dev.pajkdc.com/v1/tfs',
+    FILEGW_HOST: 'http://filegw.dev.pajkdc.com',
+    AREA_URL: 'http://www.dev.pajkdc.com/resource/areaData.json',
+    CAMEL_HOST: 'http://camel.dev.pajkdc.com/areadata',
+    UMR_HOST: 'http://umr.dev.pajkdc.com'
+  };

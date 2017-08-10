@@ -5,6 +5,7 @@ import { NgForm } from '@angular/forms';
 import { IDisease } from 'root/src/models';
 import { DeptService, DiseaseService } from 'root/src/services';
 import { UtilService } from 'common/services';
+import { APP_CONFIG, IAppConfig } from 'app/app.config';
 
 @Component({
   selector: 'edit-dialog',
@@ -22,6 +23,7 @@ export class EditDialogComponent implements OnInit {
   disease: IDisease;
 
   constructor(
+    @Inject(APP_CONFIG) private appConfig: IAppConfig,
     @Inject(MD_DIALOG_DATA) public data: IDisease,
     private deptService: DeptService,
     private utilService: UtilService,
@@ -50,7 +52,7 @@ export class EditDialogComponent implements OnInit {
     const hasDept = index !== -1;
     if (hasDept) {
       const msg: string = '重复的科室无法关联';
-      this.snackBar.open(msg, null, { duration: 2000 });
+      this.snackBar.open(msg, null, this.appConfig.mdSnackBarConfig);
       return;
     }
     this.deptAssiociated.push(dept);
@@ -73,10 +75,10 @@ export class EditDialogComponent implements OnInit {
     };
     this.diseaseService.save(postBody).subscribe(
       (data: any) => {
-        this.snackBar.open('编辑成功！', null, { duration: 2000 });
+        this.snackBar.open('编辑成功！', null, this.appConfig.mdSnackBarConfig);
         this.dialogRef.close(data)
       },
-      (errMsg: string) => this.snackBar.open(errMsg, null, { duration: 2000 })
+      (errMsg: string) => this.snackBar.open(errMsg, null, this.appConfig.mdSnackBarConfig)
     )
   }
 
@@ -91,7 +93,7 @@ export class EditDialogComponent implements OnInit {
     const tagId: number = this.selectedDeptLevel1.tagId;
     this.deptService.getDeptsByTagId(tagId).subscribe(
       (deptsLevel2: any) => this.deptsLevel2 = deptsLevel2,
-      (errMsg: string) => this.snackBar.open(errMsg, null, { duration: 2000 })
+      (errMsg: string) => this.snackBar.open(errMsg, null, this.appConfig.mdSnackBarConfig)
     );
   }
 

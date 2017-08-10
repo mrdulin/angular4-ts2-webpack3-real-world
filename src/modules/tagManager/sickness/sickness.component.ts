@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit, Inject } from '@angular/core';
 import { MdPaginator, PageEvent, MdDialog, MdDialogRef, MdSnackBar, MdSnackBarRef, SimpleSnackBar } from '@angular/material';
 import { DataSource } from '@angular/cdk';
 
@@ -10,6 +10,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { DiseaseService, IGetDiseasesByPageData } from 'root/src/services';
 import { PaginatorService } from 'common/services';
 import { Disease, IDisease } from 'root/src/models';
+import { APP_CONFIG, IAppConfig } from 'app/app.config';
 
 import { EditDialogComponent } from './editDialog';
 import { ConfigDialogComponent } from './configDialog';
@@ -51,6 +52,7 @@ export class SicknessComponent implements OnInit, OnDestroy, AfterViewInit {
   subscripton: Subscription = new Subscription();
 
   constructor(
+    @Inject(APP_CONFIG) private appConfig: IAppConfig,
     private _diseaseService: DiseaseService,
     private _paginatorService: PaginatorService,
     private _dialog: MdDialog,
@@ -67,7 +69,7 @@ export class SicknessComponent implements OnInit, OnDestroy, AfterViewInit {
   public ngOnInit() {
     this.selectedQueryType = this.queryTypes[0];
     this.displayedColumns = this.tableHeaders.map((header: ITableHeader) => header.key);
-    this.diseaseDataBase = new DiseaseDataBase(this._diseaseService, this._snackbar);
+    this.diseaseDataBase = new DiseaseDataBase(this._diseaseService, this._snackbar, this.appConfig);
     this.dataSource = new DiseaseDataSource(this.diseaseDataBase, this.paginator, this.formChange$);
   }
 
@@ -145,7 +147,7 @@ export class SicknessComponent implements OnInit, OnDestroy, AfterViewInit {
 
           dialogRef.afterClosed().subscribe(() => this.requestByCurrentData());
         },
-        (errMsg: string) => this._snackbar.open(errMsg, null, { duration: 2000 })
+        (errMsg: string) => this._snackbar.open(errMsg, null, this.appConfig.mdSnackBarConfig)
       )
     );
   }
@@ -159,7 +161,8 @@ export class DiseaseDataBase {
 
   constructor(
     private _diseaseService: DiseaseService,
-    private _snackbar: MdSnackBar
+    private _snackbar: MdSnackBar,
+    private _appConfig: IAppConfig
   ) {
   }
 
@@ -178,7 +181,7 @@ export class DiseaseDataBase {
         this.total = model.count;
         this.dataChange.next(diseases);
       },
-      (errMsg: string) => this._snackbar.open(errMsg, null, { duration: 2000 })
+      (errMsg: string) => this._snackbar.open(errMsg, null, this._appConfig.mdSnackBarConfig)
     );
   }
 }

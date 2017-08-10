@@ -3,6 +3,7 @@ import { Request, Response, RequestOptionsArgs, ConnectionBackend, RequestOption
 import { Observable } from 'rxjs';
 import { MdSnackBar, MdSnackBarRef, SimpleSnackBar } from '@angular/material';
 
+import { IAppConfig } from 'app/app.config';
 import { GLOBAL_ERROR } from '../modules/app/error.config';
 
 @Injectable()
@@ -11,7 +12,8 @@ export class HttpInterceptorService extends Http {
   constructor(
     backend: ConnectionBackend,
     defaultOptions: RequestOptions,
-    private snackBar: MdSnackBar) {
+    private snackBar: MdSnackBar
+  ) {
     super(backend, defaultOptions);
   }
 
@@ -50,7 +52,7 @@ export class HttpInterceptorService extends Http {
   intercept(observable: Observable<Response>): Observable<Response> {
     return observable.map((res: any) => {
       if (res.text() === 'need cookie: _tk') {
-        const err = { hasError: true, errorCode: '-103' };
+        const err = { hasError: true, errorCode: -103 };
         throw err;
       };
       const data = res.json();
@@ -65,8 +67,9 @@ export class HttpInterceptorService extends Http {
           //TODO: gateway error
         } else if (err.hasError) {
           //TODO: api error
-          if (err.errorCode === -103) {
+          if (err.errorCode.toString() === '-103') {
             const msg: string = GLOBAL_ERROR.get(err.errorCode.toString());
+            this.snackBar && this.snackBar.dismiss();
             this.snackBar.open(msg, null, { duration: 2000 });
           }
         } else if (err.status < 200 || err.status >= 300) {
