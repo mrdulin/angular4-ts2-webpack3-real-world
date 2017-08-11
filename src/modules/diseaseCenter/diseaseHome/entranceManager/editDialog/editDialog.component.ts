@@ -12,14 +12,14 @@ import { Observable } from 'rxjs';
   templateUrl: './editDialog.component.html',
   styleUrls: ['./editDialog.component.css']
 })
-export class EntranceEdit implements OnInit{
+export class EntranceEditComponent implements OnInit{
   entranceEditForm: FormGroup
   options: IOptions
   constructor(
     @Inject(MD_DIALOG_DATA) public formData: { record?: IDiseaseCenterEntranceData, options: IOptions },
     private fb: FormBuilder,
     private entranceService: EntranceService,
-    public dialogRef: MdDialogRef<EntranceEdit>
+    public dialogRef: MdDialogRef<EntranceEditComponent>
   ){}
 
   ngOnInit(): void {

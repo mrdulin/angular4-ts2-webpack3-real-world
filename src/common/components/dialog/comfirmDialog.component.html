@@ -1,4 +1,12 @@
-<h2 md-dialog-title>tip</h2>
-<md-dialog-content>
-  <p>{{msg}}</p>
-</md-dialog-content>
+<section class="confrim-container">
+  <h2 md-dialog-title>{{title}}</h2>
+  <md-dialog-content [style.width]="width" [style.height]="height">
+    <div class="confirm-content-box" [style.max-width]="width">
+      <p>{{msg}}</p>
+    </div>
+  </md-dialog-content>
+  <md-dialog-actions>
+    <button md-button class="primary" type="submit" (click)="handleConfirm()">{{onConfirmText}}</button>
+    <button md-button class="warnning" md-dialog-close>{{onCancelText}}</button>
+  </md-dialog-actions>
+</section>

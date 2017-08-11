@@ -6,7 +6,7 @@ import { entranceManagerComponent } from './diseaseHome/entranceManager';
 import { UploadModule } from '../../common/components/upload';
 import { UploadComponent } from '../../common/components/upload/upload.component';
 import { CheckboxGroupComponent } from '../../common/components/checkboxGroup';
-import { EntranceEdit } from './diseaseHome/entranceManager/editDialog/editDialog.component';
+import { EntranceEditComponent } from './diseaseHome/entranceManager/editDialog/editDialog.component';
 
 import { DiseaseCenterRoutingModule } from './diseaseCenter-routing.module';
 import { DiseaseCenterMaterialModule } from './diseaseCenter-material.module';
@@ -18,7 +18,7 @@ import { EntranceService } from 'root/src/services'
     UploadComponent,
     CheckboxGroupComponent,
     diseaseHomeComponent,
-    EntranceEdit,
+    EntranceEditComponent,
     entranceManagerComponent
   ],
   imports: [
@@ -28,7 +28,7 @@ import { EntranceService } from 'root/src/services'
     DiseaseCenterMaterialModule
   ],
   entryComponents: [
-    EntranceEdit
+    EntranceEditComponent
   ],
   providers: [EntranceService]
 })
