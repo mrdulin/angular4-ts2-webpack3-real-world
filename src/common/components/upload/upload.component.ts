@@ -20,6 +20,7 @@ export class UploadComponent implements OnInit, ControlValueAccessor{
   fileList: any[]
   propagateChange: Function = (_: any) => {}
   @Input() beforeUpload?: Function = () => {}
+  @Input() onSuccess?: Function = () => {}
   @Input() disabled?: boolean = false
   @Input() src?: string
   @Input() text?: string
@@ -70,6 +71,7 @@ export class UploadComponent implements OnInit, ControlValueAccessor{
       alert(`最多上传${this.limit}张图片`);
       return;
     }
+    this.beforeUpload(file)
     if (file) {
       let uploadConfig = Object.assign({
         file: file,
@@ -92,7 +94,7 @@ export class UploadComponent implements OnInit, ControlValueAccessor{
             }
             this.imgUrl = this.fileList[0].thumbUrl
             this.propagateChange(this.fileList[0].uid)
-            this.beforeUpload(this.fileList[0])
+            this.onSuccess(this.fileList[0])
           }
         },
         errorCallback: (data: any) => {

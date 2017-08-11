@@ -52,4 +52,8 @@ export class EntranceEditComponent implements OnInit{
       this.saveEditDialogData().subscribe((res: any) => this.dialogRef.close(this.entranceEditForm.value))
     }
   }
+
+  handleUploadSuccess(file: any) {
+    console.log(file)
+  }
 }
