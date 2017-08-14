@@ -5,6 +5,10 @@ import { MdSnackBar, MdSnackBarConfig } from '@angular/material';
 import { APP_CONFIG, IAppConfig } from 'app/app.config';
 import { PropertySerivce } from 'root/src/services';
 import { UtilService } from 'common/services';
+import { ITableHeader } from 'common/interfaces';
+
+import { Pluck } from 'common/pipes';
+import { SubPropertyDataSource } from './sub-property-data-source';
 
 @Component({
   selector: 'attr-edit',
@@ -14,14 +18,28 @@ export class AttrEditComponent implements OnInit {
   property: any;
   propertyValues: any[];
 
+  tableHeaders: ITableHeader[] = [
+    { key: 'name', name: '子属性项名称', cell: (row: any) => row.propertyName },
+    { key: 'id', name: '子属性项ID', cell: (row: any) => row.propertyId },
+    { key: 'type', name: '选择类型', cell: (row: any) => PropertySerivce.choiceMap.get(row.choice) },
+    { key: 'value', name: '属性值', cell: (row: any) => this.pluckPipe.transform(row.propertyValues, 'propertyValue') }
+  ];
+  displayedColumns: string[] = [];
+  dataSource: SubPropertyDataSource;
+
+  pageIndex: number;
+  pageSize: number;
+
   constructor(
     @Inject(APP_CONFIG) private appConfig: IAppConfig,
     private propertyService: PropertySerivce,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private utilService: UtilService,
-    private snackBar: MdSnackBar
-  ) { }
+    private snackBar: MdSnackBar,
+    private pluckPipe: Pluck
+  ) {
+  }
 
   ngOnInit() {
     this.property = this.propertyService.getCurrentEditProperty();
@@ -30,10 +48,32 @@ export class AttrEditComponent implements OnInit {
       return;
     }
     this.propertyValues = this.utilService.copy(this.property.propertyValues) || [];
+    this.displayedColumns = this.tableHeaders.map((header: ITableHeader): string => header.key);
+    this.dataSource = new SubPropertyDataSource(this.propertyService);
+    this.dataSource.getSubProperties(this.property.propertyId).subscribe(
+      () => null,
+      (errMsg: string) => this.snackBar.open(errMsg, null, this.appConfig.mdSnackBarConfig)
+    );
   }
 
   back() {
-    this.router.navigate(['/tag-manager/attribute']);
+    const { queryParams } = this.activatedRoute.snapshot;
+    this.router.navigate(['/tag-manager/attribute'], { queryParams });
+  }
+
+  addSubProperty() {
+    const subProperties: any[] = this.dataSource.getData();
+    const postBody = {
+      propertyId: this.property.propertyId,
+      subProperties
+    };
+
+    this.dataSource.addSubProperty(postBody).subscribe(
+      () => {
+        this.snackBar.open('新增子属性项成功', null, this.appConfig.mdSnackBarConfig);
+      },
+      (errMsg) => this.snackBar.open(errMsg, null, this.appConfig.mdSnackBarConfig)
+    )
   }
 
   /**

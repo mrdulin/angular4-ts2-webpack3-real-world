@@ -19,6 +19,11 @@ export interface IQueryCondition{
 @Injectable()
 export class PropertySerivce {
 
+  public static choiceMap: Map<string, string> = new Map<string, string>([
+    ['1', '单选'],
+    ['2', '多选']
+  ]);
+
   dataChange: BehaviorSubject<any> = new BehaviorSubject<any>({});
   private currentEditProperty: any;
   private condition: IQueryCondition;
@@ -65,6 +70,11 @@ export class PropertySerivce {
       .catch(() => Observable.throw('获取属性项列表失败'))
   }
 
+  getChildPropertiesById(id: number | string): Observable<any> {
+    const url: string = `${this.appConfig.api}/property/child?propertyId=${id}`;
+    return this.http.get(url).map((res: Response) => res.json()).catch(() => Observable.throw('获取子属性项失败'));
+  }
+
   /**
    *
    * 保存属性项编辑
@@ -86,6 +96,11 @@ export class PropertySerivce {
       .catch(() => Observable.throw(errMsg));
   }
 
+  saveSubProperty(postBody: any) {
+    const url: string = `${this.appConfig.api}/property/sub/save`;
+    return this.http.post(url, postBody).map((res: Response) => res.json()).catch(() => Observable.throw('新增子属性项失败'));
+  }
+
   setCurrentEditProperty(property: any) {
     this.currentEditProperty = property;
   }
@@ -94,11 +109,11 @@ export class PropertySerivce {
     return this.currentEditProperty;
   }
 
-  saveQueryCondition(condition: IQueryCondition) {
-    this.condition = condition;
-  }
+  // saveQueryCondition(condition: IQueryCondition) {
+  //   this.condition = condition;
+  // }
 
-  getQueryCondition() {
-    return this.condition;
-  }
+  // getQueryCondition() {
+  //   return this.condition;
+  // }
 }

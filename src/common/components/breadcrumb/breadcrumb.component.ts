@@ -23,15 +23,12 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.generateData(this._activatedRoute);
-    console.log(this.datas);
 
     this._routerSubscription = this._router.events
       .filter((event: Event): boolean => event instanceof NavigationEnd)
       .subscribe((navigationEnd: NavigationEnd) => {
         this.datas = [];
-        console.log(this._activatedRoute);
         this.generateData(this._activatedRoute);
-        console.log(this.datas);
       });
   }
 

@@ -1,7 +1,7 @@
-import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectorRef, Inject, AfterViewInit, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectorRef, Inject, ElementRef } from '@angular/core';
 import { MdPaginator, PageEvent, MdDialog, MdDialogRef, MdSnackBar } from '@angular/material';
 import { DataSource } from '@angular/cdk';
-import { Router, ActivatedRoute, NavigationEnd, Event } from '@angular/router';
+import { Router, ActivatedRoute, NavigationEnd, Event, NavigationExtras, Params } from '@angular/router';
 import { APP_CONFIG, IAppConfig } from 'app/app.config';
 
 import { PropertySerivce, IQueryCondition } from 'root/src/services';
@@ -14,20 +14,15 @@ import { PropertyEditDialogComponent } from '../propertyEditDialog';
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 
-const choiceMap: Map<string, string> = new Map<string, string>([
-  ['1', '单选'],
-  ['2', '多选']
-]);
-
 @Component({
   selector: 'attribute-home',
   templateUrl: './home.component.html'
 })
-export class AttributeHomeComponent implements OnInit, OnDestroy, AfterViewInit {
+export class AttributeHomeComponent implements OnInit, OnDestroy {
   tableHeaders: ITableHeader[] = [
     { key: 'propertyName', name: '属性项名称', cell: (row: any) => row.propertyName },
     { key: 'propertyId', name: '属性ID', cell: (row: any) => row.propertyId },
-    { key: 'choice', name: '选择类型', cell: (row: any) => choiceMap.get(row.choice) },
+    { key: 'choice', name: '选择类型', cell: (row: any) => PropertySerivce.choiceMap.get(row.choice) },
     { key: 'parentName', name: '父属性项', cell: (row: any) => row.parentName },
     { key: 'propertyValuesCount', name: '属性值数量', cell: (row: any) => row.propertyValues ? row.propertyValues.length : 0 },
     { key: 'propertyValues', name: '属性值', cell: (row: any) => this.pluckPipe.transform(row.propertyValues, 'propertyValue') },
@@ -77,32 +72,38 @@ export class AttributeHomeComponent implements OnInit, OnDestroy, AfterViewInit 
 
     this.paginatorService.i18n(this.paginator, 'cn');
 
-    const sub: Subscription = this.router.events
-      .filter((event: Event): boolean => event instanceof NavigationEnd)
-      .pairwise()
-      .subscribe((events: [NavigationEnd, NavigationEnd]) => {
-        const prevRouteUrl: string = events[0].url;
-        const currentRouteUrl: string = events[1].url;
+    this.activatedRoute.queryParams.subscribe((params: Params) => {
+      const { q, pageIndex } = params;
+      if (q && q.trim()) {
+        this.keyword = q;
+        this.paginator.pageIndex = pageIndex - 1;
+        this.getPropertiesByName(q, pageIndex);
+      }
+    });
 
-        if (prevRouteUrl.indexOf(`${currentRouteUrl}/edit`) !== -1) {
-          const lastQueryCondition: IQueryCondition = this.propertyService.getQueryCondition();
-          const { pageIndex, keyword }: { pageIndex: number, keyword: string } = lastQueryCondition;
-          console.log(lastQueryCondition);
+    // const sub: Subscription = this.router.events
+    //   .filter((event: Event): boolean => event instanceof NavigationEnd)
+    //   .pairwise()
+    //   .subscribe((events: [NavigationEnd, NavigationEnd]) => {
+    //     const prevRouteUrl: string = events[0].url;
+    //     const currentRouteUrl: string = events[1].url;
 
-          //TODO: 这里重新赋值没有触发view更新??
-          this.keyword = keyword;
-          this.paginator.pageIndex = pageIndex;
+    //     if (prevRouteUrl.indexOf(`${currentRouteUrl}/edit`) !== -1) {
+    //       const lastQueryCondition: IQueryCondition = this.propertyService.getQueryCondition();
+    //       const { pageIndex, keyword }: { pageIndex: number, keyword: string } = lastQueryCondition;
+    //       console.log(lastQueryCondition);
 
-          this.getPropertiesByName(keyword, pageIndex + 1);
-        }
-      });
+    //       //TODO: 这里重新赋值没有触发view更新??
+    //       this.keyword = keyword;
+    //       this.paginator.pageIndex = pageIndex;
+
+    //       this.getPropertiesByName(keyword, pageIndex + 1);
+    //     }
+    //   });
+
 
     // TODO: 组件销毁时，unsubscribe router.events后，以后都不会触发route.events
     // this.subscription.add(sub);
-  }
-
-  ngAfterViewInit() {
-    console.log(this.keywordInputRef);
   }
 
   ngOnDestroy() {
@@ -114,7 +115,18 @@ export class AttributeHomeComponent implements OnInit, OnDestroy, AfterViewInit 
     const keyword: string = this.keyword.trim();
     if (!keyword) return;
     const firstPage: number = 1;
-    this.getPropertiesByName(keyword, firstPage);
+    const navigationExtras: NavigationExtras = this.getNavigationExtras();
+    this.router.navigate(['/tag-manager/attribute'], navigationExtras);
+  }
+
+  getNavigationExtras(): NavigationExtras {
+    const navigationExtras: NavigationExtras = {
+      queryParams: {
+        q: this.keyword,
+        pageIndex: this.paginator.pageIndex + 1,
+      }
+    };
+    return navigationExtras;
   }
 
   getPropertiesByName(keyword: string, pageIndex: number) {
@@ -131,7 +143,7 @@ export class AttributeHomeComponent implements OnInit, OnDestroy, AfterViewInit 
 
   edit(property: any) {
     const dialogRef: MdDialogRef<PropertyEditDialogComponent> = this.dialog.open(PropertyEditDialogComponent, {
-      data: { property, choiceMap }
+      data: { property, choiceMap: PropertySerivce.choiceMap }
     });
 
     dialogRef.afterClosed().subscribe((data) => {
@@ -144,12 +156,13 @@ export class AttributeHomeComponent implements OnInit, OnDestroy, AfterViewInit 
 
   managePropertyValues(property: any) {
     const { propertyId } = property;
-    const condition: IQueryCondition = {
-      keyword: this.keyword,
-      pageIndex: this.paginator.pageIndex
-    };
+    const navigationExtras: NavigationExtras = Object.assign(this.getNavigationExtras(), { relativeTo: this.activatedRoute });
+    // const condition: IQueryCondition = {
+    //   keyword: this.keyword,
+    //   pageIndex: this.paginator.pageIndex
+    // };
+    // this.propertyService.saveQueryCondition(condition);
     this.propertyService.setCurrentEditProperty(property);
-    this.propertyService.saveQueryCondition(condition);
-    this.router.navigate(['edit', propertyId], { relativeTo: this.activatedRoute });
+    this.router.navigate(['edit', propertyId], navigationExtras);
   }
 }
