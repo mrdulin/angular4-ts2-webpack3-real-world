@@ -40,9 +40,9 @@ export class ConfigDialogComponent implements OnInit {
     };
 
     this.diseaseService.saveConfig(data).subscribe(
-      () => {
+      (data) => {
         this.snackBar.open('编辑疾病配置成功！', null, this.appConfig.mdSnackBarConfig);
-        this.dialogRef.close();
+        this.dialogRef.close(data);
       },
       (errMsg: string) => this.snackBar.open(errMsg, null, this.appConfig.mdSnackBarConfig)
     );

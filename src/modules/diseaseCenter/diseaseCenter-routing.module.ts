@@ -6,6 +6,9 @@ import { diseaseHomeComponent } from './diseaseHome';
 const routes: Routes = [
   {
     path: 'disease-center',
+    data: {
+      name: '专家专科业务'
+    },
     children: [
       {
         path: '',
@@ -14,23 +17,38 @@ const routes: Routes = [
       },
       {
         path: 'disease-home',
-        component: diseaseHomeComponent
+        component: diseaseHomeComponent,
+        data: {
+          name: '聚合页配置'
+        }
       },
       {
         path: 'specialist-home',
-        component: diseaseHomeComponent
+        component: diseaseHomeComponent,
+        data: {
+          name: '专家专科页配置'
+        }
       },
       {
         path: 'hospital-home',
-        component: diseaseHomeComponent
+        component: diseaseHomeComponent,
+        data: {
+          name: '医院配置'
+        }
       },
       {
         path: 'doctor-home',
-        component: diseaseHomeComponent
+        component: diseaseHomeComponent,
+        data: {
+          name: '医生配置'
+        }
       },
       {
         path: 'serve-city',
-        component: diseaseHomeComponent
+        component: diseaseHomeComponent,
+        data: {
+          name: '服务城市配置'
+        }
       }
     ]
   }

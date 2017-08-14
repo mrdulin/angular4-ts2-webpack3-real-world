@@ -12,7 +12,7 @@ import { UtilService } from 'common/services';
 })
 export class AttrEditComponent implements OnInit {
   property: any;
-  propertyValues: any[] = [];
+  propertyValues: any[];
 
   constructor(
     @Inject(APP_CONFIG) private appConfig: IAppConfig,
@@ -29,7 +29,7 @@ export class AttrEditComponent implements OnInit {
       this.back();
       return;
     }
-    this.propertyValues = this.utilService.copy(this.property.propertyValues);
+    this.propertyValues = this.utilService.copy(this.property.propertyValues) || [];
   }
 
   back() {

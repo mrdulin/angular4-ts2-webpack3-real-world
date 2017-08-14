@@ -14,7 +14,7 @@ import { AppComponent } from './app.component';
 import { SidebarComponent } from './sidebar';
 import { ContentComponent } from './content';
 import { BreadcrumbComponent } from 'common/components/breadcrumb';
-import { TipDialogComponent } from 'common/components/dialog';
+import { ComfirmDialogComponent } from 'common/components/dialog';
 
 import { StringService, NavigationService, PaginatorService, UploadService, UtilService } from 'common/services';
 
@@ -30,7 +30,7 @@ import './style.async.css';
     ContentComponent,
     SidebarComponent,
     BreadcrumbComponent,
-    TipDialogComponent,
+    ComfirmDialogComponent,
 
   ],
   imports: [
@@ -43,7 +43,7 @@ import './style.async.css';
   ],
   bootstrap: [AppComponent],
   entryComponents: [
-    TipDialogComponent
+    ComfirmDialogComponent
   ],
   providers: [
     Pluck,

@@ -104,7 +104,7 @@ export class DiseaseService {
     if (this.appConfig.mockApi) {
       return Observable.of(saveDiseaseConfigResponse);
     }
-    return this.http.post(url, diseaseInfo).catch(() => Observable.throw('保存失败'));
+    return this.http.post(url, diseaseInfo).map((res: Response) => res.json()).catch(() => Observable.throw('保存失败'));
   }
 
   /**

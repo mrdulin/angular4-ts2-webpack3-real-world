@@ -145,7 +145,11 @@ export class SicknessComponent implements OnInit, OnDestroy, AfterViewInit {
             data: { disease, config }
           });
 
-          dialogRef.afterClosed().subscribe(() => this.requestByCurrentData());
+          dialogRef.afterClosed().subscribe((data) => {
+            if(data) {
+              this.requestByCurrentData();
+            }
+          });
         },
         (errMsg: string) => this._snackbar.open(errMsg, null, this.appConfig.mdSnackBarConfig)
       )
