@@ -14,11 +14,13 @@ import { AppComponent } from './app.component';
 import { SidebarComponent } from './sidebar';
 import { ContentComponent } from './content';
 import { BreadcrumbComponent } from 'common/components/breadcrumb';
-import { ComfirmDialogComponent } from 'common/components/dialog';
+
+import { ComfirmDialogComponent, ComfirmDialogService } from 'common/components/dialog';
 
 import { StringService, NavigationService, PaginatorService, UploadService, UtilService } from 'common/services';
 
 import { DeptService, HttpInterceptorService, UserService } from 'root/src/services';
+
 import { MdSnackBar } from '@angular/material';
 import { Pluck } from 'common/pipes';
 
@@ -41,10 +43,8 @@ import './style.async.css';
 
     AppRoutingModule
   ],
+  entryComponents: [ComfirmDialogComponent],
   bootstrap: [AppComponent],
-  entryComponents: [
-    ComfirmDialogComponent
-  ],
   providers: [
     Pluck,
     { provide: APP_CONFIG, useValue: AppConfig },
@@ -55,7 +55,8 @@ import './style.async.css';
     DeptService,
     UserService,
     UploadService,
-    UtilService
+    UtilService,
+    ComfirmDialogService
   ]
 }
 )

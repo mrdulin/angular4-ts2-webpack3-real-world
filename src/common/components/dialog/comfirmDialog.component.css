@@ -1,0 +1,27 @@
+.confrim-container .confirm-content-box{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.confrim-container .mat-dialog-actions{
+  display: block;
+  text-align: center;
+}
+
+.confrim-container .mat-dialog-actions .mat-button{
+  margin-left: 30px;
+}
+
+.confrim-container .mat-dialog-actions .mat-button.primary{
+  background-color: #108ee9;
+  border-color: #108ee9;
+  color: #fff
+}
+
+.confrim-container .mat-dialog-actions .mat-button.warnning{
+  background-color: rgb(240, 65, 52);
+  border-color: rgb(240, 65, 52);
+  color: #fff;
+}

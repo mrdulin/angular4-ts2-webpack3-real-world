@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { MdDialog, MdSnackBar } from '@angular/material';
-import { EntranceEdit } from './editDialog/editDialog.component';
-import { EntranceService } from 'root/src/services';
-import { IDiseaseCenterEntranceData } from 'root/src/models';
-import { IOptions } from 'common/components/checkboxGroup';
-import { IEntranceData } from 'src/services';
+import { Component, OnInit } from '@angular/core'
+import { MdDialog, MdSnackBar } from '@angular/material'
+import { EntranceEditComponent } from './editDialog/editDialog.component'
+import { EntranceService } from 'root/src/services'
+import { IDiseaseCenterEntranceData } from 'root/src/models'
+import { IOptions } from 'common/components/checkboxGroup'
+import { ComfirmDialogService } from 'common/components/dialog';
+import { IEntranceData } from 'src/services'
 
 @Component({
   selector: 'entrance-manager',
@@ -17,7 +18,8 @@ export class entranceManagerComponent implements OnInit {
   constructor(
     private dialog: MdDialog,
     private entranceService: EntranceService,
-    private snackbar: MdSnackBar
+    private snackbar: MdSnackBar,
+    private ComfirmDialogService: ComfirmDialogService
   ){}
 
   ngOnInit (): void {
@@ -47,7 +49,7 @@ export class entranceManagerComponent implements OnInit {
   }
 
   editEntranceForm(record: object, options: IOptions): void{
-    const dialogRef = this.dialog.open(EntranceEdit, {
+    const dialogRef = this.dialog.open(EntranceEditComponent, {
       data: { record, options },
       width: '400px'
     })
@@ -57,7 +59,12 @@ export class entranceManagerComponent implements OnInit {
   }
 
   deleteEntranceForm(id: number): void {
-    // TODO..confirm dialog
-    // this.entranceService.deleteEntranceData(id)
+    this.ComfirmDialogService.open({ 
+      msg: '你确定要删除吗？', 
+      onConfirm: () => this.entranceService.deleteEntranceData(id).subscribe(() => {
+        this.queryEntranceInfo({ pageNo: 1, pageSize: 10 })
+        this.ComfirmDialogService.close()
+      })
+    })
   }
 }
