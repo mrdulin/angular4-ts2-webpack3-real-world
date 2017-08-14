@@ -43,7 +43,7 @@ export class HttpInterceptorService extends Http {
       options.headers = new Headers();
     }
     options.withCredentials = true;
-    // options.headers.append('Content-Type', 'application/json');
+    options.headers.set('Content-Type', 'application/json');
     options.headers.set('Accept', 'application/json');
 
     return options;

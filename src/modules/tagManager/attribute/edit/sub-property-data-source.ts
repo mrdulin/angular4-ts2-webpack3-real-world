@@ -21,11 +21,11 @@ export class SubPropertyDataSource extends DataSource<any>{
     return this.dataChange.value;
   }
 
-  addSubProperty(data: any): Observable<any> {
-    return this.propertyService.saveSubProperty(data).map(() => {
-      const oldValues = this.dataChange.value;
-      const newValues = [data, ...oldValues];
-      this.dataChange.next(newValues);
+  addSubProperty(postBody: any): Observable<any> {
+    return this.propertyService.saveSubProperty(postBody).map(() => {
+      // const oldValues = this.getData();
+      // const newValues = [...postBody.subProperties, ...oldValues];
+      // this.dataChange.next(newValues);
     });
   }
 
@@ -49,6 +49,6 @@ export class SubPropertyDataSource extends DataSource<any>{
   }
 
   disconnect() {
-
+    // this.dataChange.complete();
   }
 }

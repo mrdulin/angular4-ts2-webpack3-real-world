@@ -98,7 +98,7 @@ export class PropertySerivce {
 
   saveSubProperty(postBody: any) {
     const url: string = `${this.appConfig.api}/property/sub/save`;
-    return this.http.post(url, postBody).map((res: Response) => res.json()).catch(() => Observable.throw('新增子属性项失败'));
+    return this.http.post(url, JSON.stringify(postBody)).map((res: Response) => res.json()).catch(() => Observable.throw('新增子属性项失败'));
   }
 
   setCurrentEditProperty(property: any) {

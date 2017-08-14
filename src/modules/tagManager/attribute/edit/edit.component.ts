@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { MdSnackBar, MdSnackBarConfig } from '@angular/material';
+import { MdSnackBar, MdDialog } from '@angular/material';
 
 import { APP_CONFIG, IAppConfig } from 'app/app.config';
 import { PropertySerivce } from 'root/src/services';
@@ -17,6 +17,15 @@ import { SubPropertyDataSource } from './sub-property-data-source';
 export class AttrEditComponent implements OnInit {
   property: any;
   propertyValues: any[];
+
+  queryTypes: any[] = [
+    { name: '单选', key: '1' },
+    { name: '多选', key: '2' }
+  ];
+  sub: any;
+
+  selectedQueryType: any;
+  subPropertyName: string;
 
   tableHeaders: ITableHeader[] = [
     { key: 'name', name: '子属性项名称', cell: (row: any) => row.propertyName },
@@ -37,7 +46,8 @@ export class AttrEditComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private utilService: UtilService,
     private snackBar: MdSnackBar,
-    private pluckPipe: Pluck
+    private pluckPipe: Pluck,
+    private dialog: MdDialog
   ) {
   }
 
@@ -50,7 +60,7 @@ export class AttrEditComponent implements OnInit {
     this.propertyValues = this.utilService.copy(this.property.propertyValues) || [];
     this.displayedColumns = this.tableHeaders.map((header: ITableHeader): string => header.key);
     this.dataSource = new SubPropertyDataSource(this.propertyService);
-    this.dataSource.getSubProperties(this.property.propertyId).subscribe(
+    this.sub = this.dataSource.getSubProperties(this.property.propertyId).subscribe(
       () => null,
       (errMsg: string) => this.snackBar.open(errMsg, null, this.appConfig.mdSnackBarConfig)
     );
@@ -62,15 +72,19 @@ export class AttrEditComponent implements OnInit {
   }
 
   addSubProperty() {
-    const subProperties: any[] = this.dataSource.getData();
-    const postBody = {
-      propertyId: this.property.propertyId,
-      subProperties
-    };
+    const { propertyId } = this.property;
+    const subProperties: any[] = [];
+    subProperties.push({
+      propertyName: this.subPropertyName,
+      choice: this.selectedQueryType.key
+    });
+    const postBody = { propertyId, subProperties };
 
     this.dataSource.addSubProperty(postBody).subscribe(
       () => {
+        this.sub.unsubscribe();
         this.snackBar.open('新增子属性项成功', null, this.appConfig.mdSnackBarConfig);
+        this.dataSource.getSubProperties(propertyId);
       },
       (errMsg) => this.snackBar.open(errMsg, null, this.appConfig.mdSnackBarConfig)
     )

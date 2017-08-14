@@ -33,9 +33,21 @@
 
 <h2 class='row'>子属性项管理</h2>
 
-<div class='row'>
-  <button type="button" md-raised-button (click)='addSubProperty()'>新增子属性项</button>
-</div>
+<form novalidate (ngSubmit)='addSubProperty()'>
+  <md-input-container>
+    <input mdInput placeholder="子属性项名称" type="text" name="subPropertyName" [(ngModel)]='subPropertyName' />
+  </md-input-container>
+
+  <md-select placeholder='选择类型' name='queryType' [(ngModel)]='selectedQueryType'>
+    <md-option *ngFor='let queryType of queryTypes' [value]='queryType'>
+      {{queryType.name}}
+    </md-option>
+  </md-select>
+
+  <button type="submit" md-mini-fab>
+    <md-icon>add</md-icon>
+  </button>
+</form>
 
 <md-card>
   <md-table [dataSource]='dataSource'>
@@ -48,5 +60,5 @@
     <md-row *cdkRowDef="let row; columns: displayedColumns;"></md-row>
   </md-table>
 
-   <p class='no-data-tip' [hidden]='this.dataSource?.dataTotal'>暂无数据</p>
+  <p class='no-data-tip' [hidden]='this.dataSource?.dataTotal'>暂无数据</p>
 </md-card>
