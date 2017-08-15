@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectorRef, Inject, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, Inject, ElementRef } from '@angular/core';
 import { MdPaginator, PageEvent, MdDialog, MdDialogRef, MdSnackBar } from '@angular/material';
 import { DataSource } from '@angular/cdk';
 import { Router, ActivatedRoute, NavigationEnd, Event, NavigationExtras, Params } from '@angular/router';
@@ -55,8 +55,7 @@ export class AttributeHomeComponent implements OnInit, OnDestroy {
     private dialog: MdDialog,
     private snackBar: MdSnackBar,
     private router: Router,
-    private activatedRoute: ActivatedRoute,
-    private cdRef: ChangeDetectorRef
+    private activatedRoute: ActivatedRoute
   ) {
     const { pageIndex, pageSize, pageSizeOptions } = this.paginatorService;
 

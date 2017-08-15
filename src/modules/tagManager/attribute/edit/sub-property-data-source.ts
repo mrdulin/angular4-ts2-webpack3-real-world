@@ -22,19 +22,21 @@ export class SubPropertyDataSource extends DataSource<any>{
   }
 
   addSubProperty(postBody: any): Observable<any> {
-    return this.propertyService.saveSubProperty(postBody).map(() => {
-      // const oldValues = this.getData();
-      // const newValues = [...postBody.subProperties, ...oldValues];
-      // this.dataChange.next(newValues);
-    });
+    return this.propertyService.saveSubProperty(postBody)
+    // .map(() => {
+    //   const oldValues = this.getData();
+    //   const newValues = [...postBody.subProperties, ...oldValues];
+    //   this.dataChange.next(newValues);
+    // });
   }
 
-  getSubProperties(id: string | number) {
-    return this.propertyService.getChildPropertiesById(id).map((res: any) => {
-      const subProperties: IProperty[] = res.model;
-      this.dataTotal = subProperties.length;
-      this.dataChange.next(subProperties);
-    });
+  getSubPropertiesById(id: string | number) {
+    return this.propertyService.getChildPropertiesById(id)
+      .map((res: any) => {
+        const subProperties: IProperty[] = res.model || [];
+        this.dataTotal = subProperties.length;
+        this.dataChange.next(subProperties);
+      });
   }
 
   connect(): Observable<IProperty[]> {

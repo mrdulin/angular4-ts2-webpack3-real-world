@@ -60,10 +60,14 @@ export class AttrEditComponent implements OnInit {
     this.propertyValues = this.utilService.copy(this.property.propertyValues) || [];
     this.displayedColumns = this.tableHeaders.map((header: ITableHeader): string => header.key);
     this.dataSource = new SubPropertyDataSource(this.propertyService);
-    this.sub = this.dataSource.getSubProperties(this.property.propertyId).subscribe(
+    this.sub = this.dataSource.getSubPropertiesById(this.property.propertyId).subscribe(
       () => null,
-      (errMsg: string) => this.snackBar.open(errMsg, null, this.appConfig.mdSnackBarConfig)
+      this.getSubPropertiesByIdFailed
     );
+  }
+
+  getSubPropertiesByIdFailed(errMsg: string) {
+    this.snackBar.open(errMsg, null, this.appConfig.mdSnackBarConfig)
   }
 
   back() {
@@ -71,6 +75,11 @@ export class AttrEditComponent implements OnInit {
     this.router.navigate(['/tag-manager/attribute'], { queryParams });
   }
 
+  /**
+   * 添加子属性项
+   *
+   * @memberof AttrEditComponent
+   */
   addSubProperty() {
     const { propertyId } = this.property;
     const subProperties: any[] = [];
@@ -82,9 +91,8 @@ export class AttrEditComponent implements OnInit {
 
     this.dataSource.addSubProperty(postBody).subscribe(
       () => {
-        this.sub.unsubscribe();
         this.snackBar.open('新增子属性项成功', null, this.appConfig.mdSnackBarConfig);
-        this.dataSource.getSubProperties(propertyId);
+        this.dataSource.getSubPropertiesById(propertyId).subscribe(() => null, this.getSubPropertiesByIdFailed);
       },
       (errMsg) => this.snackBar.open(errMsg, null, this.appConfig.mdSnackBarConfig)
     )

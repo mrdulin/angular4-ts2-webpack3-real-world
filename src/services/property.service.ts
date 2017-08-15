@@ -11,7 +11,7 @@ import * as propertySaveSuccessRes from './propertySaveSuccessRes.json';
 
 type ISaveType = 'edit-prop' | 'add-prop-val' | 'del-prop-val';
 
-export interface IQueryCondition{
+export interface IQueryCondition {
   keyword: string;
   pageIndex: number;
 }
@@ -98,7 +98,15 @@ export class PropertySerivce {
 
   saveSubProperty(postBody: any) {
     const url: string = `${this.appConfig.api}/property/sub/save`;
-    return this.http.post(url, JSON.stringify(postBody)).map((res: Response) => res.json()).catch(() => Observable.throw('新增子属性项失败'));
+    return this.http.post(url, JSON.stringify(postBody))
+      .map((res: Response) => res.json())
+      .catch((res: any) => {
+        let msg: string = '新增子属性项失败';
+        if (res.errorCode === 8000) {
+          msg = res.error;
+        }
+        return Observable.throw(msg);
+      });
   }
 
   setCurrentEditProperty(property: any) {
