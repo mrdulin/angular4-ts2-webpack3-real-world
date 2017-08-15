@@ -6,15 +6,10 @@ import {
 } from '@angular/material';
 
 @NgModule({
-  imports: [
-    MdDialogModule,
-    MdButtonModule,
-    MdSnackBarModule
-  ],
   exports: [
     MdDialogModule,
     MdButtonModule,
     MdSnackBarModule
   ]
 })
-export class MaterialModule { }
+export class AppMaterialModule { }

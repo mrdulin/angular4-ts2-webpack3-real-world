@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 import { Http, RequestOptions, HttpModule, XHRBackend } from '@angular/http';
 import { httpFactory } from './http-factory';
 
-import { MaterialModule } from './material.module';
+import { AppMaterialModule } from './material.module';
 import { AppRoutingModule } from './app-routing.module';
 
 import { APP_CONFIG, AppConfig } from './app.config';
@@ -38,9 +38,8 @@ import './style.async.css';
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    MaterialModule,
     HttpModule,
-
+    AppMaterialModule,
     AppRoutingModule
   ],
   entryComponents: [ComfirmDialogComponent],

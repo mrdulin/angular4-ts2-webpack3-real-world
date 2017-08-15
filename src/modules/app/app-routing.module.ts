@@ -22,10 +22,10 @@ export const routes: Routes = [
         path: '',
         loadChildren: loadTagManagerModule
       },
-      {
-        path: '',
-        loadChildren: loadGoToHospitalModule
-      },
+      // {
+      //   path: '',
+      //   loadChildren: loadGoToHospitalModule
+      // },
       // --
 
       // -- 异步加载的特性模块 --
@@ -35,7 +35,7 @@ export const routes: Routes = [
       },
       {
         path: '',
-        loadChildren: '../doctorCenter/doctorCenter.module.ts#DoctorCenterModule'
+        loadChildren: '../doctorCenter/doctorCenter.module#DoctorCenterModule'
       }
       // --
     ]

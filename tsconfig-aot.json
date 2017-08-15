@@ -13,7 +13,10 @@
     ],
     "noImplicitAny": true,
     "suppressImplicitAnyIndexErrors": true,
-    "baseUrl": "./",
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "baseUrl": "",
     "paths": {
       "root/*": [
         "*"
@@ -27,8 +30,12 @@
     },
     "outDir": "./compiled/src"
   },
-  "include": [
-    "src/**/*"
+  "files": [
+    "./src/main.ts",
+    "./src/modules/app/index.ts",
+    "./src/modules/diseaseCenter/index.ts",
+    "./src/modules/doctorCenter/index.ts",
+    "./src/typings/json.d.ts"
   ],
   "exclude": [
     "node_modules"

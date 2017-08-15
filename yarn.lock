@@ -94,6 +94,12 @@
   version "3.4.30"
   resolved "http://registry.npm.taobao.org/@types/clean-css/download/@types/clean-css-3.4.30.tgz#0052c136f5248002428e3638b37de4a39818641d"
 
+"@types/compression-webpack-plugin@^0.3.1":
+  version "0.3.1"
+  resolved "http://registry.npm.taobao.org/@types/compression-webpack-plugin/download/@types/compression-webpack-plugin-0.3.1.tgz#3e3108e80500cdfe7d506197f3d4f46180d94e64"
+  dependencies:
+    "@types/webpack" "*"
+
 "@types/core-js@^0.9.42":
   version "0.9.42"
   resolved "http://registry.npm.taobao.org/@types/core-js/download/@types/core-js-0.9.42.tgz#dd6da92cd7d5ab5ca0b4477524537c3e633b6bce"
@@ -380,6 +386,12 @@ assert@^1.1.1:
 async-each@^1.0.0:
   version "1.0.1"
   resolved "http://registry.npm.taobao.org/async-each/download/async-each-1.0.1.tgz#19d386a1d9edc6e7c1c85d388aedbcc56d33602d"
+
+async@2.4.1:
+  version "2.4.1"
+  resolved "http://registry.npm.taobao.org/async/download/async-2.4.1.tgz#62a56b279c98a11d0987096a01cc3eeb8eb7bbd7"
+  dependencies:
+    lodash "^4.14.0"
 
 async@^1.5.2:
   version "1.5.2"
@@ -872,6 +884,13 @@ compressible@~2.0.10:
   dependencies:
     mime-db ">= 1.29.0 < 2"
 
+compression-webpack-plugin@^1.0.0:
+  version "1.0.0"
+  resolved "http://registry.npm.taobao.org/compression-webpack-plugin/download/compression-webpack-plugin-1.0.0.tgz#5c5eb6afd08ca6a5d66006eeef71da17b01bd676"
+  dependencies:
+    async "2.4.1"
+    webpack-sources "^1.0.1"
+
 compression@^1.5.2:
   version "1.7.0"
   resolved "http://registry.npm.taobao.org/compression/download/compression-1.7.0.tgz#030c9f198f1643a057d776a738e922da4373012d"
@@ -965,7 +984,14 @@ create-hmac@^1.1.0, create-hmac@^1.1.2, create-hmac@^1.1.4:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
-cross-spawn@^5.0.1:
+cross-env@^5.0.5:
+  version "5.0.5"
+  resolved "http://registry.npm.taobao.org/cross-env/download/cross-env-5.0.5.tgz#4383d364d9660873dd185b398af3bfef5efffef3"
+  dependencies:
+    cross-spawn "^5.1.0"
+    is-windows "^1.0.0"
+
+cross-spawn@^5.0.1, cross-spawn@^5.1.0:
   version "5.1.0"
   resolved "http://registry.npm.taobao.org/cross-spawn/download/cross-spawn-5.1.0.tgz#e8bd0efee58fcff6f8f94510a0a554bbfa235449"
   dependencies:
@@ -2210,6 +2236,10 @@ is-typedarray@~1.0.0:
 is-utf8@^0.2.0:
   version "0.2.1"
   resolved "http://registry.npm.taobao.org/is-utf8/download/is-utf8-0.2.1.tgz#4b0da1442104d1b336340e80797e865cf39f7d72"
+
+is-windows@^1.0.0:
+  version "1.0.1"
+  resolved "http://registry.npm.taobao.org/is-windows/download/is-windows-1.0.1.tgz#310db70f742d259a16a369202b51af84233310d9"
 
 isarray@0.0.1:
   version "0.0.1"
