@@ -11,14 +11,3 @@ export interface IDiseaseCenterEntranceData extends IDiseaseCenterMainInfo {
 export interface IDiseaseCenterMainInfo {
   id: string | number;
 }
-
-export class DiseaseCenter {
-  constructor(public model: IDiseaseCenterEntranceData) {
-    Object.assign(this, model);
-  }
-}
-
-
-
-
-

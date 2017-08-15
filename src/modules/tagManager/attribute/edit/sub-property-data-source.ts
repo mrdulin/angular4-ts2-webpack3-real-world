@@ -2,7 +2,7 @@ import { DataSource } from '@angular/cdk';
 import { Observable } from 'rxjs';
 import { PropertySerivce } from 'root/src/services';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { IProperty } from 'root/src/models';
+import { IProperty } from 'root/src/interfaces';
 
 export class SubPropertyDataSource extends DataSource<any>{
   dataChange: BehaviorSubject<IProperty[]> = new BehaviorSubject<IProperty[]>([]);
@@ -51,6 +51,6 @@ export class SubPropertyDataSource extends DataSource<any>{
   }
 
   disconnect() {
-    // this.dataChange.complete();
+    this.dataChange.complete();
   }
 }

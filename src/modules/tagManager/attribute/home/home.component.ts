@@ -71,7 +71,7 @@ export class AttributeHomeComponent implements OnInit, OnDestroy {
 
     this.paginatorService.i18n(this.paginator, 'cn');
 
-    this.activatedRoute.queryParams.subscribe((params: Params) => {
+    const queryParams$ = this.activatedRoute.queryParams.subscribe((params: Params) => {
       const { q, pageIndex } = params;
       if (q && q.trim()) {
         this.keyword = q;
@@ -79,6 +79,8 @@ export class AttributeHomeComponent implements OnInit, OnDestroy {
         this.getPropertiesByName(q, pageIndex);
       }
     });
+
+    this.subscription.add(queryParams$);
 
     // const sub: Subscription = this.router.events
     //   .filter((event: Event): boolean => event instanceof NavigationEnd)
@@ -106,7 +108,6 @@ export class AttributeHomeComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    // this.cdRef.detach();
     this.subscription.unsubscribe();
   }
 

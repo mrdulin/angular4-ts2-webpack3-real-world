@@ -4,15 +4,15 @@ import { APP_CONFIG, IAppConfig } from '../modules/app/app.config';
 
 import { HttpInterceptorService } from './httpInterceptor.service';
 import { UtilService } from 'common/services';
-import { IDiseaseCenterEntranceData } from 'root/src/models'
+import { IDiseaseCenterEntranceData } from 'root/src/interfaces'
 
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { Observable } from 'rxjs';
 
-export interface IEntranceData{ 
-  pageNo: number, 
-  pageSize: number 
+export interface IEntranceData{
+  pageNo: number,
+  pageSize: number
 }
 
 @Injectable()
@@ -40,7 +40,7 @@ export class EntranceService{
     params.set('pageSize', pageSize.toString())
 
     requestOptions.params = params
-    
+
     return this.http.get(url, requestOptions)
       .map((res: Response) => res.json())
       .catch(() => Observable.throw('获取疾病中心入口配置失败'))

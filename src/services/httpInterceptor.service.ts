@@ -26,7 +26,9 @@ export class HttpInterceptorService extends Http {
   }
 
   post(url: string, body: any, options?: RequestOptionsArgs): Observable<Response> {
-    return this.intercept(super.post(url, body, this.getRequestOptionArgs(options)));
+    const _options = this.getRequestOptionArgs(options);
+    _options.headers.set('Content-Type', 'application/json');
+    return this.intercept(super.post(url, body, _options));
   }
 
   options(url: string, options?: RequestOptionsArgs): Observable<Response> {
@@ -43,7 +45,6 @@ export class HttpInterceptorService extends Http {
       options.headers = new Headers();
     }
     options.withCredentials = true;
-    options.headers.set('Content-Type', 'application/json');
     options.headers.set('Accept', 'application/json');
 
     return options;

@@ -1,4 +1,4 @@
-<form novalidate (submit)='onSubmit()' class='form'>
+<form novalidate (submit)='formChange$.next($event)' class='form'>
 
   <md-select placeholder='查询类别' name='queryType' [(ngModel)]='selectedQueryType'>
     <md-option *ngFor='let queryType of queryTypes' [value]='queryType'>

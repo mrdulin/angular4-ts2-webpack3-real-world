@@ -22,7 +22,6 @@ export class AttrEditComponent implements OnInit {
     { name: '单选', key: '1' },
     { name: '多选', key: '2' }
   ];
-  sub: any;
 
   selectedQueryType: any;
   subPropertyName: string;
@@ -60,7 +59,7 @@ export class AttrEditComponent implements OnInit {
     this.propertyValues = this.utilService.copy(this.property.propertyValues) || [];
     this.displayedColumns = this.tableHeaders.map((header: ITableHeader): string => header.key);
     this.dataSource = new SubPropertyDataSource(this.propertyService);
-    this.sub = this.dataSource.getSubPropertiesById(this.property.propertyId).subscribe(
+    this.dataSource.getSubPropertiesById(this.property.propertyId).subscribe(
       () => null,
       this.getSubPropertiesByIdFailed
     );

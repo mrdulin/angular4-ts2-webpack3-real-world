@@ -4,7 +4,12 @@ import { APP_CONFIG, IAppConfig } from '../modules/app/app.config';
 
 import { HttpInterceptorService } from './httpInterceptor.service';
 import { UtilService } from 'common/services';
-import { IDiseaseMainInfo, IDiseaseConfig } from 'root/src/models';
+import {
+  IDiseaseConfig,
+  IApiResponse,
+  IDiseaseTagName,
+  IDiseaseSavePostBody
+} from 'root/src/interfaces';
 
 import * as data from './diseaseConfig.json';
 import * as saveDiseaseConfigResponse from './saveDiseaseConfig.json';
@@ -77,7 +82,7 @@ export class DiseaseService {
    * @returns {Observable<any>}
    * @memberof DiseaseService
    */
-  getByTagId(id: number | string): Observable<any> {
+  getByTagId(id: number | string): Observable<IDiseaseConfig> {
     const url: string = `${this.appConfig.api}/tag/disease/config?tagId=${id}`;
 
     if (this.appConfig.mockApi) {
@@ -85,8 +90,8 @@ export class DiseaseService {
     }
 
     return this.http.get(url)
-      .map((res: Response) => res.json())
-      .map((data: any) => data.model)
+      .map((res: Response): IApiResponse<IDiseaseConfig> => res.json())
+      .map((data: IApiResponse<IDiseaseConfig>): IDiseaseConfig => data.model)
       .catch(() => Observable.throw('获取疾病配置信息失败'));
   }
 
@@ -95,34 +100,36 @@ export class DiseaseService {
    * 标准疾病管理
    *
    * 疾病编辑配置保存
-   * @param {(IDiseaseMainInfo & IDiseaseConfig)} diseaseInfo
+   * @param {(IDiseaseTagName & IDiseaseConfig)} diseaseInfo
    * @returns
    * @memberof DiseaseService
    */
-  saveConfig(diseaseInfo: IDiseaseMainInfo & IDiseaseConfig) {
+  saveConfig(diseaseInfo: IDiseaseTagName & IDiseaseConfig) {
     const url: string = `${this.appConfig.api}/tag/disease/save/config`;
     if (this.appConfig.mockApi) {
       return Observable.of(saveDiseaseConfigResponse);
     }
-    return this.http.post(url, diseaseInfo).map((res: Response) => res.json()).catch(() => Observable.throw('保存失败'));
+    return this.http.post(url, diseaseInfo)
+      .map((res: Response): IApiResponse<boolean> => res.json())
+      .catch(() => Observable.throw('保存失败'));
   }
 
   /**
    * 保存疾病信息
    *
-   * @param {*} postBody
+   * @param {IDiseaseSavePostBody} postBody
    * @returns
    * @memberof DiseaseService
    */
-  save(postBody: any) {
+  save(postBody: IDiseaseSavePostBody) {
     const url: string = `${this.appConfig.api}/tag/disease/save`;
 
-    const _postBody: any = this.utilService.filterFalsy(postBody);
+    const _postBody: IDiseaseSavePostBody = this.utilService.filterFalsy(postBody);
     if (!_postBody.relatedTags.length) {
       delete _postBody.relatedTags;
     }
     return this.http.post(url, _postBody)
-      .map((res: any) => res.json())
-      .catch((err: any) => Observable.throw('保存失败'));
+      .map((res: Response): IApiResponse<number> => res.json())
+      .catch((apiRes: IApiResponse<number>) => Observable.throw('保存失败'));
   }
 }

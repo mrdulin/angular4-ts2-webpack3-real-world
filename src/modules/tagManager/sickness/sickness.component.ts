@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { DiseaseService, IGetDiseasesByPageData } from 'root/src/services';
 import { PaginatorService } from 'common/services';
-import { Disease, IDisease } from 'root/src/models';
+import { IDisease, IDiseaseTagWithChildren } from 'root/src/interfaces';
 import { APP_CONFIG, IAppConfig } from 'app/app.config';
 
 import { EditDialogComponent } from './editDialog';
@@ -30,13 +30,13 @@ export class SicknessComponent implements OnInit, OnDestroy, AfterViewInit {
   public diseaseDataBase: DiseaseDataBase;
   public dataSource: DiseaseDataSource | null;
   public tableHeaders: ITableHeader[] = [
-    { key: 'diseaseId', name: '疾病ID', cell: (row: IDisease) => `${row.tagId}` },
-    { key: 'diseaseName', name: '疾病名称', cell: (row: IDisease) => `${row.tagName}` },
-    { key: 'ICD', name: 'ICD标准码', cell: (row: IDisease) => `${row.standardCode}` },
-    { key: 'IDC', name: 'IDC附加码', cell: (row: IDisease) => `${row.extraCode}` },
-    { key: 'diseaseCategory', name: '所属疾病类目', cell: (row: IDisease) => `${row.parentName}` },
-    { key: 'department', name: '所属标准科室', cell: (row: IDisease) => `` },
-    { key: 'operator', name: '操作', cell: (row: IDisease) => `` }
+    { key: 'diseaseId', name: '疾病ID', cell: (row: IDisease<IDiseaseTagWithChildren>) => `${row.tagId}` },
+    { key: 'diseaseName', name: '疾病名称', cell: (row: IDisease<IDiseaseTagWithChildren>) => `${row.tagName}` },
+    { key: 'ICD', name: 'ICD标准码', cell: (row: IDisease<IDiseaseTagWithChildren>) => `${row.standardCode}` },
+    { key: 'IDC', name: 'IDC附加码', cell: (row: IDisease<IDiseaseTagWithChildren>) => `${row.extraCode}` },
+    { key: 'diseaseCategory', name: '所属疾病类目', cell: (row: IDisease<IDiseaseTagWithChildren>) => `${row.parentName}` },
+    { key: 'department', name: '所属标准科室', cell: (row: IDisease<IDiseaseTagWithChildren>) => `` },
+    { key: 'operator', name: '操作', cell: (row: IDisease<IDiseaseTagWithChildren>) => `` }
   ];
   public selectedQueryType: IQueryType;
   public keyword: string = '';
@@ -48,7 +48,7 @@ export class SicknessComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(MdPaginator)
   public paginator: MdPaginator;
 
-  formChange$: Subject<boolean> = new Subject<boolean>();
+  formChange$: Subject<any> = new Subject<any>();
   subscripton: Subscription = new Subscription();
 
   constructor(
@@ -71,6 +71,9 @@ export class SicknessComponent implements OnInit, OnDestroy, AfterViewInit {
     this.displayedColumns = this.tableHeaders.map((header: ITableHeader) => header.key);
     this.diseaseDataBase = new DiseaseDataBase(this._diseaseService, this._snackbar, this.appConfig);
     this.dataSource = new DiseaseDataSource(this.diseaseDataBase, this.paginator, this.formChange$);
+
+    const formChangeSub: Subscription = this.formChange$.throttleTime(2000).subscribe(($event) => this.onSubmit($event));
+    this.subscripton.add(formChangeSub);
   }
 
   public ngAfterViewInit() {
@@ -81,10 +84,9 @@ export class SicknessComponent implements OnInit, OnDestroy, AfterViewInit {
     this.subscripton.unsubscribe();
   }
 
-  public onSubmit(): void {
+  public onSubmit($event: any): void {
     this.keyword = this.keyword.trim();
     const firstPage: number = 1;
-    this.formChange$.next(true);
     const data: IGetDiseasesByPageData = this.getRequestData();
     this.diseaseDataBase.getDiseasesByPage(data, firstPage);
   }
@@ -118,10 +120,10 @@ export class SicknessComponent implements OnInit, OnDestroy, AfterViewInit {
    *
    * @desc 打开编辑疾病模态框
    * @private
-   * @param {IDisease} disease
+   * @param {IDisease<IDiseaseTagWithChildren>} disease
    * @memberof SicknessComponent
    */
-  private edit(disease: IDisease) {
+  private edit(disease: IDisease<IDiseaseTagWithChildren>) {
     const dialogRef: MdDialogRef<EditDialogComponent> = this._dialog.open(EditDialogComponent, { data: disease });
     dialogRef.afterClosed().subscribe((data: any) => {
       if (data) {
@@ -133,10 +135,10 @@ export class SicknessComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
    * @desc 打开配置设置模态框
    * @private
-   * @param {IDisease} disease
+   * @param {IDisease<IDiseaseTagWithChildren>} disease
    * @memberof SicknessComponent
    */
-  private config(disease: IDisease) {
+  private config(disease: IDisease<IDiseaseTagWithChildren>) {
     let dialogRef: MdDialogRef<ConfigDialogComponent>;
     this.subscripton.add(
       this._diseaseService.getByTagId(disease.tagId).subscribe(
@@ -156,7 +158,7 @@ export class SicknessComponent implements OnInit, OnDestroy, AfterViewInit {
     );
   }
 
-  private setProperties(disease: IDisease) {
+  private setProperties(disease: IDisease<IDiseaseTagWithChildren>) {
 
   }
 }
@@ -171,9 +173,9 @@ export class DiseaseDataBase {
   }
 
   total: number;
-  dataChange: BehaviorSubject<IDisease[]> = new BehaviorSubject<IDisease[]>([]);
+  dataChange: BehaviorSubject<IDisease<IDiseaseTagWithChildren>[]> = new BehaviorSubject<IDisease<IDiseaseTagWithChildren>[]>([]);
 
-  getData(): IDisease[] {
+  getData(): IDisease<IDiseaseTagWithChildren>[] {
     return this.dataChange.value;
   }
 
@@ -181,7 +183,7 @@ export class DiseaseDataBase {
     this._diseaseService.getDiseasesByPage(data, pageIndex).subscribe(
       (res: any) => {
         const { model } = res;
-        const diseases: IDisease[] = model.t;
+        const diseases: IDisease<IDiseaseTagWithChildren>[] = model.t;
         this.total = model.count;
         this.dataChange.next(diseases);
       },
@@ -211,7 +213,7 @@ export class DiseaseDataSource extends DataSource<any>{
     });
 
     return Observable.merge(...displayDataChanges).map(() => {
-      const diseases: IDisease[] = this._diseaseDataBase.getData();
+      const diseases: IDisease<IDiseaseTagWithChildren>[] = this._diseaseDataBase.getData();
       return diseases;
     });
 

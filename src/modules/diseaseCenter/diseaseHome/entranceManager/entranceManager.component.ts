@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core'
 import { MdDialog, MdSnackBar } from '@angular/material'
 import { EntranceEditComponent } from './editDialog/editDialog.component'
 import { EntranceService } from 'root/src/services'
-import { IDiseaseCenterEntranceData } from 'root/src/models'
+import { IDiseaseCenterEntranceData } from 'root/src/interfaces'
 import { IOptions } from 'common/components/checkboxGroup'
 import { ComfirmDialogService } from 'common/components/dialog';
 import { IEntranceData } from 'src/services'
@@ -59,8 +59,8 @@ export class entranceManagerComponent implements OnInit {
   }
 
   deleteEntranceForm(id: number): void {
-    this.ComfirmDialogService.open({ 
-      msg: '你确定要删除吗？', 
+    this.ComfirmDialogService.open({
+      msg: '你确定要删除吗？',
       onConfirm: () => this.entranceService.deleteEntranceData(id).subscribe(() => {
         this.queryEntranceInfo({ pageNo: 1, pageSize: 10 })
         this.ComfirmDialogService.close()

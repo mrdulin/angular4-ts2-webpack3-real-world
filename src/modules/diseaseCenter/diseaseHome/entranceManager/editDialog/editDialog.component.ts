@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core'
 import { MdDialogRef, MD_DIALOG_DATA } from '@angular/material'
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms'
-import { IDiseaseCenterEntranceData } from 'root/src/models'
+import { IDiseaseCenterEntranceData } from 'root/src/interfaces'
 import { IOptions } from 'root/src/common/components/checkboxGroup'
 import { EntranceService } from 'root/src/services'
 
@@ -39,7 +39,7 @@ export class EntranceEditComponent implements OnInit{
   createDialogData(): Observable<any> {
     return this.entranceService.createEntranceData(this.entranceEditForm.value)
   }
-  
+
   saveEditDialogData(): Observable<any> {
     return this.entranceService.saveEntranceData(this.entranceEditForm.value)
   }

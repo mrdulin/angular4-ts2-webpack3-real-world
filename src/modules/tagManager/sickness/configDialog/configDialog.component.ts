@@ -1,7 +1,13 @@
 import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { MD_DIALOG_DATA, MdDialogRef, MdSnackBar } from '@angular/material';
 
-import { IDisease, IDiseaseConfig, IDiseaseMainInfo } from 'root/src/models';
+import {
+  IDisease,
+  IDiseaseConfig,
+  IDiseaseTagName,
+  IDiseaseTagWithChildren,
+  IApiResponse
+} from 'root/src/interfaces';
 import { DiseaseService } from 'root/src/services';
 import { APP_CONFIG, IAppConfig } from 'app/app.config';
 
@@ -12,7 +18,7 @@ import { APP_CONFIG, IAppConfig } from 'app/app.config';
 })
 export class ConfigDialogComponent implements OnInit {
 
-  disease: IDisease;
+  disease: IDisease<IDiseaseTagWithChildren>;
   config: IDiseaseConfig;
 
   constructor(
@@ -33,18 +39,18 @@ export class ConfigDialogComponent implements OnInit {
    * @memberof ConfigDialogComponent
    */
   onSumit() {
-    const data: IDiseaseMainInfo & IDiseaseConfig = {
+    const data: IDiseaseTagName & IDiseaseConfig = {
       tagId: this.disease.tagId,
       tagName: this.disease.tagName,
       ...this.config
     };
 
     this.diseaseService.saveConfig(data).subscribe(
-      (data) => {
+      (apiRes: IApiResponse<boolean>): void => {
         this.snackBar.open('编辑疾病配置成功！', null, this.appConfig.mdSnackBarConfig);
-        this.dialogRef.close(data);
+        this.dialogRef.close(apiRes);
       },
-      (errMsg: string) => this.snackBar.open(errMsg, null, this.appConfig.mdSnackBarConfig)
+      (errMsg: string): void => { this.snackBar.open(errMsg, null, this.appConfig.mdSnackBarConfig) }
     );
   }
 
