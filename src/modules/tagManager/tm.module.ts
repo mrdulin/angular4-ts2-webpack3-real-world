@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, NgModuleFactory } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -12,7 +12,6 @@ import { DepartmentComponent, DeptEditDialogComponent, AddDeptDialogComponent } 
 import { AttributeComponent, PropertyEditDialogComponent, AttrEditComponent, AttributeHomeComponent } from './attribute';
 
 import { DiseaseService, PropertySerivce } from 'root/src/services';
-
 
 @NgModule({
   declarations: [
@@ -44,6 +43,9 @@ import { DiseaseService, PropertySerivce } from 'root/src/services';
   providers: [DiseaseService, PropertySerivce]
 
 })
-export class TagManagerModule {
+export class TagManagerModule {}
 
+export function loadTagManagerModule() {
+  return TagManagerModule;
 }
+

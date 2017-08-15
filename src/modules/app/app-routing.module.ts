@@ -3,11 +3,11 @@ import { NgModule, OnInit } from '@angular/core';
 import { SidebarComponent } from './sidebar';
 import { ContentComponent } from './content';
 
-import { TagManagerModule } from '../tagManager';
-import { GoToHospitalModule } from '../goToHospital';
+import { loadTagManagerModule } from '../tagManager';
+import { loadGoToHospitalModule } from '../goToHospital';
 import { RouterService } from 'common/services';
 
-const routes: Routes = [
+export const routes: Routes = [
   {
     path: '',
     redirectTo: 'tag-manager',
@@ -20,11 +20,11 @@ const routes: Routes = [
       // -- 同步预加载特性模块 --
       {
         path: '',
-        loadChildren: () => TagManagerModule
+        loadChildren: loadTagManagerModule
       },
       {
         path: '',
-        loadChildren: () => GoToHospitalModule
+        loadChildren: loadGoToHospitalModule
       },
       // --
 
@@ -62,12 +62,12 @@ const routes: Routes = [
   providers: [RouterService]
 })
 export class AppRoutingModule {
-  constructor(
-    private _router: Router,
-    private _routerService: RouterService
-  ) {
+  // constructor(
+  //   private _router: Router,
+  //   private _routerService: RouterService
+  // ) {
     // this.loadAsyncRoutes();
-  }
+  // }
 
   // private loadAsyncRoutes() {
   //   const asyncRoutes: any[] = this._routerService.loadAsyncRoutes((<any>config).mods);

@@ -23,7 +23,6 @@ const config: webpack.Configuration = {
     alias: {
       '@angular': helpers.resolve('../node_modules/@angular'),
       'material-design-icons': helpers.resolve('../node_modules/material-design-icons'),
-      'normalize.css': helpers.resolve('../node_modules/normalize.css/normalize.css'),
       'root': helpers.resolve('..'),
       'common': helpers.resolve('../src/common'),
       'services': helpers.resolve('../src/services'),
@@ -62,7 +61,7 @@ const config: webpack.Configuration = {
       template: 'src/index.html'
     }),
     new webpack.optimize.CommonsChunkPlugin({
-      name: 'vendor',
+      names: ['vendor', 'polyfills'],
       chunks: ['app'],
       minChunks: module => /node_modules/.test(module.resource)
     }),

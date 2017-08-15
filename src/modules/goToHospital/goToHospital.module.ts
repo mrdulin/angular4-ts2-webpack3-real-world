@@ -16,3 +16,7 @@ import { HomePageComponent } from './homePage'
   // exports: []
 })
 export class GoToHospitalModule { }
+
+export function loadGoToHospitalModule() {
+  return GoToHospitalModule;
+};

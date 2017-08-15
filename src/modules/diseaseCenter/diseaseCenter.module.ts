@@ -33,3 +33,7 @@ import { EntranceService } from 'root/src/services'
   providers: [EntranceService]
 })
 export class DiseaseCenterModule { }
+
+export function loadDiseaseCenterModule() {
+  return DiseaseCenterModule;
+}

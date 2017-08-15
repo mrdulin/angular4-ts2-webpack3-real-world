@@ -33,7 +33,7 @@ import './style.async.css';
     SidebarComponent,
     BreadcrumbComponent,
     ComfirmDialogComponent,
-
+    Pluck
   ],
   imports: [
     BrowserModule,

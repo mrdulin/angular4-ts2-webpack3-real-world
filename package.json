@@ -13,7 +13,9 @@
     "build:dev": "npm run clean && webpack --env=dev --progress --colors --config ./config/webpack.config.ts && npm run http-server",
     "output:size": "du -ah ./dist",
     "clean": "rm -rf dist",
-    "http-server": "http-server ./dist -p 2222 -a 0.0.0.0 -o"
+    "http-server": "http-server ./dist -p 2222 -a 0.0.0.0 -o",
+    "aot": "rm -rf compiled && ngc -p tsconfig-aot.json",
+    "clean:src:js": "find ./src -name '*.js' | xargs rm -rf"
   },
   "devDependencies": {
     "@types/core-js": "^0.9.42",
@@ -44,17 +46,18 @@
     "@angular/cdk": "^2.0.0-beta.8",
     "@angular/common": "^4.3.4",
     "@angular/compiler": "^4.3.4",
+    "@angular/compiler-cli": "^4.3.4",
     "@angular/core": "^4.3.4",
     "@angular/forms": "^4.3.4",
     "@angular/http": "^4.3.4",
     "@angular/material": "^2.0.0-beta.8",
     "@angular/platform-browser": "^4.3.4",
     "@angular/platform-browser-dynamic": "^4.3.4",
+    "@angular/platform-server": "^4.3.4",
     "@angular/router": "^4.3.4",
     "core-js": "^2.5.0",
     "js-cookie": "^2.1.4",
     "material-design-icons": "^3.0.1",
-    "normalize.css": "^7.0.0",
     "reflect-metadata": "^0.1.10",
     "rxjs": "^5.4.3",
     "zone.js": "^0.8.14"

@@ -3,6 +3,7 @@ import * as path from 'path';
 import * as HtmlWebpackPlugin from 'html-webpack-plugin';
 import * as ExtractTextPlugin from 'extract-text-webpack-plugin';
 import * as Merge from 'webpack-merge';
+import * as helpers from './helpers';
 
 import webpackCommonConfig from './webpack.common';
 declare const __dirname: string;
@@ -12,18 +13,8 @@ const PORT: number = 2222;
 const config: webpack.Configuration = Merge(webpackCommonConfig, {
 
   entry: {
-    vendor: [
-      '@angular/core',
-      '@angular/common',
-      '@angular/forms',
-      '@angular/http',
-      '@angular/router',
-      '@angular/material',
-      '@angular/animations',
-      '@angular/platform-browser',
-      '@angular/platform-browser-dynamic',
-      'rxjs'
-    ]
+    vendor: helpers.resolve('../src/vendor.ts'),
+    polyfills: helpers.resolve('../src/polyfills.ts')
   },
 
   output: {
