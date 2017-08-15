@@ -38,6 +38,16 @@
       </md-card-actions>
     </md-card>
   </section>
+
+  <section class="pagination">
+    <md-paginator
+      #pagination
+      [length]="totalCount"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="pageSizeOptions"
+      (page)="handlePageChange(pagination)">
+    </md-paginator>
+  </section>
 </section>
 
 
