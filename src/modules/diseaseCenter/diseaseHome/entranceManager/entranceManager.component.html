@@ -44,6 +44,7 @@
       #pagination
       [length]="totalCount"
       [pageSize]="pageSize"
+      [pageIndex]="pageIndex - 1"
       [pageSizeOptions]="pageSizeOptions"
       (page)="handlePageChange(pagination)">
     </md-paginator>

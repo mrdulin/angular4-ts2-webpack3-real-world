@@ -73,7 +73,7 @@ export class entranceManagerComponent implements OnInit {
       data: { record, options },
       width: '400px'
     })
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe(() => {
       this.queryEntranceInfo({ pageNo: 1, pageSize: 10 })
     })
   }
