@@ -30,8 +30,8 @@ import { DiseaseService, PropertySerivce } from 'root/src/services';
     TagManagerRoutingModule,
     FormsModule,
     CommonModule,
-    TagManagerMaterialModule,
-    HttpModule
+    HttpModule,
+    TagManagerMaterialModule
   ],
   entryComponents: [
     EditDialogComponent,

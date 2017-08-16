@@ -4,6 +4,7 @@ import * as HtmlWebpackPlugin from 'html-webpack-plugin';
 import * as ExtractTextPlugin from 'extract-text-webpack-plugin';
 import * as Merge from 'webpack-merge';
 import * as helpers from './helpers';
+import * as CompressionPlugin from 'compression-webpack-plugin';
 
 import webpackCommonConfig from './webpack.common';
 declare const __dirname: string;
@@ -65,7 +66,14 @@ const config: webpack.Configuration = Merge(webpackCommonConfig, {
         warnings: false
       },
       comments: false
-    })
+    }),
+    new CompressionPlugin({
+      asset: "[path].gz[query]",
+      algorithm: "gzip",
+      test: /\.js$|\.html$/,
+      threshold: 10240,
+      minRatio: 0.8
+    }),
   ]
 
 });

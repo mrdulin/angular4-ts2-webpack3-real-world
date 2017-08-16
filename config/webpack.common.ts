@@ -5,11 +5,15 @@ import * as Merge from 'webpack-merge';
 import * as helpers from './helpers';
 declare const __dirname: string;
 
+const AOT = process.env.BUILD_AOT;
+
+console.log('AOT', AOT);
+
 const config: webpack.Configuration = {
   context: helpers.resolve('../'),
   cache: true,
   entry: {
-    app: './src/main.ts'
+    app: AOT ? './src/main-aot.ts' : './src/main.ts'
   },
 
   output: {
@@ -21,6 +25,7 @@ const config: webpack.Configuration = {
     extensions: ['.ts', '.tsx', '.js', '.json'],
     modules: [path.join(__dirname, '../src'), 'node_modules'],
     alias: {
+      // '@angular': AOT ? helpers.resolve('../compiled/aot/node_modules/@angular') : helpers.resolve('../node_modules/@angular'),
       '@angular': helpers.resolve('../node_modules/@angular'),
       'material-design-icons': helpers.resolve('../node_modules/material-design-icons'),
       'root': helpers.resolve('..'),
@@ -40,7 +45,13 @@ const config: webpack.Configuration = {
         ],
         use: [
           'awesome-typescript-loader',
-          'angular-router-loader',
+          {
+            loader: 'angular-router-loader',
+            options: {
+              aot: AOT,
+              genDir: './compiled/aot'
+            }
+          },
           'angular2-template-loader'
         ]
       },
