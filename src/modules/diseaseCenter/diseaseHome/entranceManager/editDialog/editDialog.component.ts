@@ -12,7 +12,7 @@ import { Observable } from 'rxjs';
   templateUrl: './editDialog.component.html',
   styleUrls: ['./editDialog.component.css']
 })
-export class EntranceEditComponent implements OnInit{
+export class EntranceEditComponent implements OnInit {
   entranceEditForm: FormGroup
   options: IOptions
   constructor(
@@ -20,20 +20,25 @@ export class EntranceEditComponent implements OnInit{
     private fb: FormBuilder,
     private diseaseHomeService: DiseaseHomeService,
     public dialogRef: MdDialogRef<EntranceEditComponent>
-  ){}
+  ) { }
 
   ngOnInit(): void {
-    const { record: { sortFactor, name, linkUrl, icon, poster, channels, id }, options } = this.formData
-    this.entranceEditForm = this.fb.group({
-      sortFactor: sortFactor,
-      name: [name, Validators.required],
-      linkUrl: linkUrl,
-      icon: [icon, Validators.required],
-      poster: poster,
-      channels: [channels, Validators.required],
-      id: id
-    });
+    const { record, options } = this.formData
+    if (record) {
+      const { sortFactor, name, linkUrl, icon, poster, channels, id } = record;
+
+      this.entranceEditForm = this.fb.group({
+        sortFactor: sortFactor,
+        name: [name, Validators.required],
+        linkUrl: linkUrl,
+        icon: [icon, Validators.required],
+        poster: poster,
+        channels: [channels, Validators.required],
+        id: id
+      });
+    }
     this.options = options
+
   }
 
   createDialogData(): Observable<any> {

@@ -68,7 +68,7 @@ export class EntranceManagerComponent implements OnInit {
     (err: string) => this.snackbar.open(err, null, { duration: 2000 }))
   }
 
-  editEntranceForm(record: object, options: IOptions): void{
+  editEntranceForm(record: object, options: IOptions[]): void{
     const dialogRef = this.dialog.open(EntranceEditComponent, {
       data: { record, options },
       width: '400px'

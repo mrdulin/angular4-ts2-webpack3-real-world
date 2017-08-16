@@ -7,13 +7,12 @@ declare const __dirname: string;
 
 const AOT = process.env.BUILD_AOT;
 
-console.log('AOT', AOT);
-
 const config: webpack.Configuration = {
-  context: helpers.resolve('../'),
   cache: true,
   entry: {
-    app: AOT ? './src/main-aot.ts' : './src/main.ts'
+    app: helpers.resolve(AOT ? '../src/main-aot.ts' : '../src/main.ts'),
+    vendor: helpers.resolve('../src/vendor.ts'),
+    polyfills: helpers.resolve('../src/polyfills.ts')
   },
 
   output: {
@@ -23,7 +22,6 @@ const config: webpack.Configuration = {
 
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.json'],
-    modules: [path.join(__dirname, '../src'), 'node_modules'],
     alias: {
       // '@angular': AOT ? helpers.resolve('../compiled/aot/node_modules/@angular') : helpers.resolve('../node_modules/@angular'),
       '@angular': helpers.resolve('../node_modules/@angular'),
@@ -40,7 +38,6 @@ const config: webpack.Configuration = {
       {
         test: /\.ts$/,
         exclude: [
-          /node_modules/,
           /\.(spec|e2e)\.ts$/
         ],
         use: [
@@ -72,9 +69,8 @@ const config: webpack.Configuration = {
       template: 'src/index.html'
     }),
     new webpack.optimize.CommonsChunkPlugin({
-      names: ['vendor', 'polyfills'],
-      chunks: ['app'],
-      minChunks: module => /node_modules/.test(module.resource)
+      names: ['polyfills', 'vendor'],
+      minChunks: Infinity
     }),
     //解决打包编译时，循环依赖的错误
     new webpack.ContextReplacementPlugin(
