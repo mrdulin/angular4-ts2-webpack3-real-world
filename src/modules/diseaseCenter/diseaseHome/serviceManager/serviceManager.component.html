@@ -1,0 +1,36 @@
+<section class="service-manager">
+  <header>
+    <h1>公共服务配置</h1>
+    <button md-raised-button class="primary" (click)="editServiceForm({})">新 增</button>
+  </header>
+
+  <section class="container">
+    <md-card class="item-card" *ngFor="let v of serviceData">
+      <md-card-content>
+        <md-input-container class="inline-item">
+          <input mdInput placeholder="排序" disabled value={{v.sortFactor}}>
+        </md-input-container>
+
+        <md-input-container class="inline-item">
+          <input mdInput placeholder="名称" disabled value={{v.name}}>
+        </md-input-container>
+
+        <md-input-container class="inline-item">
+          <input mdInput placeholder="URL" disabled value={{v.linkUrl}}>
+        </md-input-container>
+
+        <section class="inline-item">
+          <upload [text]="'图标'" disabled={{true}} src={{v.icon}}></upload>
+        </section>
+      </md-card-content>
+      <md-card-actions>
+        <button md-button class="primary" (click)="editServiceForm(v)">编辑</button>
+        <button md-button class="warnning" (click)="deleteServiceForm(v.id)">删除</button>
+      </md-card-actions>
+    </md-card>
+
+    <p class='no-data-tip' [hidden]='serviceData?.length'>暂无数据</p>
+  </section>
+</section>
+
+

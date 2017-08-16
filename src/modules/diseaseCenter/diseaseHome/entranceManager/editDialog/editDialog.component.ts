@@ -1,9 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core'
 import { MdDialogRef, MD_DIALOG_DATA } from '@angular/material'
-import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms'
+import { FormGroup, FormBuilder, Validators } from '@angular/forms'
 import { IDiseaseCenterEntranceData } from 'root/src/interfaces'
 import { IOptions } from 'root/src/common/components/checkboxGroup'
-import { EntranceService } from 'root/src/services'
+import { DiseaseHomeService } from 'root/src/services'
 
 import { Observable } from 'rxjs';
 
@@ -18,7 +18,7 @@ export class EntranceEditComponent implements OnInit{
   constructor(
     @Inject(MD_DIALOG_DATA) public formData: { record?: IDiseaseCenterEntranceData, options: IOptions },
     private fb: FormBuilder,
-    private entranceService: EntranceService,
+    private diseaseHomeService: DiseaseHomeService,
     public dialogRef: MdDialogRef<EntranceEditComponent>
   ){}
 
@@ -37,11 +37,11 @@ export class EntranceEditComponent implements OnInit{
   }
 
   createDialogData(): Observable<any> {
-    return this.entranceService.createEntranceData(this.entranceEditForm.value)
+    return this.diseaseHomeService.createEntranceData(this.entranceEditForm.value)
   }
 
   saveEditDialogData(): Observable<any> {
-    return this.entranceService.saveEntranceData(this.entranceEditForm.value)
+    return this.diseaseHomeService.saveEntranceData(this.entranceEditForm.value)
   }
 
   handleSubmit(): void {
@@ -51,9 +51,5 @@ export class EntranceEditComponent implements OnInit{
     } else {
       this.saveEditDialogData().subscribe((res: any) => this.dialogRef.close(this.entranceEditForm.value))
     }
-  }
-
-  handleUploadSuccess(file: any) {
-    console.log(file)
   }
 }

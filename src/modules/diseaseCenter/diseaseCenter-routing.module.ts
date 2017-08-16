@@ -1,7 +1,7 @@
 import { Routes, RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 
-import { diseaseHomeComponent } from './diseaseHome';
+import { DiseaseHomeComponent } from './diseaseHome';
 
 const routes: Routes = [
   {
@@ -17,35 +17,35 @@ const routes: Routes = [
       },
       {
         path: 'disease-home',
-        component: diseaseHomeComponent,
+        component: DiseaseHomeComponent,
         data: {
           name: '聚合页配置'
         }
       },
       {
         path: 'specialist-home',
-        component: diseaseHomeComponent,
+        component: DiseaseHomeComponent,
         data: {
           name: '专家专科页配置'
         }
       },
       {
         path: 'hospital-home',
-        component: diseaseHomeComponent,
+        component: DiseaseHomeComponent,
         data: {
           name: '医院配置'
         }
       },
       {
         path: 'doctor-home',
-        component: diseaseHomeComponent,
+        component: DiseaseHomeComponent,
         data: {
           name: '医生配置'
         }
       },
       {
         path: 'serve-city',
-        component: diseaseHomeComponent,
+        component: DiseaseHomeComponent,
         data: {
           name: '服务城市配置'
         }

@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core'
 import { MdDialog, MdSnackBar, MdPaginator, PageEvent } from '@angular/material'
 import { EntranceEditComponent } from './editDialog/editDialog.component'
-import { EntranceService } from 'root/src/services'
+import { DiseaseHomeService } from 'root/src/services'
 import { IDiseaseCenterEntranceData } from 'root/src/interfaces'
 import { IOptions } from 'common/components/checkboxGroup'
-import { ComfirmDialogService } from 'common/components/dialog';
+import { ComfirmDialogService } from 'common/components/dialog'
 import { IEntranceData } from 'src/services'
 import { PaginatorService } from 'common/services'
 
@@ -13,7 +13,7 @@ import { PaginatorService } from 'common/services'
   templateUrl: './entranceManager.component.html',
   styleUrls: ['./entranceManager.component.css']
 })
-export class entranceManagerComponent implements OnInit {
+export class EntranceManagerComponent implements OnInit {
   entranceData: IDiseaseCenterEntranceData[]
   checkboxOptions: IOptions[]
   pageIndex: number
@@ -27,7 +27,7 @@ export class entranceManagerComponent implements OnInit {
 
   constructor(
     private dialog: MdDialog,
-    private entranceService: EntranceService,
+    private diseaseHomeService: DiseaseHomeService,
     private snackbar: MdSnackBar,
     private comfirmDialogService: ComfirmDialogService,
     private paginatorService: PaginatorService
@@ -46,7 +46,7 @@ export class entranceManagerComponent implements OnInit {
   }
 
   queryChannelsInfo(): void {
-    this.entranceService.getChannelsData().subscribe((res: any) => {
+    this.diseaseHomeService.getChannelsData().subscribe((res: any) => {
       const { model } = res
       this.checkboxOptions = model.map((item: any) => {
         return {
@@ -60,7 +60,7 @@ export class entranceManagerComponent implements OnInit {
 
   queryEntranceInfo(data: IEntranceData) {
     this.pageIndex = data.pageNo
-    this.entranceService.getEntranceData(data).subscribe((res: any) => {
+    this.diseaseHomeService.getEntranceData(data).subscribe((res: any) => {
       const { model } = res
       this.entranceData = model.t || []
       this.totalCount = model.count
@@ -81,7 +81,7 @@ export class entranceManagerComponent implements OnInit {
   deleteEntranceForm(id: number): void {
     this.comfirmDialogService.open({
       msg: '你确定要删除吗？',
-      onConfirm: () => this.entranceService.deleteEntranceData(id).subscribe(() => {
+      onConfirm: () => this.diseaseHomeService.deleteEntranceData(id).subscribe(() => {
         this.queryEntranceInfo({ pageNo: 1, pageSize: 10 })
         this.comfirmDialogService.close()
       })

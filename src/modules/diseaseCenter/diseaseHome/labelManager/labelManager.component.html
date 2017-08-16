@@ -1,0 +1,26 @@
+<section class="label-manager">
+  <header>
+    <h1>运营标签</h1>
+  </header>
+
+  <section class="create-channel">
+    <md-input-container class="inline-item">
+      <input #inputEl mdInput placeholder="添加运营标签">
+    </md-input-container>
+    <button md-mini-fab [disabled]="!inputEl.value" (click)="createChip(inputEl.value); inputEl.value = null"><md-icon>add</md-icon></button>
+  </section>
+
+  <section class="container">
+    <md-chip-list>
+      <md-chip *ngFor="let chip of chipList" (click)="editSortFacor(chip)"
+        selected="true">
+        <span class="chip-content">{{chip.name}}{{ chip.sortFactor ? '('+chip.sortFactor+')' : null }}</span>
+        <button md-mini-fab (click)="deleteChip(chip?.id)"><md-icon>clear</md-icon></button>
+      </md-chip>
+    </md-chip-list>
+
+    <p class='no-data-tip' [hidden]='chipList?.length'>暂无数据</p>
+  </section>
+</section>
+
+
