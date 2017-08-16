@@ -4,4 +4,4 @@ import {Component} from '@angular/core';
   selector: 'disease-home',
   templateUrl: './diseaseHome.component.html'
 })
-export class diseaseHomeComponent{}
+export class DiseaseHomeComponent{}
