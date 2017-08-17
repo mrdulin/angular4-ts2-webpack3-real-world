@@ -15,7 +15,7 @@
       <md-chip *ngFor="let chip of chipList" (click)="editSortFacor(chip)"
         selected="true">
         <span class="chip-content">{{chip.name}}{{ chip.sortFactor ? '('+chip.sortFactor+')' : null }}</span>
-        <button md-mini-fab (click)="deleteChip(chip?.id)"><md-icon>clear</md-icon></button>
+        <button md-mini-fab (click)="deleteChip(chip?.id, $event)"><md-icon>clear</md-icon></button>
       </md-chip>
     </md-chip-list>
 

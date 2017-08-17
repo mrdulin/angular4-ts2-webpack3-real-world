@@ -138,6 +138,11 @@ export class DiseaseHomeService{
       .map((res: any) => res.json())
       .catch((err: any) => Observable.throw('删除失败'));
   }
+
+  updateSortFactor({ id, sortFactor = null }: { id: number, sortFactor?: number }): Observable<any> {
+    const url: string = `${this.appConfig.api}/disease/center/label/updateSortFactor`
+    return this.http.post(url, { labelSortFactorParamList: [{ id, sortFactor: sortFactor && +sortFactor || null }] })
+  }
   /*-------- 运营推荐标签配置 end -------*/
 
 }

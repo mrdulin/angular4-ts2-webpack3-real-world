@@ -15,6 +15,12 @@ export interface IDiseaseCenterServiceData extends IDiseaseCenterMainInfo {
   name: string | null;
 }
 
+export interface IDiseaseCenterLabelData extends IDiseaseCenterMainInfo {
+  code: number | null;
+  sortFactor: number | null;
+  name: string | null;
+}
+
 export interface IDiseaseCenterMainInfo {
   id: string | number;
 }
