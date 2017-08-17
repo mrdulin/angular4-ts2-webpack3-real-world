@@ -1,0 +1,39 @@
+.channels-manager header{
+  margin: 20px 0;
+}
+
+.channels-manager h1{
+  display: inline-block;
+  font-size: 16px;
+  vertical-align: middle;
+}
+
+.channels-manager .container {
+  padding: 0 2%;
+}
+
+.channels-manager .container .mat-chip {
+  margin: 0 10px 20px 0;
+}
+
+.channels-manager .container span.chip-content{
+  vertical-align: middle;
+}
+
+.channels-manager .container .mat-mini-fab{
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  box-sizing: border-box;
+  line-height: 20px;
+  vertical-align: middle;
+}
+
+.channels-manager .container .mat-mini-fab .mat-icon{
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  font-size: 16px;
+  padding: 0;
+  line-height: 20px;
+}

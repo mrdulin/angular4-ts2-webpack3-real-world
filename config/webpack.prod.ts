@@ -13,13 +13,8 @@ const PORT: number = 2222;
 
 const config: webpack.Configuration = Merge(webpackCommonConfig, {
 
-  entry: {
-    vendor: helpers.resolve('../src/vendor.ts'),
-    polyfills: helpers.resolve('../src/polyfills.ts')
-  },
-
   output: {
-    filename: 'scripts/[name].[hash:16].js',
+    filename: 'scripts/[name].[chunkhash:16].js',
     chunkFilename: 'scripts/[id].[name]-[chunkhash:16].chunk.js',
     publicPath: `http://localhost:${PORT}/`
   },

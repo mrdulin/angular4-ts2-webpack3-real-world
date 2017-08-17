@@ -6,7 +6,9 @@ import {
   MdCheckboxModule,
   MdCardModule,
   MdTabsModule,
-  MdDialogModule
+  MdDialogModule,
+  MdPaginatorModule,
+  MdChipsModule
 } from '@angular/material';
 import { CdkTableModule } from '@angular/cdk';
 
@@ -18,6 +20,8 @@ import { CdkTableModule } from '@angular/cdk';
     MdCardModule,
     MdTabsModule,
     MdDialogModule,
+    MdPaginatorModule,
+    MdChipsModule,
     CdkTableModule,
     CommonModule
   ],
@@ -28,6 +32,8 @@ import { CdkTableModule } from '@angular/cdk';
     MdCardModule,
     MdTabsModule,
     MdDialogModule,
+    MdPaginatorModule,
+    MdChipsModule,
     CdkTableModule,
     CommonModule
   ]

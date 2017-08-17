@@ -37,6 +37,19 @@
         <button md-button class="warnning" (click)="deleteEntranceForm(v.id)">删除</button>
       </md-card-actions>
     </md-card>
+
+    <p class='no-data-tip' [hidden]='totalCount'>暂无数据</p>
+  </section>
+
+  <section class="pagination" [hidden]='!totalCount'>
+    <md-paginator
+      #pagination
+      [length]="totalCount"
+      [pageSize]="pageSize"
+      [pageIndex]="pageIndex - 1"
+      [pageSizeOptions]="pageSizeOptions"
+      (page)="handlePageChange(pagination)">
+    </md-paginator>
   </section>
 </section>
 

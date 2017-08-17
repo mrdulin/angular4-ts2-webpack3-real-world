@@ -1,4 +1,4 @@
-<form [formGroup]="entranceEditForm" (ngSubmit)="handleSubmit()" novalidate>
+<form [formGroup]="serviceEditForm" (ngSubmit)="handleSubmit()" novalidate>
   <h2 md-dialog-title>编辑</h2>
   <md-dialog-content>
       <div>
@@ -17,19 +17,10 @@
         <section class="inline-item">
           <upload [text]="'图标'" formControlName="icon"></upload>
         </section>
-
-        <section class="inline-item">
-          <upload [text]="'封面'" formControlName="poster"></upload>
-        </section>
-
-        <section class="inline-item check-group">
-          <label>渠道：</label>
-          <checkbox-group class="ckg" [options]="options" formControlName="channels"></checkbox-group>
-        </section>
       </div>
   </md-dialog-content>
   <md-dialog-actions>
-    <button md-button class="primary" [class.disabled]="entranceEditForm.invalid" type="submit" [disabled]="entranceEditForm.invalid">确定</button>
+    <button md-button class="primary" [class.disabled]="serviceEditForm.invalid" type="submit" [disabled]="serviceEditForm.invalid">确定</button>
     <button md-button class="warnning" md-dialog-close>取消</button>
   </md-dialog-actions>
 </form>

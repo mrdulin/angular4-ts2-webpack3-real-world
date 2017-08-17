@@ -8,6 +8,13 @@ export interface IDiseaseCenterEntranceData extends IDiseaseCenterMainInfo {
   channels: number[];
 }
 
+export interface IDiseaseCenterServiceData extends IDiseaseCenterMainInfo {
+  linkUrl: string | null;
+  icon: string | null;
+  sortFactor: number | null;
+  name: string | null;
+}
+
 export interface IDiseaseCenterMainInfo {
   id: string | number;
 }

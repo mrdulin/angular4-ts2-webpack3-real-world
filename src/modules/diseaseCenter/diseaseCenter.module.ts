@@ -1,25 +1,33 @@
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { diseaseHomeComponent } from './diseaseHome';
-import { entranceManagerComponent } from './diseaseHome/entranceManager';
 import { UploadModule } from '../../common/components/upload';
 import { UploadComponent } from '../../common/components/upload/upload.component';
 import { CheckboxGroupComponent } from '../../common/components/checkboxGroup';
+import { DiseaseHomeComponent } from './diseaseHome';
+import { EntranceManagerComponent } from './diseaseHome/entranceManager';
 import { EntranceEditComponent } from './diseaseHome/entranceManager/editDialog/editDialog.component';
+import { ChannelsManagerComponent } from './diseaseHome/channelsManager';
+import { ServiceManagerComponent } from './diseaseHome/serviceManager';
+import { ServiceEditComponent } from './diseaseHome/serviceManager/editDialog/editDialog.component';
+import { LabelManagerComponent } from './diseaseHome/labelManager';
 
 import { DiseaseCenterRoutingModule } from './diseaseCenter-routing.module';
 import { DiseaseCenterMaterialModule } from './diseaseCenter-material.module';
 
-import { EntranceService } from 'root/src/services'
+import { DiseaseHomeService } from 'root/src/services'
 
 @NgModule({
   declarations: [
     UploadComponent,
     CheckboxGroupComponent,
-    diseaseHomeComponent,
+    DiseaseHomeComponent,
+    EntranceManagerComponent,
     EntranceEditComponent,
-    entranceManagerComponent
+    ChannelsManagerComponent,
+    ServiceManagerComponent,
+    ServiceEditComponent,
+    LabelManagerComponent
   ],
   imports: [
     UploadModule,
@@ -28,9 +36,10 @@ import { EntranceService } from 'root/src/services'
     DiseaseCenterMaterialModule
   ],
   entryComponents: [
-    EntranceEditComponent
+    EntranceEditComponent,
+    ServiceEditComponent
   ],
-  providers: [EntranceService]
+  providers: [DiseaseHomeService]
 })
 export class DiseaseCenterModule { }
 

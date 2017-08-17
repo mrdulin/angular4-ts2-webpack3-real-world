@@ -1,11 +1,6 @@
-import 'reflect-metadata';
-
 import { enableProdMode } from '@angular/core';
 import { platformBrowser } from '@angular/platform-browser';
-
 import { AppModuleNgFactory } from '../compiled/aot/src/modules/app/app.module.ngfactory';
-
-import 'zone.js/dist/zone';
 
 if (process.env.NODE_ENV === 'production') {
   enableProdMode();

@@ -1,4 +1,4 @@
 import 'core-js';
 
 import 'reflect-metadata';
-import 'zone.js';
+import 'zone.js/dist/zone';
