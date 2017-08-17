@@ -19,7 +19,7 @@
   <md-input-container>
     <input mdInput #propertyValueInput placeholder="属性值名称" type="text" name="propertyValue">
   </md-input-container>
-  <button type="button" md-mini-fab (click)='addPropertyValue(propertyValueInput)'>
+  <button type="button" md-mini-fab mdTooltip='添加属性值' [mdTooltipPosition]='"after"' (click)='addPropertyValue(propertyValueInput)'>
     <md-icon>add</md-icon>
   </button>
 
@@ -44,7 +44,7 @@
     </md-option>
   </md-select>
 
-  <button type="submit" md-mini-fab>
+  <button type="submit" md-mini-fab mdTooltip='新增子属性项' [mdTooltipPosition]='"after"'>
     <md-icon>add</md-icon>
   </button>
 </form>

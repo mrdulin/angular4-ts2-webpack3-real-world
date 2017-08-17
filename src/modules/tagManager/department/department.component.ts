@@ -9,6 +9,8 @@ import { DeptDataSource } from './depart-data-source';
 import { DeptEditDialogComponent } from './deptEditDialog';
 import { AddDeptDialogComponent } from './addDeptDialog';
 
+import { Subject } from 'rxjs/Subject';
+
 @Component({
   selector: 'department',
   templateUrl: './department.component.html',
@@ -18,6 +20,8 @@ export class DepartmentComponent implements OnInit {
   pageSize: number;
   pageIndex: number;
   pageSizeOptions: number[];
+
+  formSubmit$: Subject<Event> = new Subject();
 
   dataSource: DeptDataSource | null;
 
@@ -48,10 +52,12 @@ export class DepartmentComponent implements OnInit {
 
   ngOnInit() {
     this.displayedColumns = this.tableHeaders.map((header) => header.key);
-    this.dataSource = new DeptDataSource(this.deptService, this.paginator);
+    this.dataSource = new DeptDataSource(this.deptService, this.paginator, this.formSubmit$);
+
+    this.formSubmit$.throttleTime(2000).subscribe(($event) => this.onSumbit($event));
   }
 
-  onSumbit() {
+  onSumbit($event: Event) {
     this.tagName = this.tagName.trim();
     const firstPage: number = 1;
     this.deptService.getDeptsByPage(this.tagName, firstPage);

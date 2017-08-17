@@ -1,4 +1,4 @@
-<form novalidate (submit)='onSumbit()'>
+<form novalidate (submit)='formSubmit$.next($event)'>
   <md-input-container type='text'>
     <input mdInput type="text" name="tagName" [(ngModel)]='tagName' placeholder="科室名称">
   </md-input-container>
