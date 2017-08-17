@@ -17,18 +17,16 @@ export const routes: Routes = [
     path: '',
     component: ContentComponent,
     children: [
-      // -- 同步预加载特性模块 --
-      {
-        path: '',
-        loadChildren: loadTagManagerModule
-      },
-      {
-        path: '',
-        loadChildren: loadGoToHospitalModule
-      },
-      // --
-
       // -- 异步加载的特性模块 --
+      {
+        path: '',
+        loadChildren: '../tagManager/tm.module#TagManagerModule?chunkName=tagManagerModule'
+      },
+      {
+        path: '',
+        loadChildren: '../goToHospital/goToHospital.module#GoToHospitalModule?chunkName=goToHospitalModule'
+      },
+
       {
         path: '',
         loadChildren: '../diseaseCenter/diseaseCenter.module#DiseaseCenterModule?chunkName=diseaseCenter'
@@ -37,7 +35,7 @@ export const routes: Routes = [
         path: '',
         loadChildren: '../doctorCenter/doctorCenter.module#DoctorCenterModule?chunkName=doctorCenter'
       }
-      // --
+      //--
     ]
   },
   {

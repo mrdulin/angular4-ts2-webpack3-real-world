@@ -29,6 +29,17 @@ const config: webpack.Configuration = Merge(webpackCommonConfig, {
   module: {
     rules: [
       {
+        test: /\.ts$/,
+        exclude: [
+          /\.(spec|e2e)\.ts$/
+        ],
+        use: [
+          'awesome-typescript-loader',
+          'angular-router-loader',
+          'angular2-template-loader'
+        ]
+      },
+      {
         test: /\.async\.(html|css)$/,
         use: [
           'style-loader',
@@ -49,5 +60,7 @@ const config: webpack.Configuration = Merge(webpackCommonConfig, {
   ]
 
 });
+
+console.log((<any>config.entry).app);
 
 export default config;

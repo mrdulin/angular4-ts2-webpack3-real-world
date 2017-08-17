@@ -22,7 +22,7 @@ export class HttpInterceptorService extends Http {
   }
 
   get(url: string, options?: RequestOptionsArgs): Observable<Response> {
-    return this.intercept(super.get(url, this.getRequestOptionArgs(options)));
+    return this.intercept(super.get(url, this.getRequestOptionArgs(options)))
   }
 
   post(url: string, body: any, options?: RequestOptionsArgs): Observable<Response> {
@@ -51,18 +51,26 @@ export class HttpInterceptorService extends Http {
   }
 
   intercept(observable: Observable<Response>): Observable<Response> {
-    return observable.map((res: any) => {
-      if (res.text() === 'need cookie: _tk') {
-        const err = { hasError: true, errorCode: -103 };
-        throw err;
-      };
-      const data = res.json();
-      if (data.hasError || data.errorCode) {
-        throw data;
-      } else {
-        return res;
-      }
-    })
+    return observable
+      .timeout(1000)
+      .catch((err: any) => {
+        if (err.name === "TimeoutError") {
+          this.snackBar.open('请求超时', null, { duration: 2000 });
+        }
+        return Observable.empty();
+      })
+      .map((res: any) => {
+        if (res.text() === 'need cookie: _tk') {
+          const err = { hasError: true, errorCode: -103 };
+          throw err;
+        };
+        const data = res.json();
+        if (data.hasError || data.errorCode) {
+          throw data;
+        } else {
+          return res;
+        }
+      })
       .catch((err, source) => {
         if (err.gwError) {
           //TODO: gateway error
@@ -74,11 +82,12 @@ export class HttpInterceptorService extends Http {
             this.snackBar.open(msg, null, { duration: 2000 });
           }
         } else if (err.status < 200 || err.status >= 300) {
-          //TODO: http status error
+
           const snackBarRef: MdSnackBarRef<SimpleSnackBar> = this.snackBar.open('http请求异常', '刷新');
           snackBarRef.onAction().subscribe(() => {
             window.location.reload();
           });
+
         }
 
         return Observable.throw(err);

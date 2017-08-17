@@ -7,16 +7,17 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "lib": [
-      "es2015",
       "dom",
+      "es2015",
       "es2016"
     ],
+
     "noImplicitAny": true,
-    "suppressImplicitAnyIndexErrors": true,
-    "typeRoots": [
-      "node_modules/@types"
-    ],
-    "baseUrl": "",
+    "noImplicitThis": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+
+    "baseUrl": ".",
     "paths": {
       "root/*": [
         "*"
@@ -35,10 +36,9 @@
     "./src/modules/app/index.ts",
     "./src/modules/diseaseCenter/index.ts",
     "./src/modules/doctorCenter/index.ts",
+    "./src/modules/goToHospital/index.ts",
+    "./src/modules/tagManager/index.ts",
     "./src/typings/json.d.ts"
-  ],
-  "exclude": [
-    "node_modules"
   ],
   "angularCompilerOptions": {
     "genDir": "./compiled/aot",

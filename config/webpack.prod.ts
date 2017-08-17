@@ -12,7 +12,9 @@ declare const __dirname: string;
 const PORT: number = 2222;
 
 const config: webpack.Configuration = Merge(webpackCommonConfig, {
-
+  entry: {
+    app: helpers.resolve('../src/main-aot.ts')
+  },
   output: {
     filename: 'scripts/[name].[chunkhash:16].js',
     chunkFilename: 'scripts/[id].[name]-[chunkhash:16].chunk.js',
@@ -23,6 +25,29 @@ const config: webpack.Configuration = Merge(webpackCommonConfig, {
 
   module: {
     rules: [
+      {
+        test: /\.ts$/,
+        exclude: [
+          /\.(spec|e2e)\.ts$/
+        ],
+        use: [
+          {
+            loader: 'awesome-typescript-loader',
+            options: {
+              configFileName: helpers.resolve('../tsconfig.json')
+            }
+          },
+          {
+            loader: 'angular-router-loader',
+            options: {
+              aot: true,
+              debug: true,
+              genDir: './compiled/aot'
+            }
+          },
+          'angular2-template-loader'
+        ]
+      },
       {
         test: /\.css$/,
         use: ExtractTextPlugin.extract({
@@ -70,7 +95,6 @@ const config: webpack.Configuration = Merge(webpackCommonConfig, {
       minRatio: 0.8
     }),
   ]
-
 });
 
 export default config;

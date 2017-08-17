@@ -3,24 +3,29 @@ import { Observable } from 'rxjs';
 import { DeptService } from 'root/src/services';
 import { MdPaginator } from '@angular/material';
 
+import { Subject } from 'rxjs/Subject';
+
 export class DeptDataSource extends DataSource<any> {
   constructor(
     private deptService: DeptService,
-    private paginator: MdPaginator
+    private paginator: MdPaginator,
+    private formSubmit$: Subject<Event>
   ) {
     super();
   }
 
   connect(): Observable<any[]> {
     const displayDataChanges = [
-      this.deptService.dataChange
-      // this.paginator.page
+      this.deptService.dataChange,
+      this.formSubmit$
     ];
+
+    this.formSubmit$.subscribe(() => {
+      this.paginator.pageIndex = 0;
+    });
+
     return Observable.merge(...displayDataChanges).map(() => {
       const depts: any = this.deptService.getDeptsData();
-      // const { pageSize, pageIndex } = this.paginator;
-      // const startIndex: number = pageIndex * pageSize;
-      // return depts.splice(startIndex, pageSize);
       return depts;
     });
   }

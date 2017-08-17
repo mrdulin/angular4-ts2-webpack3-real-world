@@ -32,7 +32,7 @@ __注意：__
 
 __TODO：__
 
-[  ] Angular2中`JIT`和`AOT`编译。使用`AOT`编译替代`JIT`编译
+[ x ] Angular2中`JIT`和`AOT`编译。使用`AOT`编译替代`JIT`编译
 
   https://segmentfault.com/a/1190000008739157
   https://angular.cn/docs/ts/latest/cookbook/aot-compiler.html
