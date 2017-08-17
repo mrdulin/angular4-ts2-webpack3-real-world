@@ -7,6 +7,10 @@ import { IOptions } from 'common/components/checkboxGroup'
 import { ComfirmDialogService } from 'common/components/dialog'
 import { IEntranceData } from 'src/services'
 import { PaginatorService } from 'common/services'
+import { IQueryType, ITableHeader } from 'common/interfaces'
+import { DataSource } from '@angular/cdk'
+import { Observable } from 'rxjs/Observable'
+import { EntranceDataSource } from './entrance-data-source'
 
 @Component({
   selector: 'entrance-manager',
@@ -15,7 +19,17 @@ import { PaginatorService } from 'common/services'
 })
 export class EntranceManagerComponent implements OnInit {
   entranceData: IDiseaseCenterEntranceData[]
+  entranceDataSource: EntranceDataSource = new EntranceDataSource(this.diseaseHomeService)
   checkboxOptions: IOptions[]
+  tableHeaders: ITableHeader[] = [
+    { key: 'sortFactor', name: '排序', cell: (row: any) => `${row.sortFactor}` },
+    { key: 'name', name: '名称', cell: (row: any) => `${row.name}` },
+    { key: 'url', name: 'URL', cell: (row: any) => `${row.linkUrl}` },
+    { key: 'icon', name: '图标', cell: (row: any) => `${row.icon}` },
+    { key: 'poster', name: '封面', cell: (row: any) => `${row.poster}` },
+    { key: 'channels', name: '渠道', cell: (row: any) => `${row.channels}` },
+    { key: 'operator', name: '操作', cell: (row: any) => `sss` }
+  ]
   pageIndex: number
   pageSize: number
   pageSizeOptions: number[]
@@ -60,10 +74,9 @@ export class EntranceManagerComponent implements OnInit {
 
   queryEntranceInfo(data: IEntranceData) {
     this.pageIndex = data.pageNo
-    this.diseaseHomeService.getEntranceData(data).subscribe((res: any) => {
-      const { model } = res
-      this.entranceData = model.t || []
-      this.totalCount = model.count
+    this.entranceDataSource.queryEntranceInfo(data).subscribe(
+    () => {
+      this.totalCount = this.entranceDataSource.dataTotal
     },
     (err: string) => this.snackbar.open(err, null, { duration: 2000 }))
   }

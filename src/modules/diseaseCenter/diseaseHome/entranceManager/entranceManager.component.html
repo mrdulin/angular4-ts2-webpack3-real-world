@@ -38,7 +38,25 @@
       </md-card-actions>
     </md-card>
 
-    <p class='no-data-tip' [hidden]='totalCount'>暂无数据</p>
+    <md-card>
+      <md-table [dataSource]="entranceDataSource">
+        <ng-container *ngFor="let tableHeader of tableHeaders" [cdkColumnDef]="tableHeader.key">
+          <md-header-cell *cdkHeaderCellDef> {{tableHeader.name}} </md-header-cell>
+          <md-cell class="table-cell" *cdkCellDef="let row">
+            <span>{{tableHeader.cell(row)}}</span>
+            <span class="operator-button-list">
+              <a (click)="editEntranceForm(row, checkboxOptions)">编辑</a>
+              <a (click)="deleteEntranceForm(row.id)">删除</a>
+            </span>
+          </md-cell>
+        </ng-container>
+    
+        <md-header-row *cdkHeaderRowDef="displayedColumns"></md-header-row>
+        <md-row *cdkRowDef="let row; columns: displayedColumns;"></md-row>
+      </md-table>
+    </md-card>
+
+    <p class="no-data-tip" [hidden]="totalCount">暂无数据</p>
   </section>
 
   <section class="pagination" [hidden]='!totalCount'>
