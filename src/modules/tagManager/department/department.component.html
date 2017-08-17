@@ -12,7 +12,7 @@
 <md-card>
 
   <md-table [dataSource]='dataSource'>
-    <ng-container *ngFor='let tableHeader of tableHeaders; let last = last; trackBy: trackByFn' [cdkColumnDef]='tableHeader.key'>
+    <ng-container *ngFor='let tableHeader of tableHeaders; let last = last;' [cdkColumnDef]='tableHeader.key'>
       <md-header-cell *cdkHeaderCellDef> {{tableHeader.name}} </md-header-cell>
       <md-cell class='table-cell' *cdkCellDef="let row">
         <span *ngIf='!last'>{{tableHeader.cell(row)}}</span>

@@ -13,6 +13,6 @@ import { HospitalManagerComponent } from './hospitalManager';
 })
 export class DoctorCenterModule { }
 
-export function loadDoctorCenterModule() {
-  return DoctorCenterModule;
-};
+// export function loadDoctorCenterModule() {
+//   return DoctorCenterModule;
+// };

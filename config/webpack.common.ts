@@ -5,12 +5,9 @@ import * as Merge from 'webpack-merge';
 import * as helpers from './helpers';
 declare const __dirname: string;
 
-const AOT = process.env.BUILD_AOT;
-
 const config: webpack.Configuration = {
-  cache: true,
   entry: {
-    app: helpers.resolve(AOT ? '../src/main-aot.ts' : '../src/main.ts'),
+    app: helpers.resolve('../src/main.ts'),
     vendor: helpers.resolve('../src/vendor.ts'),
     polyfills: helpers.resolve('../src/polyfills.ts')
   },
@@ -33,24 +30,6 @@ const config: webpack.Configuration = {
 
   module: {
     rules: [
-      {
-        test: /\.ts$/,
-        exclude: [
-          /\.(spec|e2e)\.ts$/
-        ],
-        use: [
-          'awesome-typescript-loader',
-          {
-            loader: 'angular-router-loader',
-            options: {
-              aot: !!AOT,
-              debug: true,
-              genDir: './compiled/aot'
-            }
-          },
-          'angular2-template-loader'
-        ]
-      },
       {
         test: /\.(html|css)$/,
         use: 'raw-loader',

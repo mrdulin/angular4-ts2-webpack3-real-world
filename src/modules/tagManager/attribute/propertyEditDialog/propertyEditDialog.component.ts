@@ -34,7 +34,7 @@ export class PropertyEditDialogComponent implements OnInit {
     // console.log(this.options);
   }
 
-  onSubmit(value: string) {
+  onSubmit() {
     const postBody = {
       choice: this.selectedOption.key,
       propertyId: this.data.property.propertyId,

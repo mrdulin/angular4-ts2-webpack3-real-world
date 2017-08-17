@@ -20,11 +20,11 @@ export const routes: Routes = [
       // -- 同步预加载特性模块 --
       {
         path: '',
-        loadChildren: loadTagManagerModule
+        loadChildren: '../tagManager/tm.module#TagManagerModule?chunkName=tagManagerModule'
       },
       {
         path: '',
-        loadChildren: loadGoToHospitalModule
+        loadChildren: '../goToHospital/goToHospital.module#GoToHospitalModule?chunkName=goToHospitalModule'
       },
       // --
 
@@ -37,7 +37,7 @@ export const routes: Routes = [
         path: '',
         loadChildren: '../doctorCenter/doctorCenter.module#DoctorCenterModule?chunkName=doctorCenter'
       }
-      // --
+      //--
     ]
   },
   {

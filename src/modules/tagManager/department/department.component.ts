@@ -35,7 +35,7 @@ export class DepartmentComponent implements OnInit {
   displayedColumns: string[] = [];
 
   constructor(
-    private deptService: DeptService,
+    public deptService: DeptService,
     private paginatorService: PaginatorService,
     private dialog: MdDialog
   ) {

@@ -43,6 +43,6 @@ import { DiseaseHomeService } from 'root/src/services'
 })
 export class DiseaseCenterModule { }
 
-export function loadDiseaseCenterModule() {
-  return DiseaseCenterModule;
-}
+// export function loadDiseaseCenterModule() {
+//   return DiseaseCenterModule;
+// }
