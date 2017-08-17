@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core'
 import { MdDialog, MdSnackBar } from '@angular/material'
 import { DiseaseHomeService } from 'root/src/services'
 import { ComfirmDialogService } from 'common/components/dialog'
+import { LabelEditComponent } from './editDialog/editDialog.component'
 
 @Component({
   selector: 'label-manager',
@@ -37,7 +38,8 @@ export class LabelManagerComponent implements OnInit {
     (err: string) => this.snackbar.open(err, null, { duration: 2000 }))
   }
  
-  deleteChip(id: number): void {
+  deleteChip(id: number, e: Event): void {
+    e.stopPropagation()
     this.comfirmDialogService.open({
       msg: '你确定要删除吗？',
       onConfirm: () => this.diseaseHomeService.deleteLabelData(id).subscribe(() => {
@@ -47,7 +49,13 @@ export class LabelManagerComponent implements OnInit {
     })
   }
 
-  editSortFacor(chip: object): void {
-    console.log(chip)
+  editSortFacor(record: object): void {
+    const dialogRef = this.dialog.open(LabelEditComponent, {
+      data: { record },
+      width: '400px'
+    })
+    dialogRef.afterClosed().subscribe(() => {
+      this.queryLabelInfo()
+    })
   }
 }
