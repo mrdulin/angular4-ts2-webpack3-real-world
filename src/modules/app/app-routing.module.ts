@@ -31,11 +31,11 @@ export const routes: Routes = [
       // -- 异步加载的特性模块 --
       {
         path: '',
-        loadChildren: '../diseaseCenter/diseaseCenter.module#DiseaseCenterModule'
+        loadChildren: '../diseaseCenter/diseaseCenter.module#DiseaseCenterModule?chunkName=diseaseCenter'
       },
       {
         path: '',
-        loadChildren: '../doctorCenter/doctorCenter.module#DoctorCenterModule'
+        loadChildren: '../doctorCenter/doctorCenter.module#DoctorCenterModule?chunkName=doctorCenter'
       }
       // --
     ]

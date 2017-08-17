@@ -6,11 +6,11 @@ import '@angular/forms';
 import '@angular/http';
 import '@angular/router';
 import '@angular/platform-browser';
-import '@angular/platform-browser-dynamic';
 
 //Angular-material2
 import '@angular/material';
 import '@angular/animations';
+import '@angular/cdk';
 
 //RxJS
 import 'rxjs';

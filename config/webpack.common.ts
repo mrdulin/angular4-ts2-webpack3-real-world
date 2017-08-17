@@ -16,14 +16,12 @@ const config: webpack.Configuration = {
   },
 
   output: {
-    path: helpers.resolve('../dist'),
-    sourceMapFilename: '[name].map'
+    path: helpers.resolve('../dist')
   },
 
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.json'],
     alias: {
-      // '@angular': AOT ? helpers.resolve('../compiled/aot/node_modules/@angular') : helpers.resolve('../node_modules/@angular'),
       '@angular': helpers.resolve('../node_modules/@angular'),
       'material-design-icons': helpers.resolve('../node_modules/material-design-icons'),
       'root': helpers.resolve('..'),
@@ -45,7 +43,8 @@ const config: webpack.Configuration = {
           {
             loader: 'angular-router-loader',
             options: {
-              aot: AOT,
+              aot: !!AOT,
+              debug: true,
               genDir: './compiled/aot'
             }
           },

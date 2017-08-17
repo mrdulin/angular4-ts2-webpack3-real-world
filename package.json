@@ -14,7 +14,7 @@
     "build:dev": "npm run clean && webpack --env=dev --progress --colors --config ./config/webpack.config.ts && npm run http-server",
     "output:size": "du -ah ./dist",
     "clean": "rm -rf dist",
-    "http-server": "http-server ./dist -p 2222 -a 0.0.0.0 -o",
+    "http-server": "http-server ./dist -p 2222 -a 0.0.0.0 -o -g -c10",
     "build:aot": "rm -rf compiled && ngc -p tsconfig-aot.json",
     "clean:src:js": "find ./src -name '*.js' | xargs rm -rf"
   },
