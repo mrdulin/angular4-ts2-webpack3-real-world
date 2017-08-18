@@ -4,6 +4,6 @@ export interface IQueryType {
 }
 
 export interface ITableHeader extends IQueryType {
-  cell(row: any): string;
+  cell(row: any): any;
 }
 
