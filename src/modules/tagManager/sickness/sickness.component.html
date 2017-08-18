@@ -33,10 +33,10 @@
     <md-row *cdkRowDef="let row; columns: displayedColumns;"></md-row>
   </md-table>
 
-  <p class='no-data-tip' [hidden]='diseaseDataBase.total'>暂无数据</p>
+  <p class='no-data-tip' [hidden]='dataSource.total'>暂无数据</p>
 
-  <div [hidden]='!diseaseDataBase.total'>
-    <md-paginator (page)='onPageChange($event)' [length]="diseaseDataBase.total" [pageIndex]="pageIndex" [pageSize]="pageSize"
+  <div [hidden]='!dataSource.total'>
+    <md-paginator (page)='onPageChange($event)' [length]="dataSource.total" [pageIndex]="pageIndex" [pageSize]="pageSize"
       [pageSizeOptions]="pageSizeOptions">
     </md-paginator>
   </div>

@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { DiseaseService, IGetDiseasesByPageData } from 'root/src/services';
 import { PaginatorService } from 'common/services';
-import { IDisease, IDiseaseTagWithChildren } from 'root/src/interfaces';
+import { IDisease, IDiseaseTagWithChildren, IApiResponse, IModel, IPagination } from 'root/src/interfaces';
 import { APP_CONFIG, IAppConfig } from 'app/app.config';
 
 import { EditDialogComponent } from './editDialog';
@@ -27,14 +27,13 @@ export class SicknessComponent implements OnInit, OnDestroy, AfterViewInit {
     { key: 'diseaseName', name: '疾病名称' },
     { key: 'ICD', name: 'ICD标准码' }
   ];
-  public diseaseDataBase: DiseaseDataBase;
   public dataSource: DiseaseDataSource | null;
   public tableHeaders: ITableHeader[] = [
-    { key: 'diseaseId', name: '疾病ID', cell: (row: IDisease<IDiseaseTagWithChildren>) => `${row.tagId}` },
-    { key: 'diseaseName', name: '疾病名称', cell: (row: IDisease<IDiseaseTagWithChildren>) => `${row.tagName}` },
-    { key: 'ICD', name: 'ICD标准码', cell: (row: IDisease<IDiseaseTagWithChildren>) => `${row.standardCode}` },
-    { key: 'IDC', name: 'IDC附加码', cell: (row: IDisease<IDiseaseTagWithChildren>) => `${row.extraCode}` },
-    { key: 'diseaseCategory', name: '所属疾病类目', cell: (row: IDisease<IDiseaseTagWithChildren>) => `${row.parentName}` },
+    { key: 'diseaseId', name: '疾病ID', cell: (row: IDisease<IDiseaseTagWithChildren>) => row.tagId },
+    { key: 'diseaseName', name: '疾病名称', cell: (row: IDisease<IDiseaseTagWithChildren>) => row.tagName },
+    { key: 'ICD', name: 'ICD标准码', cell: (row: IDisease<IDiseaseTagWithChildren>) => row.standardCode },
+    { key: 'IDC', name: 'IDC附加码', cell: (row: IDisease<IDiseaseTagWithChildren>) => row.extraCode },
+    { key: 'diseaseCategory', name: '所属疾病类目', cell: (row: IDisease<IDiseaseTagWithChildren>) => row.parentName },
     { key: 'department', name: '所属标准科室', cell: (row: IDisease<IDiseaseTagWithChildren>) => `` },
     { key: 'operator', name: '操作', cell: (row: IDisease<IDiseaseTagWithChildren>) => `` }
   ];
@@ -48,7 +47,7 @@ export class SicknessComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(MdPaginator)
   public paginator: MdPaginator;
 
-  formChange$: Subject<any> = new Subject<any>();
+  formChange$: Subject<Event> = new Subject<Event>();
   subscripton: Subscription = new Subscription();
 
   constructor(
@@ -64,15 +63,18 @@ export class SicknessComponent implements OnInit, OnDestroy, AfterViewInit {
     this.pageSize = pageSize;
     this.pageSizeOptions = pageSizeOptions;
 
+    this.getDiseasesByPageFailed = this.getDiseasesByPageFailed.bind(this);
   }
 
   public ngOnInit() {
     this.selectedQueryType = this.queryTypes[0];
     this.displayedColumns = this.tableHeaders.map((header: ITableHeader) => header.key);
-    this.diseaseDataBase = new DiseaseDataBase(this._diseaseService, this._snackbar, this.appConfig);
-    this.dataSource = new DiseaseDataSource(this.diseaseDataBase, this.paginator, this.formChange$);
+    this.dataSource = new DiseaseDataSource(this._diseaseService, this.paginator, this.formChange$);
 
-    const formChangeSub: Subscription = this.formChange$.throttleTime(2000).subscribe(($event) => this.onSubmit($event));
+    const formChangeSub: Subscription = this.formChange$
+      .throttleTime(2000)
+      .subscribe(($event) => this.onSubmit($event));
+
     this.subscripton.add(formChangeSub);
   }
 
@@ -88,24 +90,27 @@ export class SicknessComponent implements OnInit, OnDestroy, AfterViewInit {
     this.keyword = this.keyword.trim();
     const firstPage: number = 1;
     const data: IGetDiseasesByPageData = this.getRequestData();
-    this.diseaseDataBase.getDiseasesByPage(data, firstPage);
+    this.dataSource.getDiseasesByPage(data, firstPage).subscribe(null, this.getDiseasesByPageFailed);
   }
-
 
   public onPageChange(e: PageEvent) {
     const pageIndex: number = e.pageIndex + 1;
     const data: IGetDiseasesByPageData = this.getRequestData();
-    this.diseaseDataBase.getDiseasesByPage(data, pageIndex);
+    this.dataSource.getDiseasesByPage(data, pageIndex).subscribe(null, this.getDiseasesByPageFailed);
   }
 
-  public trackByFn(index: number, tableHeader: ITableHeader) {
+  public trackByFn(index: number, tableHeader: ITableHeader): string {
     return tableHeader.key;
+  }
+
+  private getDiseasesByPageFailed(errMsg: string) {
+    this._snackbar.open(errMsg, null, this.appConfig.mdSnackBarConfig);
   }
 
   private requestByCurrentData() {
     const pageIndex: number = this.paginator.pageIndex + 1;
     const reqData: IGetDiseasesByPageData = this.getRequestData();
-    this.diseaseDataBase.getDiseasesByPage(reqData, pageIndex);
+    this.dataSource.getDiseasesByPage(reqData, pageIndex).subscribe(null, this.getDiseasesByPageFailed);
   }
 
   private getRequestData(): IGetDiseasesByPageData {
@@ -148,7 +153,7 @@ export class SicknessComponent implements OnInit, OnDestroy, AfterViewInit {
           });
 
           dialogRef.afterClosed().subscribe((data) => {
-            if(data) {
+            if (data) {
               this.requestByCurrentData();
             }
           });
@@ -163,48 +168,32 @@ export class SicknessComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 }
 
-export class DiseaseDataBase {
-
+export class DiseaseDataSource extends DataSource<any>{
   constructor(
     private _diseaseService: DiseaseService,
-    private _snackbar: MdSnackBar,
-    private _appConfig: IAppConfig
+    private _paginator: MdPaginator,
+    private _formChange$: Subject<Event>
   ) {
+    super();
   }
 
-  total: number;
+  total: number = 0;
   dataChange: BehaviorSubject<IDisease<IDiseaseTagWithChildren>[]> = new BehaviorSubject<IDisease<IDiseaseTagWithChildren>[]>([]);
 
   getData(): IDisease<IDiseaseTagWithChildren>[] {
     return this.dataChange.value;
   }
 
-  getDiseasesByPage(data: IGetDiseasesByPageData, pageIndex: number) {
-    this._diseaseService.getDiseasesByPage(data, pageIndex).subscribe(
-      (res: any) => {
-        const { model } = res;
-        const diseases: IDisease<IDiseaseTagWithChildren>[] = model.t;
-        this.total = model.count;
-        this.dataChange.next(diseases);
-      },
-      (errMsg: string) => this._snackbar.open(errMsg, null, this._appConfig.mdSnackBarConfig)
-    );
+  getDiseasesByPage(data: IGetDiseasesByPageData, pageIndex: number): Observable<any> {
+    return this._diseaseService.getDiseasesByPage(data, pageIndex).map((model: IModel<IDisease<IDiseaseTagWithChildren>> & IPagination) => {
+      const diseases: IDisease<IDiseaseTagWithChildren>[] = model.t;
+      this.total = model.count;
+      this.dataChange.next(diseases);
+    });
   }
-}
-
-export class DiseaseDataSource extends DataSource<any>{
-  constructor(
-    private _diseaseDataBase: DiseaseDataBase,
-    private _paginator: MdPaginator,
-    private _formChange$: Subject<boolean>
-  ) {
-    super();
-  }
-
   connect(): Observable<any> {
     const displayDataChanges = [
-      this._diseaseDataBase.dataChange,
-      // this._paginator.page,
+      this.dataChange,
       this._formChange$,
     ];
 
@@ -213,13 +202,12 @@ export class DiseaseDataSource extends DataSource<any>{
     });
 
     return Observable.merge(...displayDataChanges).map(() => {
-      const diseases: IDisease<IDiseaseTagWithChildren>[] = this._diseaseDataBase.getData();
+      const diseases: IDisease<IDiseaseTagWithChildren>[] = this.getData();
       return diseases;
     });
-
   }
 
   disconnect() {
-    this._diseaseDataBase.dataChange.complete();
+    this.dataChange.complete();
   }
 }

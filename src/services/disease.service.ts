@@ -8,7 +8,10 @@ import {
   IDiseaseConfig,
   IApiResponse,
   IDiseaseTagName,
-  IDiseaseSavePostBody
+  IDiseaseSavePostBody,
+  IDiseaseTagWithChildren,
+  IDisease,
+  IPagination
 } from 'root/src/interfaces';
 
 import * as data from './diseaseConfig.json';
@@ -72,6 +75,7 @@ export class DiseaseService {
 
     return this.http.get(url, requestOptions)
       .map((res: Response) => res.json())
+      .map((apiRes: IApiResponse<IDisease<IDiseaseTagWithChildren>[], IPagination>) => apiRes.model)
       .catch(() => Observable.throw('获取疾病列表失败'));
   }
 
@@ -91,7 +95,7 @@ export class DiseaseService {
 
     return this.http.get(url)
       .map((res: Response): IApiResponse<IDiseaseConfig> => res.json())
-      .map((data: IApiResponse<IDiseaseConfig>): IDiseaseConfig => data.model)
+      .map((data: IApiResponse<IDiseaseConfig>) => data.model)
       .catch(() => Observable.throw('获取疾病配置信息失败'));
   }
 

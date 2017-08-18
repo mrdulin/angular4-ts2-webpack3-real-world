@@ -1,13 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Request, Response, RequestOptionsArgs, ConnectionBackend, RequestOptions, Http, Headers } from '@angular/http';
 import { Observable } from 'rxjs';
-import { MdSnackBar, MdSnackBarRef, SimpleSnackBar } from '@angular/material';
+import { MdSnackBar, MdSnackBarRef, SimpleSnackBar, MdSnackBarConfig } from '@angular/material';
 
 import { IAppConfig } from 'app/app.config';
 import { GLOBAL_ERROR } from '../modules/app/error.config';
 
 @Injectable()
 export class HttpInterceptorService extends Http {
+
+  snackBarOptions: MdSnackBarConfig = {
+    duration: 2000
+  };
 
   constructor(
     backend: ConnectionBackend,
@@ -53,12 +57,6 @@ export class HttpInterceptorService extends Http {
   intercept(observable: Observable<Response>): Observable<Response> {
     return observable
       .timeout(1000)
-      .catch((err: any) => {
-        if (err.name === "TimeoutError") {
-          this.snackBar.open('请求超时', null, { duration: 2000 });
-        }
-        return Observable.empty();
-      })
       .map((res: any) => {
         if (res.text() === 'need cookie: _tk') {
           const err = { hasError: true, errorCode: -103 };
@@ -72,14 +70,19 @@ export class HttpInterceptorService extends Http {
         }
       })
       .catch((err, source) => {
-        if (err.gwError) {
+
+        if (err.name === "TimeoutError") {
+          this.snackBar.open('请求超时', null, this.snackBarOptions);
+          return Observable.empty();
+        } else if (err.gwError) {
           //TODO: gateway error
         } else if (err.hasError) {
           //TODO: api error
           if (err.errorCode.toString() === '-103') {
             const msg: string = GLOBAL_ERROR.get(err.errorCode.toString());
             this.snackBar && this.snackBar.dismiss();
-            this.snackBar.open(msg, null, { duration: 2000 });
+            this.snackBar.open(msg, null, this.snackBarOptions);
+            return Observable.empty();
           }
         } else if (err.status < 200 || err.status >= 300) {
 
@@ -87,7 +90,7 @@ export class HttpInterceptorService extends Http {
           snackBarRef.onAction().subscribe(() => {
             window.location.reload();
           });
-
+          return Observable.empty();
         }
 
         return Observable.throw(err);
