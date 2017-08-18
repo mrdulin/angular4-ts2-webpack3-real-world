@@ -20,7 +20,7 @@ import * as diseases from './diseases.json';
 
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 
 
 export interface IGetDiseasesByPageData {

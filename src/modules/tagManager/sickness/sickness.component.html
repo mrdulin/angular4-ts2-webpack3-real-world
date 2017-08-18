@@ -22,9 +22,9 @@
       <md-cell class='table-cell' *cdkCellDef="let row">
         <span *ngIf='!last'>{{tableHeader.cell(row)}}</span>
         <span *ngIf='last' class='operator-button-list'>
-          <a (click)='edit(row)'>编辑</a>
-          <a (click)='config(row)'>配置</a>
-          <a (click)='setProperties(row)'>设置属性项</a>
+          <a (click)='row.handler = "edit"; editButton$.next(row)'>编辑</a>
+          <a (click)='row.handler = "config"; configButton$.next(row)'>配置</a>
+          <a (click)='row.handler = "setProperties"; setPropertiesButton$.next(row)'>设置属性项</a>
         </span>
       </md-cell>
     </ng-container>
@@ -33,7 +33,11 @@
     <md-row *cdkRowDef="let row; columns: displayedColumns;"></md-row>
   </md-table>
 
-  <p class='no-data-tip' [hidden]='dataSource.total'>暂无数据</p>
+  <p class='no-data-tip' [hidden]='dataSource.total || loading'>暂无数据</p>
+  <p class='no-data-tip' *ngIf='loading'>
+    <md-progress-spinner mode="indeterminate"></md-progress-spinner>
+    <span>加载中...</span>
+  </p>
 
   <div [hidden]='!dataSource.total'>
     <md-paginator (page)='onPageChange($event)' [length]="dataSource.total" [pageIndex]="pageIndex" [pageSize]="pageSize"
