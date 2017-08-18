@@ -27,36 +27,18 @@
   padding: 0 2%;
 }
 
-.entrance-manager .container .item-card{
-  display: inline-block;
-  width: 29%;
-  margin: 10px 2%;
-  box-sizing: border-box;
-}
-
-.entrance-manager .container .item-card .mat-card-actions{
+.entrance-manager .container .mat-card .mat-header-cell
+,.entrance-manager .container .mat-card .mat-cell{
+  overflow: hidden;
   text-align: center;
+  position: relative;
 }
 
-
-.entrance-manager .container .item-card .inline-item{
-  display: block;
-  width: 100%;
+.entrance-manager .container .mat-card .mat-row{
+  height: auto;
 }
 
-.entrance-manager .container .item-card .inline-item.check-group{
-  display: flex;
-}
-
-.entrance-manager .container .item-card .inline-item.check-group .ckg{
-  flex: 1;
-}
-
-.entrance-manager .container .item-card .inline-item.check-group label{
-  color: rgba(0,0,0,.38);
-  line-height: 24px;
-}
-
-.entrance-manager .container .item-card .inline-item label{
-  vertical-align: middle;
+.entrance-manager .mat-row .mat-column-icon{
+  margin: 5px 10px;
+  box-sizing: border-box;
 }

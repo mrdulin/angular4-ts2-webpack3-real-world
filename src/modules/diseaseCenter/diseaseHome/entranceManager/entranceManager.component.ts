@@ -6,11 +6,12 @@ import { IDiseaseCenterEntranceData } from 'root/src/interfaces'
 import { IOptions } from 'common/components/checkboxGroup'
 import { ComfirmDialogService } from 'common/components/dialog'
 import { IEntranceData } from 'src/services'
-import { PaginatorService } from 'common/services'
+import { PaginatorService, UtilService } from 'common/services'
 import { IQueryType, ITableHeader } from 'common/interfaces'
 import { DataSource } from '@angular/cdk'
 import { Observable } from 'rxjs/Observable'
 import { EntranceDataSource } from './entrance-data-source'
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser'
 
 @Component({
   selector: 'entrance-manager',
@@ -18,18 +19,18 @@ import { EntranceDataSource } from './entrance-data-source'
   styleUrls: ['./entranceManager.component.css']
 })
 export class EntranceManagerComponent implements OnInit {
-  entranceData: IDiseaseCenterEntranceData[]
   entranceDataSource: EntranceDataSource = new EntranceDataSource(this.diseaseHomeService)
   checkboxOptions: IOptions[]
   tableHeaders: ITableHeader[] = [
-    { key: 'sortFactor', name: '排序', cell: (row: any) => `${row.sortFactor}` },
-    { key: 'name', name: '名称', cell: (row: any) => `${row.name}` },
-    { key: 'url', name: 'URL', cell: (row: any) => `${row.linkUrl}` },
-    { key: 'icon', name: '图标', cell: (row: any) => `${row.icon}` },
-    { key: 'poster', name: '封面', cell: (row: any) => `${row.poster}` },
-    { key: 'channels', name: '渠道', cell: (row: any) => `${row.channels}` },
-    { key: 'operator', name: '操作', cell: (row: any) => `sss` }
+    { key: 'sortFactor', name: '排序', cell: (row: any) => row.sortFactor },
+    { key: 'name', name: '名称', cell: (row: any) => row.name },
+    { key: 'url', name: 'URL', cell: (row: any) => this.transferToLink(row.linkUrl) },
+    { key: 'icon', name: '图标', cell: (row: any) => this.renderImageHtml(row.icon) },
+    { key: 'poster', name: '封面', cell: (row: any) => this.renderImageHtml(row.poster) },
+    { key: 'channels', name: '渠道', cell: (row: any) => this.transfer(row.channels) },
+    { key: 'operator', name: '操作', cell: (row: any) => {} }
   ]
+  displayedColumns: string[] = []
   pageIndex: number
   pageSize: number
   pageSizeOptions: number[]
@@ -44,7 +45,9 @@ export class EntranceManagerComponent implements OnInit {
     private diseaseHomeService: DiseaseHomeService,
     private snackbar: MdSnackBar,
     private comfirmDialogService: ComfirmDialogService,
-    private paginatorService: PaginatorService
+    private paginatorService: PaginatorService,
+    private domSanitizer: DomSanitizer,
+    private utilService: UtilService
   ){
     const { pageIndex, pageSize, pageSizeOptions } = this.paginatorService
     
@@ -54,9 +57,36 @@ export class EntranceManagerComponent implements OnInit {
   }
 
   ngOnInit (): void {
+    this.displayedColumns = this.tableHeaders.map((header: ITableHeader): string => header.key)
     this.queryChannelsInfo()
     this.queryEntranceInfo({ pageNo: 1, pageSize: 10 })
     this.paginatorService.i18n(this.paginator, 'cn')
+  }
+
+  transferToLink(url: any): SafeHtml {
+    if (!url) {
+      return null
+    }
+    return this.domSanitizer.bypassSecurityTrustHtml(`<a href="${url}" target="_blank">${url}</a>`)
+  }
+
+  renderImageHtml(src: any): SafeHtml {
+    const imgUrl: string = src && this.utilService.getPublicImageUrl(src) || null
+    if (!imgUrl) {
+      return null
+    }
+    return this.domSanitizer.bypassSecurityTrustHtml(`
+      <div class="imgbox" style="height: 60px;">
+        <img 
+          style="max-height: 60px;max-width: 100%;position: absolute;
+          top: 50%;left: 50%;transform: translate(-50%, -50%);" src="${imgUrl}" /></div>
+    `)
+  }
+
+  transfer(values: number[]): string{
+    return values.map(value => {
+      return this.checkboxOptions.find(item => item.value === value).label
+    }).join(',')
   }
 
   queryChannelsInfo(): void {

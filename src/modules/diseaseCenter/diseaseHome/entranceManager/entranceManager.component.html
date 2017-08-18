@@ -5,48 +5,15 @@
   </header>
 
   <section class="container">
-    <md-card class="item-card" *ngFor="let v of entranceData">
-      <md-card-content>
-        <md-input-container class="inline-item">
-          <input mdInput placeholder="排序" disabled value={{v.sortFactor}}>
-        </md-input-container>
-
-        <md-input-container class="inline-item">
-          <input mdInput placeholder="名称" disabled value={{v.name}}>
-        </md-input-container>
-
-        <md-input-container class="inline-item">
-          <input mdInput placeholder="URL" disabled value={{v.linkUrl}}>
-        </md-input-container>
-
-        <section class="inline-item">
-          <upload [text]="'图标'" disabled={{true}} src={{v.icon}}></upload>
-        </section>
-
-        <section class="inline-item">
-          <upload [text]="'封面'" disabled={{true}} src={{v.poster}}></upload>
-        </section>
-
-        <section class="inline-item check-group">
-          <label>渠道：</label>
-          <checkbox-group class="ckg" [options]="checkboxOptions" value={{v.channels}} disabled={{true}}></checkbox-group>
-        </section>
-      </md-card-content>
-      <md-card-actions>
-        <button md-button class="primary" (click)="editEntranceForm(v, checkboxOptions)">编辑</button>
-        <button md-button class="warnning" (click)="deleteEntranceForm(v.id)">删除</button>
-      </md-card-actions>
-    </md-card>
-
     <md-card>
       <md-table [dataSource]="entranceDataSource">
-        <ng-container *ngFor="let tableHeader of tableHeaders" [cdkColumnDef]="tableHeader.key">
+        <ng-container *ngFor="let tableHeader of tableHeaders; let last = last" [cdkColumnDef]="tableHeader.key">
           <md-header-cell *cdkHeaderCellDef> {{tableHeader.name}} </md-header-cell>
           <md-cell class="table-cell" *cdkCellDef="let row">
-            <span>{{tableHeader.cell(row)}}</span>
-            <span class="operator-button-list">
-              <a (click)="editEntranceForm(row, checkboxOptions)">编辑</a>
-              <a (click)="deleteEntranceForm(row.id)">删除</a>
+            <span *ngIf="!last" [innerHtml]="tableHeader.cell(row)"></span>
+            <span *ngIf='last' class='operator-button-list'>
+              <a (click)='editEntranceForm(row, checkboxOptions)'>编辑</a>
+              <a (click)='deleteEntranceForm(row.id)'>删除</a>
             </span>
           </md-cell>
         </ng-container>
