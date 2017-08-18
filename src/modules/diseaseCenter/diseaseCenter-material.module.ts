@@ -8,7 +8,8 @@ import {
   MdTabsModule,
   MdDialogModule,
   MdPaginatorModule,
-  MdChipsModule
+  MdChipsModule,
+  MdTableModule
 } from '@angular/material';
 import { CdkTableModule } from '@angular/cdk';
 
@@ -22,6 +23,7 @@ import { CdkTableModule } from '@angular/cdk';
     MdDialogModule,
     MdPaginatorModule,
     MdChipsModule,
+    MdTableModule,
     CdkTableModule,
     CommonModule
   ],
@@ -34,6 +36,7 @@ import { CdkTableModule } from '@angular/cdk';
     MdDialogModule,
     MdPaginatorModule,
     MdChipsModule,
+    MdTableModule,
     CdkTableModule,
     CommonModule
   ]
