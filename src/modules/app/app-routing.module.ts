@@ -20,7 +20,7 @@ export const routes: Routes = [
       // -- 异步加载的特性模块 --
       {
         path: '',
-        loadChildren: '../tagManager/tm.module#TagManagerModule?chunkName=tagManagerModule'
+        loadChildren: '../tagManager/tm.module#TagManagerModule?chunkName=tagManagerModule&sync=true'
       },
       {
         path: '',

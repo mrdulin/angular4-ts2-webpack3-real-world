@@ -44,10 +44,18 @@ export class SicknessComponent implements OnInit, OnDestroy, AfterViewInit {
   public pageIndex: number;
   public pageSizeOptions: number[];
 
+  private buttonHandlerMap: Map<string, Function>;
+
+  loading: boolean;
+
   @ViewChild(MdPaginator)
   public paginator: MdPaginator;
 
   formChange$: Subject<Event> = new Subject<Event>();
+  configButton$: Subject<IDisease<IDiseaseTagWithChildren>> = new Subject();
+  editButton$: Subject<IDisease<IDiseaseTagWithChildren>> = new Subject();
+  setPropertiesButton$: Subject<IDisease<IDiseaseTagWithChildren>> = new Subject();
+
   subscripton: Subscription = new Subscription();
 
   constructor(
@@ -64,6 +72,11 @@ export class SicknessComponent implements OnInit, OnDestroy, AfterViewInit {
     this.pageSizeOptions = pageSizeOptions;
 
     this.getDiseasesByPageFailed = this.getDiseasesByPageFailed.bind(this);
+    this.buttonHandlerMap = new Map([
+      ['config', this.config],
+      ['edit', this.edit],
+      ['setProperties', this.setProperties]
+    ]);
   }
 
   public ngOnInit() {
@@ -71,11 +84,48 @@ export class SicknessComponent implements OnInit, OnDestroy, AfterViewInit {
     this.displayedColumns = this.tableHeaders.map((header: ITableHeader) => header.key);
     this.dataSource = new DiseaseDataSource(this._diseaseService, this.paginator, this.formChange$);
 
-    const formChangeSub: Subscription = this.formChange$
-      .throttleTime(2000)
-      .subscribe(($event) => this.onSubmit($event));
+    this.setFormSubmitStream$();
+    this.setButtonStream$();
+  }
 
-    this.subscripton.add(formChangeSub);
+  private setFormSubmitStream$() {
+    this.subscripton.add(
+      this.formChange$
+        .throttleTime(2000)
+        .do(() => this.showLoading())
+        .switchMap(($event) => this.getDiseasesByPage($event))
+        // 由于formChange$在组件的生命周期内始终没有complete，所以不会触发finally
+        // https://github.com/angular/angular/issues/7865
+        // .finally(() => {
+        //   console.log('done');
+        //   this.loading = false;
+        // })
+        .subscribe(() => this.hideLoading(), this.getDiseasesByPageFailed)
+    );
+  }
+
+  private setButtonStream$() {
+    this.subscripton.add(
+      Observable.merge(
+        this.configButton$,
+        this.editButton$,
+        this.setPropertiesButton$
+      )
+        .throttleTime(1000)
+        .subscribe((val: IDisease<IDiseaseTagWithChildren> & { handler: string }) => {
+          const handlerName = val.handler;
+          const handler = this.buttonHandlerMap.get(handlerName);
+          handler(val);
+        })
+    );
+  }
+
+  private showLoading() {
+    this.loading = true;
+  }
+
+  private hideLoading() {
+    this.loading = false;
   }
 
   public ngAfterViewInit() {
@@ -86,11 +136,13 @@ export class SicknessComponent implements OnInit, OnDestroy, AfterViewInit {
     this.subscripton.unsubscribe();
   }
 
-  public onSubmit($event: any): void {
+  public getDiseasesByPage($event: Event): Observable<any> {
+    console.log($event);
     this.keyword = this.keyword.trim();
     const firstPage: number = 1;
     const data: IGetDiseasesByPageData = this.getRequestData();
-    this.dataSource.getDiseasesByPage(data, firstPage).subscribe(null, this.getDiseasesByPageFailed);
+    return this.dataSource.getDiseasesByPage(data, firstPage)
+
   }
 
   public onPageChange(e: PageEvent) {
@@ -105,6 +157,7 @@ export class SicknessComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private getDiseasesByPageFailed(errMsg: string) {
     this._snackbar.open(errMsg, null, this.appConfig.mdSnackBarConfig);
+    this.hideLoading();
   }
 
   private requestByCurrentData() {
@@ -128,7 +181,7 @@ export class SicknessComponent implements OnInit, OnDestroy, AfterViewInit {
    * @param {IDisease<IDiseaseTagWithChildren>} disease
    * @memberof SicknessComponent
    */
-  private edit(disease: IDisease<IDiseaseTagWithChildren>) {
+  private edit = (disease: IDisease<IDiseaseTagWithChildren>) => {
     const dialogRef: MdDialogRef<EditDialogComponent> = this._dialog.open(EditDialogComponent, { data: disease });
     dialogRef.afterClosed().subscribe((data: any) => {
       if (data) {
@@ -143,7 +196,7 @@ export class SicknessComponent implements OnInit, OnDestroy, AfterViewInit {
    * @param {IDisease<IDiseaseTagWithChildren>} disease
    * @memberof SicknessComponent
    */
-  private config(disease: IDisease<IDiseaseTagWithChildren>) {
+  private config = (disease: IDisease<IDiseaseTagWithChildren>) => {
     let dialogRef: MdDialogRef<ConfigDialogComponent>;
     this.subscripton.add(
       this._diseaseService.getByTagId(disease.tagId).subscribe(
@@ -163,8 +216,8 @@ export class SicknessComponent implements OnInit, OnDestroy, AfterViewInit {
     );
   }
 
-  private setProperties(disease: IDisease<IDiseaseTagWithChildren>) {
-
+  private setProperties = (disease: IDisease<IDiseaseTagWithChildren>) => {
+    console.log(disease);
   }
 }
 

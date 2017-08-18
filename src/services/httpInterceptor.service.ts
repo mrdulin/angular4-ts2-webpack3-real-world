@@ -6,6 +6,9 @@ import { MdSnackBar, MdSnackBarRef, SimpleSnackBar, MdSnackBarConfig } from '@an
 import { IAppConfig } from 'app/app.config';
 import { GLOBAL_ERROR } from '../modules/app/error.config';
 
+const TIME_OUT_DURATION = 5000;
+const TIME_OUT_MESSAGE = '请求超时';
+
 @Injectable()
 export class HttpInterceptorService extends Http {
 
@@ -56,7 +59,7 @@ export class HttpInterceptorService extends Http {
 
   intercept(observable: Observable<Response>): Observable<Response> {
     return observable
-      .timeout(1000)
+      .timeout(TIME_OUT_DURATION)
       .map((res: any) => {
         if (res.text() === 'need cookie: _tk') {
           const err = { hasError: true, errorCode: -103 };
@@ -72,7 +75,7 @@ export class HttpInterceptorService extends Http {
       .catch((err, source) => {
 
         if (err.name === "TimeoutError") {
-          this.snackBar.open('请求超时', null, this.snackBarOptions);
+          this.snackBar.open(TIME_OUT_MESSAGE, null, this.snackBarOptions);
           return Observable.empty();
         } else if (err.gwError) {
           //TODO: gateway error

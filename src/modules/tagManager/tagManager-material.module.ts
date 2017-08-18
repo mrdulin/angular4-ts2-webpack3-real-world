@@ -6,7 +6,8 @@ import {
   MdTableModule,
   MdSelectModule,
   MdSnackBarModule,
-  MdTooltipModule
+  MdTooltipModule,
+  MdProgressSpinnerModule
 } from '@angular/material';
 import { CdkTableModule } from '@angular/cdk';
 
@@ -22,7 +23,8 @@ import { CdkTableModule } from '@angular/cdk';
     MdTableModule,
     MdSelectModule,
     MdSnackBarModule,
-    MdTooltipModule
+    MdTooltipModule,
+    MdProgressSpinnerModule
   ],
   exports: [
     CdkTableModule,
@@ -35,7 +37,8 @@ import { CdkTableModule } from '@angular/cdk';
     MdTableModule,
     MdSelectModule,
     MdSnackBarModule,
-    MdTooltipModule
+    MdTooltipModule,
+    MdProgressSpinnerModule
   ]
 })
 export class TagManagerMaterialModule {
