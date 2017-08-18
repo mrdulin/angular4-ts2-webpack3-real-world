@@ -104,6 +104,12 @@ export class SicknessComponent implements OnInit, OnDestroy, AfterViewInit {
     );
   }
 
+  /**
+   * 限制 操作 三个按钮的点击时间间隔
+   *
+   * @private
+   * @memberof SicknessComponent
+   */
   private setButtonStream$() {
     this.subscripton.add(
       Observable.merge(
@@ -113,8 +119,8 @@ export class SicknessComponent implements OnInit, OnDestroy, AfterViewInit {
       )
         .throttleTime(1000)
         .subscribe((val: IDisease<IDiseaseTagWithChildren> & { handler: string }) => {
-          const handlerName = val.handler;
-          const handler = this.buttonHandlerMap.get(handlerName);
+          const handlerName: string = val.handler;
+          const handler: Function = this.buttonHandlerMap.get(handlerName);
           handler(val);
         })
     );
