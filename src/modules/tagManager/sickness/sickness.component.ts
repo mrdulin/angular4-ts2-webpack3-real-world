@@ -14,6 +14,7 @@ import { APP_CONFIG, IAppConfig } from 'app/app.config';
 
 import { EditDialogComponent } from './editDialog';
 import { ConfigDialogComponent } from './configDialog';
+import { CreateDialogComponent } from './createDialog';
 
 import { IQueryType, ITableHeader } from 'common/interfaces';
 
@@ -224,6 +225,10 @@ export class SicknessComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private setProperties = (disease: IDisease<IDiseaseTagWithChildren>) => {
     console.log(disease);
+  }
+
+  private create() {
+    this._dialog.open(CreateDialogComponent);
   }
 }
 
